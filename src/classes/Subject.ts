@@ -1,4 +1,5 @@
 import { yes } from '../common';
+import Resource from './Resource';
 
 export default class Subject {
 
@@ -6,16 +7,16 @@ export default class Subject {
 
   }
 
-  getId() {
-
+  getId(): String {
+    return "";
   }
 
-  getParents() {
-
+  getParents(): Array<Subject> {
+    return [];
   }
 
-  async isAllowed(resource, permission, assertionFn = yes) {
-
+  async isAllowed(resource: Resource, permission, assertionFn = yes): Promise<Boolean> {
+    return true;
   }
 
 }
