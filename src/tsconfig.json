@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "commonjs",
+    "module": "es2015",
     "declaration": false,
     "noImplicitAny": false,
     "removeComments": true,
     "noLib": false,
-    "outDir": "./dist",
+    "outDir": "../dist",
     "inlineSourceMap": true
   }
 }
