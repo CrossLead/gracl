@@ -1,9 +1,11 @@
 import { yes } from '../common';
 import Resource from './Resource';
+import { Repository } from '../interfaces/Repository';
+
 
 export default class Subject {
 
-  constructor() {
+  constructor(data, repository: Repository) {
 
   }
 
