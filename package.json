@@ -2,7 +2,7 @@
   "name": "gracl",
   "version": "0.0.0",
   "description": "graph acl in typescript",
-  "main": "./dist/index.js",
+  "main": "./dist/gracl.js",
   "directories": {
     "test": "test"
   },
