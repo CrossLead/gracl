@@ -8,6 +8,7 @@ echo "compiling typescript..."
 
 echo "Running browserify..."
 ./node_modules/browserify/bin/cmd.js ./dist/index.js \
+  --require babel-polyfill \
   -o ./dist/gracl.js \
   -t [ babelify --presets [ es2015 ] ]
 
