@@ -5,7 +5,7 @@ import { Repository } from '../interfaces/Repository';
 
 export default class Resource {
 
-  constructor(data, repository: Repository) {
+  constructor(data: any, repository: Repository) {
 
   }
 
