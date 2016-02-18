@@ -4,12 +4,12 @@
   "description": "graph acl in typescript",
   "main": "./dist/gracl.js",
   "scripts": {
-    "compile": "npm run-script typings && npm run-script tscompile && npm run-script browserify && npm run-script minify",
+    "build": "npm run-script typings && npm run-script tscompile && npm run-script browserify && npm run-script minify",
     "pretest": "npm run-script tscompile",
     "test": "mocha dist/test/ --require babel-polyfill --compilers js:babel-register",
     "tscompile": "./node_modules/typescript/bin/tsc -p ./",
     "typings": "./node_modules/typings/dist/bin/typings.js install",
-    "browserify": "./node_modules/browserify/bin/cmd.js ./dist/lib/index.js --require babel-polyfill -o ./dist/gracl.js -t [ babelify --presets [ es2015 ] ]",
+    "browserify": "./node_modules/browserify/bin/cmd.js ./dist/lib/index.js -o ./dist/gracl.js -t [ babelify ]",
     "minify": "./node_modules/uglifyjs/bin/uglifyjs ./dist/gracl.js --screw-ie8 --mangle -o  ./dist/gracl.min.js"
   },
   "repository": {
@@ -25,14 +25,19 @@
     "presets": [
       "es2015"
     ],
+    "plugins": [
+      "transform-runtime"
+    ],
     "sourceMaps": true
   },
   "homepage": "https://github.com/CrossLead/gracl",
   "devDependencies": {
     "babel-cli": "^6.5.1",
+    "babel-plugin-transform-runtime": "^6.5.2",
     "babel-polyfill": "^6.5.0",
     "babel-preset-es2015": "^6.5.0",
     "babel-register": "^6.5.2",
+    "babel-runtime": "^6.5.0",
     "babelify": "^7.2.0",
     "browserify": "^13.0.0",
     "chai": "^3.5.0",

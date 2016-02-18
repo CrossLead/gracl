@@ -3,7 +3,7 @@
 ### Dev setup
 
   1. run `npm install`
-  2. run `npm run-script build`
+  2. run `npm run build`
 
 ### Build chain
   1. Compile with `tsc` targeting ES6 to allow async functions, outputting directory to `./dist`
