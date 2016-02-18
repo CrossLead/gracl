@@ -4,9 +4,13 @@
   "description": "graph acl in typescript",
   "main": "./dist/gracl.js",
   "scripts": {
-    "build": "./scripts/build",
+    "compile": "npm run-script typings && npm run-script tscompile && npm run-script browserify && npm run-script minify",
+    "pretest": "npm run-script tscompile",
     "test": "mocha dist/test/ --require babel-polyfill --compilers js:babel-register",
-    "pretest": "tsc -p ./"
+    "tscompile": "./node_modules/typescript/bin/tsc -p ./",
+    "typings": "./node_modules/typings/dist/bin/typings.js install",
+    "browserify": "./node_modules/browserify/bin/cmd.js ./dist/lib/index.js --require babel-polyfill -o ./dist/gracl.js -t [ babelify --presets [ es2015 ] ]",
+    "minify": "./node_modules/uglifyjs/bin/uglifyjs ./dist/gracl.js --screw-ie8 --mangle -o  ./dist/gracl.min.js"
   },
   "repository": {
     "type": "git",
