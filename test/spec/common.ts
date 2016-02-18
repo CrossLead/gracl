@@ -1,6 +1,6 @@
-/// <reference path="../typings/main.d.ts" />
+/// <reference path="../../typings/main.d.ts" />
 import { expect } from 'chai';
-import common from '../lib/common';
+import common from '../../lib/common';
 
 
 describe("Common functions", () => {
