@@ -5,7 +5,7 @@
   "main": "./dist/gracl.js",
   "scripts": {
     "build": "npm run-script typings && npm run-script tscompile && npm run-script browserify && npm run-script minify",
-    "pretest": "npm run-script tscompile",
+    "pretest": "rm -rf ./dist/test && npm run-script tscompile",
     "test": "mocha dist/test/ --require babel-polyfill --compilers js:babel-register",
     "tscompile": "./node_modules/typescript/bin/tsc -p ./",
     "typings": "./node_modules/typings/dist/bin/typings.js install",
