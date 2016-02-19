@@ -1,5 +1,12 @@
 import { Repository } from '../interfaces/Repository';
 
+// general node class (different links in the hierarchy)
+interface NodeClass {
+  new (doc: any): Node,
+  repository: Repository
+}
+
+
 export default class Node {
 
   // default id parameter
@@ -9,27 +16,27 @@ export default class Node {
   // permissions property from object
   private static repository: Repository;
 
-  constructor(doc) {
+  constructor(doc: any) {
     this.doc = doc;
   }
 
-  isNodeType(c) {
+  isNodeType(c): boolean {
     return this.constructor === c;
   }
 
-  getNodeType() {
+  getNodeType(): string {
     return this.constructor.name;
   }
 
-  getParentNodeType() {
+  getParentNodeType(): string {
     return this.getParentClass().name;
   }
 
-  async getId() {
+  async getId(): Promise<any> {
     return this.doc[Object.getPrototypeOf(this).constructor.id];
   }
 
-  getParentClass() {
+  getParentClass(): NodeClass {
     // extract relative super class;
     const subClassPrototype = this.constructor.prototype,
           ParentClass = Object.getPrototypeOf(subClassPrototype).constructor;
@@ -37,14 +44,14 @@ export default class Node {
     return ParentClass;
   }
 
-  async getParentObject(data) {
+  async getParentObject(data: any): Promise<Node> {
     const ParentClass = this.getParentClass();
 
     if (typeof data === 'string') {
-      if (!ParentClass.model) {
-        throw new Error(`No static model property present on ${ParentClass.name} Node!`);
+      if (!ParentClass.repository) {
+        throw new Error(`No static repository property present on ${ParentClass.name} Node!`);
       }
-      data = await ParentClass.model.find(data);
+      data = await ParentClass.repository.find(data);
     }
 
     return new ParentClass(data);

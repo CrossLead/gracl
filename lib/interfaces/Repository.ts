@@ -3,5 +3,5 @@
  */
 
 export interface Repository {
-  getEntity(id: String): Promise<any>;
+  find(id: String): Promise<any>;
 }
