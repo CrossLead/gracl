@@ -1,31 +1,20 @@
 import { yes } from '../common';
 import Subject from './Subject';
-import { Repository } from '../interfaces/Repository';
+import Node from './Node';
+import { Permission } from '../interfaces/Permission';
 
 
-export default class Resource {
+export default class Resource extends Node {
 
-  constructor(data: any, repository: Repository) {
-
-  }
-
-  getId(): String {
-    return "";
-  }
-
-  getParents(): Array<Resource> {
-    return [];
-  }
-
-  async isAllowed(subject: Subject, permission, assertionFn = yes): Promise<Boolean> {
+  async isAllowed(subject: Subject, permissionType: string, assertionFn = yes): Promise<Boolean> {
     return true;
   }
 
-  async allow(subject: Subject, permission) {
-
+  async allow(subject: Subject, permissionType: string) {
+    this.doc.permissions;
   }
 
-  async deny(subject: Subject, permission) {
+  async deny(subject: Subject, permissionType: string) {
 
   }
 

@@ -1,21 +1,8 @@
 import { yes } from '../common';
 import Resource from './Resource';
-import { Repository } from '../interfaces/Repository';
+import Node from './Node';
 
-
-export default class Subject {
-
-  constructor(data, repository: Repository) {
-
-  }
-
-  getId(): String {
-    return "";
-  }
-
-  getParents(): Array<Subject> {
-    return [];
-  }
+export default class Subject extends Node {
 
   async isAllowed(resource: Resource, permission, assertionFn = yes): Promise<Boolean> {
     return true;
