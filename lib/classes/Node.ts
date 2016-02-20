@@ -3,17 +3,14 @@ import { Repository } from '../interfaces/Repository';
 // general node class (different links in the hierarchy)
 interface NodeClass {
   new (doc: any): Node,
-  repository: Repository
+  repository: Repository,
+  id: string
 }
-
 
 export default class Node {
 
-  // default id parameter
   static id = 'id';
   public doc: any;
-
-  // permissions property from object
   private static repository: Repository;
 
   constructor(doc: any) {
@@ -32,21 +29,23 @@ export default class Node {
     return this.getParentClass().name;
   }
 
-  async getId(): Promise<any> {
-    return this.doc[Object.getPrototypeOf(this).constructor.id];
-  }
-
   getParentClass(): NodeClass {
-    // extract relative super class;
-    const subClassPrototype = this.constructor.prototype,
-          ParentClass = Object.getPrototypeOf(subClassPrototype).constructor;
+    // extract relative super class
+    const thisPrototype = this.constructor.prototype,
+          ParentClass: NodeClass = Object.getPrototypeOf(thisPrototype).constructor;
 
     return ParentClass;
+  }
+
+  async getId(): Promise<string> {
+    const thisClass: NodeClass = Object.getPrototypeOf(this).constructor;
+    return this.doc[thisClass.id];
   }
 
   async getParentObject(data: any): Promise<Node> {
     const ParentClass = this.getParentClass();
 
+    // data is the id, retrieve from repository
     if (typeof data === 'string') {
       if (!ParentClass.repository) {
         throw new Error(`No static repository property present on ${ParentClass.name} Node!`);

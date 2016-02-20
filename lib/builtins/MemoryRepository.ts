@@ -11,7 +11,7 @@ export default class MemoryRepository implements Repository {
     this.data = data;
   }
 
-  async getEntity(id: string): Promise<any> {
+  async find(id: string): Promise<any> {
     return this.data[id];
   }
 
