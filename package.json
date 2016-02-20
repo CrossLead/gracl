@@ -48,5 +48,6 @@
     "typescript": "^1.7.5",
     "typings": "^0.6.8",
     "uglifyjs": "^2.4.10"
-  }
+  },
+  "dependencies": {}
 }

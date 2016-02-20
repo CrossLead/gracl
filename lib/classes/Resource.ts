@@ -1,6 +1,6 @@
-import { yes } from '../common';
 import Subject from './Subject';
 import Node from './Node';
+import { permissionCompare, permissionIndexOf, yes } from '../util';
 import { Document, Permission } from '../interfaces';
 
 
@@ -8,9 +8,13 @@ export default class Resource extends Node {
 
   constructor(doc: Document) {
     super(doc);
-    if (!this.doc.permissions) {
-      this.doc.permissions = [];
-    }
+    const permissions = this.doc.permissions = this.doc.permissions || [];
+    this.sortPermissions();
+  }
+
+  sortPermissions() {
+    this.doc.permissions.sort(permissionCompare);
+    return this;
   }
 
   async isAllowed(subject: Subject, permissionType: string, assertionFn = yes): Promise<Boolean> {
@@ -18,15 +22,19 @@ export default class Resource extends Node {
     return predicate && true;
   }
 
-  async allow(subject: Subject, permissionType: string): Promise<Resource> {
+  async updatePermission(subject: Subject, action: (Permission) => Permission): Promise<Resource> {
     const { doc } = this,
-          permission: Permission = {
-            type: permissionType,
-            ids: [ subject.getId() ]
-          };
+          { permissions } = doc,
+          subjectId = subject.getId();
 
-    // add permission
-    this.doc.permissions.push(permission);
+    const existingPermissionIndex = permissionIndexOf(permissions, subjectId);
+
+    if (existingPermissionIndex >= 0) {
+      permissions[existingPermissionIndex] = action(permissions[existingPermissionIndex])
+    } else {
+      // add permission
+      this.doc.permissions.push(action({ subjectId }));
+    }
 
     // save updated document
     const id = this.getId(),
@@ -35,8 +43,34 @@ export default class Resource extends Node {
     return new Resource(updated);
   }
 
+  async setPermissionAccess(subject: Subject, permissionType: string, access: boolean): Promise<Resource> {
+    return this.updatePermission(subject, permission => {
+      (permission.access = permission.access || {})[permissionType] = access;
+      return permission;
+    });
+  }
+
+  async setPermissionSuperAccess(subject: Subject, permissionType: string, access: boolean): Promise<Resource> {
+    return this.updatePermission(subject, permission => {
+      permission.superAccess = access;
+      return permission;
+    });
+  }
+
+  async allow(subject: Subject, permissionType: string): Promise<Resource> {
+    return this.setPermissionAccess(subject, permissionType, true);
+  }
+
   async deny(subject: Subject, permissionType: string): Promise<Resource> {
-    return this;
+    return this.setPermissionAccess(subject, permissionType, false);
+  }
+
+  async allowSuperAccess(subject: Subject, permissionType: string): Promise<Resource> {
+    return this.setPermissionSuperAccess(subject, permissionType, true);
+  }
+
+  async denySuperAccess(subject: Subject, permissionType: string): Promise<Resource> {
+    return this.setPermissionSuperAccess(subject, permissionType, false);
   }
 
 }

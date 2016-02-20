@@ -1,16 +1,16 @@
 /// <reference path="../../typings/main.d.ts" />
 import { expect } from 'chai';
-import common from '../../lib/common';
+import * as util from '../../lib/util';
 
 
 describe("Common functions", () => {
 
   it("yes() should return true", () => {
-    expect(common.yes()).to.equal(true);
+    expect(util.yes()).to.equal(true);
   });
 
   it("noop() should return void", () => {
-    expect(common.noop()).to.equal(void 0);
+    expect(util.noop()).to.equal(void 0);
   });
 
 });

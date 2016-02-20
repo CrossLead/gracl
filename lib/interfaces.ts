@@ -1,13 +1,22 @@
+/**
+ * Interfaces for externally defined objects
+ */
+
 
 export interface Repository {
   getEntity(id: string): Promise<Document>;
   saveEntity(id: string, doc: Document): Promise<Document>;
 }
 
+
 export interface Permission {
-  type: string,
-  ids: Array<string>
+  subjectId: string,
+  superAccess?: boolean,
+  access?: {
+    [key: string]: boolean
+  }
 }
+
 
 export interface Document {
   permissions?: Array<Permission>

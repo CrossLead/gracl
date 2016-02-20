@@ -1,4 +1,4 @@
-import { yes } from '../common';
+import { yes } from '../util';
 import Resource from './Resource';
 import Node from './Node';
 
