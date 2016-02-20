@@ -1,4 +1,4 @@
-import { Repository } from "../interfaces/Repository";
+import { Repository, Document } from "../interfaces";
 
 /**
  * Trivial in memory repository for example / testing
@@ -11,8 +11,12 @@ export default class MemoryRepository implements Repository {
     this.data = data;
   }
 
-  async getEntity(id: string): Promise<any> {
+  async getEntity(id: string): Promise<Document> {
     return this.data[id];
+  }
+
+  async saveEntity(id: string, doc: Document): Promise<Document> {
+    return this.data[id] = doc;
   }
 
 }

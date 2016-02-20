@@ -1,59 +1,62 @@
-import { Repository } from '../interfaces/Repository';
+import { Repository, Permission, Document } from '../interfaces';
 
-// general node class (different links in the hierarchy)
-interface NodeClass {
-  new (doc: any): Node,
+
+export interface NodeClass {
+  new (doc: Document): Node,
   repository: Repository,
   id: string
 }
 
+
 export default class Node {
 
-  public doc: any;
+  public doc: Document;
   public static id = 'id';
-  private static repository: Repository;
+  public static repository: Repository;
 
-  constructor(doc: any) {
+  constructor(doc: Document) {
     this.doc = doc;
   }
 
+  private _getClass(node: Node) {
+    return <NodeClass> Object.getPrototypeOf(node).constructor;
+  }
+
   isNodeType(nc: NodeClass): boolean {
-    return this.constructor === nc;
-  }
-
-  getNodeType(): NodeClass {
-    return <NodeClass>this.constructor;
-  }
-
-  getParentNodeType(): NodeClass {
-    return this.getParentClass();
+    return this.getClass() === nc;
   }
 
   getParentClass(): NodeClass {
-    // extract relative super class
-    const thisPrototype = this.constructor.prototype,
-          ParentClass: NodeClass = Object.getPrototypeOf(thisPrototype).constructor;
-
-    return ParentClass;
+    return this._getClass(this.constructor.prototype);
   }
 
-  async getId(): Promise<string> {
-    const thisClass = <NodeClass>Object.getPrototypeOf(this).constructor;
-    return this.doc[thisClass.id];
+  getClass(): NodeClass {
+    return this._getClass(this);
   }
 
-  async getParentObject(data: any): Promise<Node> {
+  getId(): string {
+    return this.doc[this.getClass().id];
+  }
+
+  getRepository(): Repository {
+    return this.getClass().repository;
+  }
+
+  async getParentObject(data: string|Document): Promise<Node> {
     const ParentClass = this.getParentClass();
+    let doc: Document;
 
     // data is the id, retrieve from repository
     if (typeof data === 'string') {
       if (!ParentClass.repository) {
         throw new Error(`No static repository property present on ${ParentClass.name} Node!`);
       }
-      data = await ParentClass.repository.getEntity(data);
+      doc = await ParentClass.repository.getEntity(<string> data);
+    } else {
+      doc = data;
     }
 
-    return new ParentClass(data);
+    return new ParentClass(doc);
   }
 
 }
