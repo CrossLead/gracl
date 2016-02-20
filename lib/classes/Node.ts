@@ -9,24 +9,24 @@ interface NodeClass {
 
 export default class Node {
 
-  static id = 'id';
   public doc: any;
+  public static id = 'id';
   private static repository: Repository;
 
   constructor(doc: any) {
     this.doc = doc;
   }
 
-  isNodeType(c): boolean {
-    return this.constructor === c;
+  isNodeType(nc: NodeClass): boolean {
+    return this.constructor === nc;
   }
 
-  getNodeType(): string {
-    return this.constructor.name;
+  getNodeType(): NodeClass {
+    return <NodeClass>this.constructor;
   }
 
-  getParentNodeType(): string {
-    return this.getParentClass().name;
+  getParentNodeType(): NodeClass {
+    return this.getParentClass();
   }
 
   getParentClass(): NodeClass {
@@ -38,7 +38,7 @@ export default class Node {
   }
 
   async getId(): Promise<string> {
-    const thisClass: NodeClass = Object.getPrototypeOf(this).constructor;
+    const thisClass = <NodeClass>Object.getPrototypeOf(this).constructor;
     return this.doc[thisClass.id];
   }
 
@@ -50,7 +50,7 @@ export default class Node {
       if (!ParentClass.repository) {
         throw new Error(`No static repository property present on ${ParentClass.name} Node!`);
       }
-      data = await ParentClass.repository.find(data);
+      data = await ParentClass.repository.getEntity(data);
     }
 
     return new ParentClass(data);
