@@ -4,8 +4,8 @@
   "description": "graph acl in typescript",
   "main": "./dist/gracl.js",
   "scripts": {
-    "build": "npm run-script typings && npm run-script tscompile && npm run-script browserify && npm run-script minify",
-    "pretest": "rm -rf ./dist/test && npm run-script tscompile",
+    "build": "npm run typings && npm run tscompile && npm run browserify && npm run minify",
+    "pretest": "rm -rf ./dist/test && npm run tscompile",
     "test": "mocha dist/test/ --require babel-polyfill --compilers js:babel-register",
     "tscompile": "./node_modules/typescript/bin/tsc -p ./",
     "typings": "./node_modules/typings/dist/bin/typings.js install",
