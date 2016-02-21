@@ -1138,14 +1138,6 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 			<a href="index.html#_interfaces_" class="tsd-kind-icon">"interfaces"</a>
 			<ul>
 				<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-					<a href="index.html#_interfaces_.document" class="tsd-kind-icon">Document</a>
-					<ul>
-						<li class=" tsd-kind-property tsd-parent-kind-interface">
-							<a href="index.html#_interfaces_.document.permissions" class="tsd-kind-icon">permissions</a>
-						</li>
-					</ul>
-				</li>
-				<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 					<a href="index.html#_interfaces_.permission" class="tsd-kind-icon">Permission</a>
 					<ul>
 						<li class=" tsd-kind-property tsd-parent-kind-interface">
@@ -1166,6 +1158,9 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 							<a href="index.html#_interfaces_.repository.saveentity" class="tsd-kind-icon">save<wbr>Entity</a>
 						</li>
 					</ul>
+				</li>
+				<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+					<a href="index.html#_interfaces_.document" class="tsd-kind-icon">Document</a>
 				</li>
 			</ul>
 		</li>
@@ -1471,9 +1466,14 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 					<div class="tsd-signature tsd-kind-icon">Node<span class="tsd-signature-symbol">:</span> </div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L18">classes/Node.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L20">classes/Node.ts:20</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p> Abstract base class from which all gracl hierachy nodes inherit.</p>
+						</div>
+					</div>
 					<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
 						<a name="_classes_node_.node.constructor" class="tsd-anchor"></a>
 						<h3>constructor</h3>
@@ -1484,9 +1484,14 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 							<li class="tsd-description">
 								<aside class="tsd-sources">
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L23">classes/Node.ts:23</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L40">classes/Node.ts:40</a></li>
 									</ul>
 								</aside>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p> Constructor, simply assigns the given document as a property</p>
+									</div>
+								</div>
 								<h4 class="tsd-parameters-title">Parameters</h4>
 								<ul class="tsd-parameters">
 									<li>
@@ -1503,9 +1508,16 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 						<div class="tsd-signature tsd-kind-icon">doc<span class="tsd-signature-symbol">:</span> <a href="index.html#_interfaces_.document" class="tsd-signature-type">Document</a></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L21">classes/Node.ts:21</a></li>
+								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L28">classes/Node.ts:28</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p> The actual data document assigned to the node,
+									contains arbitrary properties. gracl will set doc.permissions
+								to contain the acl permissions.</p>
+							</div>
+						</div>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 						<a name="_classes_node_.node.id" class="tsd-anchor"></a>
@@ -1513,9 +1525,14 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 						<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L22">classes/Node.ts:22</a></li>
+								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L34">classes/Node.ts:34</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p> The id property within the document contained by this node type, defaults to &#39;id&#39;</p>
+							</div>
+						</div>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 						<a name="_classes_node_.node.repository" class="tsd-anchor"></a>
@@ -1523,9 +1540,14 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 						<div class="tsd-signature tsd-kind-icon">repository<span class="tsd-signature-symbol">:</span> <a href="index.html#_interfaces_.repository" class="tsd-signature-type">Repository</a></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L23">classes/Node.ts:23</a></li>
+								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L40">classes/Node.ts:40</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p> The repository for this node type, provides async getter function.</p>
+							</div>
+						</div>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
 						<a name="_classes_node_.node._getclass" class="tsd-anchor"></a>
@@ -1537,9 +1559,14 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 							<li class="tsd-description">
 								<aside class="tsd-sources">
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L31">classes/Node.ts:31</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L54">classes/Node.ts:54</a></li>
 									</ul>
 								</aside>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p> Internal method for determining the class of a given instance of a Node subclass</p>
+									</div>
+								</div>
 								<h4 class="tsd-parameters-title">Parameters</h4>
 								<ul class="tsd-parameters">
 									<li>
@@ -1560,7 +1587,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 							<li class="tsd-description">
 								<aside class="tsd-sources">
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L46">classes/Node.ts:46</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L72">classes/Node.ts:72</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-returns-title">Returns <a href="index.html#_classes_node_.nodeclass" class="tsd-signature-type">NodeClass</a></h4>
@@ -1577,7 +1604,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 							<li class="tsd-description">
 								<aside class="tsd-sources">
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L57">classes/Node.ts:57</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L83">classes/Node.ts:83</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -1594,7 +1621,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 							<li class="tsd-description">
 								<aside class="tsd-sources">
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L41">classes/Node.ts:41</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L67">classes/Node.ts:67</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-returns-title">Returns <a href="index.html#_classes_node_.nodeclass" class="tsd-signature-type">NodeClass</a></h4>
@@ -1611,7 +1638,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 							<li class="tsd-description">
 								<aside class="tsd-sources">
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L77">classes/Node.ts:77</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L103">classes/Node.ts:103</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1634,7 +1661,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 							<li class="tsd-description">
 								<aside class="tsd-sources">
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L72">classes/Node.ts:72</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L98">classes/Node.ts:98</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="index.html#_classes_node_.node" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1651,7 +1678,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 							<li class="tsd-description">
 								<aside class="tsd-sources">
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L62">classes/Node.ts:62</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L88">classes/Node.ts:88</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-returns-title">Returns <a href="index.html#_interfaces_.repository" class="tsd-signature-type">Repository</a></h4>
@@ -1668,7 +1695,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 							<li class="tsd-description">
 								<aside class="tsd-sources">
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L51">classes/Node.ts:51</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L77">classes/Node.ts:77</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -1685,7 +1712,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 							<li class="tsd-description">
 								<aside class="tsd-sources">
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L67">classes/Node.ts:67</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L93">classes/Node.ts:93</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1714,9 +1741,14 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 							<li class="tsd-description">
 								<aside class="tsd-sources">
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L36">classes/Node.ts:36</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L62">classes/Node.ts:62</a></li>
 									</ul>
 								</aside>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p> Check if this node is a particular Node subclass</p>
+									</div>
+								</div>
 								<h4 class="tsd-parameters-title">Parameters</h4>
 								<ul class="tsd-parameters">
 									<li>
@@ -1737,7 +1769,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 							<li class="tsd-description">
 								<aside class="tsd-sources">
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L95">classes/Node.ts:95</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L121">classes/Node.ts:121</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1870,9 +1902,16 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.doc">doc</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L21">classes/Node.ts:21</a></li>
+								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L28">classes/Node.ts:28</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p> The actual data document assigned to the node,
+									contains arbitrary properties. gracl will set doc.permissions
+								to contain the acl permissions.</p>
+							</div>
+						</div>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
 						<a name="_classes_resource_.resource.id" class="tsd-anchor"></a>
@@ -1881,9 +1920,14 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.id">id</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L22">classes/Node.ts:22</a></li>
+								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L34">classes/Node.ts:34</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p> The id property within the document contained by this node type, defaults to &#39;id&#39;</p>
+							</div>
+						</div>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
 						<a name="_classes_resource_.resource.repository" class="tsd-anchor"></a>
@@ -1892,9 +1936,14 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.repository">repository</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L23">classes/Node.ts:23</a></li>
+								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L40">classes/Node.ts:40</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p> The repository for this node type, provides async getter function.</p>
+							</div>
+						</div>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 						<a name="_classes_resource_.resource.allow" class="tsd-anchor"></a>
@@ -1959,7 +2008,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 								<aside class="tsd-sources">
 									<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.getclass">getClass</a></p>
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L46">classes/Node.ts:46</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L72">classes/Node.ts:72</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-returns-title">Returns <a href="index.html#_classes_node_.nodeclass" class="tsd-signature-type">NodeClass</a></h4>
@@ -1977,7 +2026,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 								<aside class="tsd-sources">
 									<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.getid">getId</a></p>
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L57">classes/Node.ts:57</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L83">classes/Node.ts:83</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -1995,7 +2044,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 								<aside class="tsd-sources">
 									<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.getparentclass">getParentClass</a></p>
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L41">classes/Node.ts:41</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L67">classes/Node.ts:67</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-returns-title">Returns <a href="index.html#_classes_node_.nodeclass" class="tsd-signature-type">NodeClass</a></h4>
@@ -2013,7 +2062,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 								<aside class="tsd-sources">
 									<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.getparentobject">getParentObject</a></p>
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L77">classes/Node.ts:77</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L103">classes/Node.ts:103</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2037,7 +2086,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 								<aside class="tsd-sources">
 									<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.getparents">getParents</a></p>
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L72">classes/Node.ts:72</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L98">classes/Node.ts:98</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="index.html#_classes_node_.node" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -2078,7 +2127,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 								<aside class="tsd-sources">
 									<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.getrepository">getRepository</a></p>
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L62">classes/Node.ts:62</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L88">classes/Node.ts:88</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-returns-title">Returns <a href="index.html#_interfaces_.repository" class="tsd-signature-type">Repository</a></h4>
@@ -2096,7 +2145,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 								<aside class="tsd-sources">
 									<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.hierarchyroot">hierarchyRoot</a></p>
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L51">classes/Node.ts:51</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L77">classes/Node.ts:77</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -2144,9 +2193,14 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 								<aside class="tsd-sources">
 									<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.isnodetype">isNodeType</a></p>
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L36">classes/Node.ts:36</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L62">classes/Node.ts:62</a></li>
 									</ul>
 								</aside>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p> Check if this node is a particular Node subclass</p>
+									</div>
+								</div>
 								<h4 class="tsd-parameters-title">Parameters</h4>
 								<ul class="tsd-parameters">
 									<li>
@@ -2168,7 +2222,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 								<aside class="tsd-sources">
 									<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.parentsallowed">parentsAllowed</a></p>
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L95">classes/Node.ts:95</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L121">classes/Node.ts:121</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2308,9 +2362,14 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 								<aside class="tsd-sources">
 									<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.constructor">constructor</a></p>
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L23">classes/Node.ts:23</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L40">classes/Node.ts:40</a></li>
 									</ul>
 								</aside>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p> Constructor, simply assigns the given document as a property</p>
+									</div>
+								</div>
 								<h4 class="tsd-parameters-title">Parameters</h4>
 								<ul class="tsd-parameters">
 									<li>
@@ -2328,9 +2387,16 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.doc">doc</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L21">classes/Node.ts:21</a></li>
+								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L28">classes/Node.ts:28</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p> The actual data document assigned to the node,
+									contains arbitrary properties. gracl will set doc.permissions
+								to contain the acl permissions.</p>
+							</div>
+						</div>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
 						<a name="_classes_subject_.subject.id" class="tsd-anchor"></a>
@@ -2339,9 +2405,14 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.id">id</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L22">classes/Node.ts:22</a></li>
+								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L34">classes/Node.ts:34</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p> The id property within the document contained by this node type, defaults to &#39;id&#39;</p>
+							</div>
+						</div>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
 						<a name="_classes_subject_.subject.repository" class="tsd-anchor"></a>
@@ -2350,9 +2421,14 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.repository">repository</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L23">classes/Node.ts:23</a></li>
+								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L40">classes/Node.ts:40</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p> The repository for this node type, provides async getter function.</p>
+							</div>
+						</div>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 						<a name="_classes_subject_.subject.getclass" class="tsd-anchor"></a>
@@ -2365,7 +2441,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 								<aside class="tsd-sources">
 									<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.getclass">getClass</a></p>
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L46">classes/Node.ts:46</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L72">classes/Node.ts:72</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-returns-title">Returns <a href="index.html#_classes_node_.nodeclass" class="tsd-signature-type">NodeClass</a></h4>
@@ -2383,7 +2459,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 								<aside class="tsd-sources">
 									<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.getid">getId</a></p>
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L57">classes/Node.ts:57</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L83">classes/Node.ts:83</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -2401,7 +2477,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 								<aside class="tsd-sources">
 									<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.getparentclass">getParentClass</a></p>
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L41">classes/Node.ts:41</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L67">classes/Node.ts:67</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-returns-title">Returns <a href="index.html#_classes_node_.nodeclass" class="tsd-signature-type">NodeClass</a></h4>
@@ -2419,7 +2495,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 								<aside class="tsd-sources">
 									<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.getparentobject">getParentObject</a></p>
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L77">classes/Node.ts:77</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L103">classes/Node.ts:103</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2443,7 +2519,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 								<aside class="tsd-sources">
 									<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.getparents">getParents</a></p>
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L72">classes/Node.ts:72</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L98">classes/Node.ts:98</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="index.html#_classes_node_.node" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -2461,7 +2537,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 								<aside class="tsd-sources">
 									<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.getrepository">getRepository</a></p>
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L62">classes/Node.ts:62</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L88">classes/Node.ts:88</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-returns-title">Returns <a href="index.html#_interfaces_.repository" class="tsd-signature-type">Repository</a></h4>
@@ -2479,7 +2555,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 								<aside class="tsd-sources">
 									<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.hierarchyroot">hierarchyRoot</a></p>
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L51">classes/Node.ts:51</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L77">classes/Node.ts:77</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -2527,9 +2603,14 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 								<aside class="tsd-sources">
 									<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.isnodetype">isNodeType</a></p>
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L36">classes/Node.ts:36</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L62">classes/Node.ts:62</a></li>
 									</ul>
 								</aside>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p> Check if this node is a particular Node subclass</p>
+									</div>
+								</div>
 								<h4 class="tsd-parameters-title">Parameters</h4>
 								<ul class="tsd-parameters">
 									<li>
@@ -2551,7 +2632,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 								<aside class="tsd-sources">
 									<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.parentsallowed">parentsAllowed</a></p>
 									<ul>
-										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L95">classes/Node.ts:95</a></li>
+										<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L121">classes/Node.ts:121</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2591,26 +2672,6 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 						<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/interfaces.ts#L1">interfaces.ts:1</a></li>
 					</ul>
 				</aside>
-				<section class="tsd-panel tsd-member tsd-kind-interface tsd-parent-kind-external-module">
-					<a name="_interfaces_.document" class="tsd-anchor"></a>
-					<h3>Document</h3>
-					<div class="tsd-signature tsd-kind-icon">Document<span class="tsd-signature-symbol">:</span> </div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/interfaces.ts#L20">interfaces.ts:20</a></li>
-						</ul>
-					</aside>
-					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-						<a name="_interfaces_.document.permissions" class="tsd-anchor"></a>
-						<h3>permissions</h3>
-						<div class="tsd-signature tsd-kind-icon">permissions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="index.html#_interfaces_.permission" class="tsd-signature-type">Permission</a><span class="tsd-signature-symbol">&gt;</span></div>
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/interfaces.ts#L21">interfaces.ts:21</a></li>
-							</ul>
-						</aside>
-					</section>
-				</section>
 				<section class="tsd-panel tsd-member tsd-kind-interface tsd-parent-kind-external-module">
 					<a name="_interfaces_.permission" class="tsd-anchor"></a>
 					<h3>Permission</h3>
@@ -2712,6 +2773,16 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 							</li>
 						</ul>
 					</section>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module">
+					<a name="_interfaces_.document" class="tsd-anchor"></a>
+					<h3>Document</h3>
+					<div class="tsd-signature tsd-kind-icon">Document<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/interfaces.ts#L20">interfaces.ts:20</a></li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-external-module">
