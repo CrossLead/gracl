@@ -7,7 +7,14 @@ import { yes } from '../util';
 /**
  * union of subclasses for inherited method signatures
  */
-type HierarchyClass = Subject | Resource;
+type HierarchyNode = Subject | Resource;
+
+
+export interface PermissionsGraph {
+  node: string,
+  permissions: Array<Permission>,
+  parents?: Array<PermissionsGraph>
+}
 
 
 /**
@@ -62,7 +69,7 @@ export class Node {
   /**
    *  Internal method for determining the class of a given instance of a Node subclass
    */
-  private _getClass(node: any): NodeClass {
+  private _getClassOf(node: any): NodeClass {
     return <NodeClass> Object.getPrototypeOf(node).constructor;
   }
 
@@ -71,7 +78,11 @@ export class Node {
    *  Pretty printing
    */
   toString(): string {
-    return `<Node: type = ${this.getClass().name}, documentId = ${this.getId()}>`
+    const nodeSubclassName = this.getNodeSubclass().name,
+          className = this.getClass().name,
+          id = this.getId();
+
+    return `<${nodeSubclassName}:${className} id=${id}>`
   }
 
 
@@ -87,7 +98,7 @@ export class Node {
    *  Get the relative super class constructor of this instance
    */
   getParentClass(): NodeClass {
-    return this._getClass(this.constructor.prototype);
+    return this._getClassOf(this.constructor.prototype);
   }
 
 
@@ -95,16 +106,16 @@ export class Node {
    *  Get the class of this instance
    */
   getClass(): NodeClass {
-    return this._getClass(this);
+    return this._getClassOf(this);
   }
 
 
   /**
-   *  Check if this class direcly inherits from HierarchyClass by
+   *  Check if this class direcly inherits from HierarchyNode by
       checking if the class two levels up is Node
    */
   hierarchyRoot() {
-    return this._getClass(this.getParentClass().prototype) === Node;
+    return this._getClassOf(this.getParentClass().prototype) === Node;
   }
 
 
@@ -127,7 +138,7 @@ export class Node {
   /**
    *  Check if a node is allowed access to this node. Must be overridden by subclasses.
    */
-  async isAllowed(node: HierarchyClass, permissionType: string, assertionFn = yes): Promise<Boolean> {
+  async isAllowed(node: HierarchyNode, permissionType: string, assertionFn = yes): Promise<Boolean> {
     console.warn(`Calling Node.isAllowed(), must implement on subclass!`);
     return false;
   }
@@ -146,7 +157,7 @@ export class Node {
    *  Given an id of a parent of this node, create a Node instance of that object.
       @param data Either the <string> id of the object, or the raw document itself.
    */
-  async getParentObject(data: string|Document): Promise<Node> {
+  async getParentObject(data: string | Document): Promise<Node> {
     const ParentClass = this.getParentClass();
     let doc: Document;
 
@@ -167,7 +178,7 @@ export class Node {
   /**
    *  Check if other node is allowed access to any of this nodes parents.
    */
-  async parentsAllowed(node: HierarchyClass, permissionType: string, assertionFn = yes) {
+  async parentsAllowed(node: HierarchyNode, permissionType: string, assertionFn = yes) {
     if (this.hierarchyRoot()) return false;
 
     const parents = await this.getParents() || [],
@@ -176,6 +187,40 @@ export class Node {
           );
 
     return parentsAllowed.some(Boolean);
+  }
+
+
+  /**
+   *  Determine what subclass of node this node is.
+   */
+  getNodeSubclass(): NodeClass {
+    let nodeClass = this.getClass();
+    while (this._getClassOf(nodeClass.prototype) !== Node) {
+      nodeClass = this._getClassOf(nodeClass.prototype);
+    }
+    return nodeClass;
+  }
+
+
+  /**
+   *  Retrieve permissions hierarchy for this node.
+   */
+  async getPermissionsHierarchy(): Promise<PermissionsGraph> {
+    const { permissions = [] } = this.doc;
+
+    const graph = {
+      node: this.toString(),
+      permissions: <Array<Permission>> permissions
+    };
+
+    if (!this.hierarchyRoot()) {
+      const parents = await this.getParents();
+      if (parents.length) {
+        graph['parents'] = await Promise.all(parents.map(p => p.getPermissionsHierarchy()));
+      }
+    }
+
+    return graph;
   }
 
 

@@ -52,8 +52,13 @@ export class Resource extends Node {
    */
   async isAllowed(subject: Subject, permissionType: string, assertionFn = yes): Promise<Boolean> {
     if (!(await assertionFn())) return false;
+
+    // check specific permission boolean value for this subject on this resource
     const access = this.getPermission(subject).access[permissionType];
     if (access === true || access === false) return access;
+
+    if (await subject.parentsAllowed(this, permissionType, assertionFn)) return true;
+
     return await this.parentsAllowed(subject, permissionType, assertionFn);
   }
 
@@ -74,7 +79,7 @@ export class Resource extends Node {
       permissions[existingPermissionIndex] = action(permissions[existingPermissionIndex])
     } else {
       // add permission
-      this.doc.permissions.push(action({ subjectId }));
+      permissions.push(action({ subjectId }));
     }
 
     // save updated document
@@ -88,7 +93,7 @@ export class Resource extends Node {
   /**
    *  Set access for a particular permission type to true or false for a given Subject.
    */
-  async setPermissionAccess(subject: Subject, permissionType: string, access: boolean): Promise<Resource> {
+  setPermissionAccess(subject: Subject, permissionType: string, access: boolean): Promise<Resource> {
     return this.updatePermission(subject, permission => {
       (permission.access = permission.access || {})[permissionType] = access;
       return permission;
@@ -99,7 +104,7 @@ export class Resource extends Node {
   /**
    *  Set access for a particular permission type to true for a given Subject.
    */
-  async allow(subject: Subject, permissionType: string): Promise<Resource> {
+  allow(subject: Subject, permissionType: string): Promise<Resource> {
     return this.setPermissionAccess(subject, permissionType, true);
   }
 
@@ -107,7 +112,7 @@ export class Resource extends Node {
   /**
    *  Set access for a particular permission type to false for a given Subject.
    */
-  async deny(subject: Subject, permissionType: string): Promise<Resource> {
+  deny(subject: Subject, permissionType: string): Promise<Resource> {
     return this.setPermissionAccess(subject, permissionType, false);
   }
 

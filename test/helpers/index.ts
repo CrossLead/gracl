@@ -1,5 +1,9 @@
 let __id = 1;
 
+export function uidReset() {
+  __id = 1;
+}
+
 export function uid() {
   return `uid${__id++}`;
 }

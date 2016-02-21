@@ -15,7 +15,7 @@ import {
   Post
 } from '../classes/index';
 
-import { user, team, org, post, blog } from '../helpers/index';
+import { user, team, org, post, blog, uidReset } from '../helpers/index';
 
 describe("gracl", () => {
   let orgA,
@@ -33,42 +33,54 @@ describe("gracl", () => {
       postB1b,
       postA1a;
 
+  const resetTestData = async () => {
+    uidReset();
 
-  before(async () => {
     // setup, add documents to models
     orgA = org();
     orgB = org();
-    await orgModel.saveEntity(orgA.id, orgA);
-    await orgModel.saveEntity(orgB.id, orgB);
 
     teamA1 = team(orgB);
     teamA2 = team(orgB);
     teamA3 = team(orgB);
     teamB1 = team(orgB);
-    await teamModel.saveEntity(teamA1.id, teamA1);
-    await teamModel.saveEntity(teamA2.id, teamA2);
-    await teamModel.saveEntity(teamA3.id, teamA3);
-    await teamModel.saveEntity(teamB1.id, teamB1);
 
     userA1 = user([ teamA1, teamA2 ]);
     userA2 = user([ teamA1, teamA3 ]);
     userB1 = user([ teamB1 ]);
-    await userModel.saveEntity(userA1.id, userA1);
-    await userModel.saveEntity(userA2.id, userA2);
-    await userModel.saveEntity(userB1.id, userB1);
 
     blogA1 = blog(orgA);
     blogB1 = blog(orgB);
-    await blogModel.saveEntity(blogA1.id, blogA1);
-    await blogModel.saveEntity(blogB1.id, blogB1);
 
     postB1a = post(blogB1);
     postB1b = post(blogB1);
     postA1a = post(blogA1);
-    await postModel.saveEntity(postA1a.id, postA1a);
-    await postModel.saveEntity(postB1a.id, postB1a);
-    await postModel.saveEntity(postB1b.id, postB1b);
-  });
+
+    await Promise.all([
+      orgModel.saveEntity(orgA.id, orgA),
+      orgModel.saveEntity(orgB.id, orgB),
+
+      teamModel.saveEntity(teamA1.id, teamA1),
+      teamModel.saveEntity(teamA2.id, teamA2),
+      teamModel.saveEntity(teamA3.id, teamA3),
+      teamModel.saveEntity(teamB1.id, teamB1),
+
+      userModel.saveEntity(userA1.id, userA1),
+      userModel.saveEntity(userA2.id, userA2),
+      userModel.saveEntity(userB1.id, userB1),
+
+      blogModel.saveEntity(blogA1.id, blogA1),
+      blogModel.saveEntity(blogB1.id, blogB1),
+
+      postModel.saveEntity(postA1a.id, postA1a),
+      postModel.saveEntity(postB1a.id, postB1a),
+      postModel.saveEntity(postB1b.id, postB1b)
+    ]);
+
+  };
+
+  // run before each test
+  beforeEach(resetTestData);
 
 
   it('Retrieving document from repository should work', async() => {
@@ -87,11 +99,11 @@ describe("gracl", () => {
   });
 
 
-  it('Resource.allow(Subject, <permission>) should set access to true for permission for subject.', async() => {
+  it('Resource.allow(Subject, <perm>) -> subject can access resource.', async() => {
     const resource = new Post(postA1a),
           subject = new User(userA1);
 
-    const initiallAllowed = await resource.isAllowed(subject, 'view');
+    const initialAllowed = await resource.isAllowed(subject, 'view');
 
     expect(
       await resource.allow(subject, 'view'),
@@ -100,8 +112,63 @@ describe("gracl", () => {
 
     const afterSetAllowed = await resource.isAllowed(subject, 'view');
 
-    expect(initiallAllowed, 'the subject should not yet be allowed to view the resource.').to.equal(false);
+    expect(initialAllowed, 'the subject should not yet be allowed to view the resource.').to.equal(false);
     expect(afterSetAllowed, 'After resource sets permission, they should have access').to.equal(true);
+  });
+
+
+  it('Resource.allow(parentSubject, <perm>) -> child subject can access resource.', async() => {
+    const parentResource = new Blog(blogA1),
+          childResource = new Post(postA1a),
+          subject = new User(userA1);
+
+    const initialAllowed = await childResource.isAllowed(subject, 'view');
+
+    expect(
+      await parentResource.allow(subject, 'view'),
+      'Setting permission for parentSubject should return same resource type.'
+    ).to.be.instanceof(Blog);
+
+    const afterSetAllowed = await childResource.isAllowed(subject, 'view');
+
+    expect(initialAllowed, 'the child subject should not yet be allowed to view the resource.').to.equal(false);
+    expect(afterSetAllowed, 'After resource sets permission, they should have access').to.equal(true);
+  });
+
+
+  it('parentResource.allow(parentSubject, <perm>) -> child subject can access child resource.', async() => {
+    const parentResource = new Blog(blogA1),
+          childResource  = new Post(postA1a),
+          parentSubject  = new Team(teamA1),
+          childSubject   = new User(userA1);
+
+    const initialAllowed = await childResource.isAllowed(childSubject, 'view');
+
+    expect(
+      await parentResource.allow(parentSubject, 'view'),
+      'Setting permission for parentSubject should return same resource type.'
+    ).to.be.instanceof(Blog);
+
+    const afterSetAllowed = await childResource.isAllowed(childSubject, 'view');
+
+    expect(initialAllowed, 'the child subject should not yet be allowed to view the resource.').to.equal(false);
+    expect(afterSetAllowed, 'After resource sets permission, they should have access').to.equal(true);
+  });
+
+
+  it('Permissions should be visible through resource.getPermissionsHierarchy()', async() => {
+    const parentResource = new Blog(blogA1),
+          childResource = new Post(postA1a),
+          subject = new User(userA1);
+
+    await parentResource.allow(subject, 'view');
+
+    // get hierarchy with childResource as root.
+    const hiearchy = await childResource.getPermissionsHierarchy();
+
+    expect(hiearchy.node, 'Node should be string representation.').to.equal(childResource.toString());
+    expect(hiearchy.parents[0].permissions, 'Parent resource should have one permission.').to.have.length(1);
+    expect(hiearchy.parents[0].permissions[0].access['view'], 'View access should be true').to.equal(true);
   });
 
 
