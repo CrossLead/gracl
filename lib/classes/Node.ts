@@ -18,7 +18,7 @@ type HierarchyClass = Subject | Resource;
       - Resource
  */
 export interface NodeClass {
-  new (doc: Document): Node | HierarchyClass,
+  new (doc: Document): Node,
   repository: Repository,
   id: string
 }
