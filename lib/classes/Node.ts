@@ -14,25 +14,51 @@ export interface NodeClass {
   id: string
 }
 
-
+/**
+ *  Abstract base class from which all gracl hierachy nodes inherit.
+ */
 export class Node {
 
 
+  /**
+   *  The actual data document assigned to the node,
+      contains arbitrary properties. gracl will set doc.permissions
+      to contain the acl permissions.
+   */
   public doc: Document;
+
+
+  /**
+   *  The id property within the document contained by this node type, defaults to 'id'
+   */
   public static id = 'id';
+
+
+  /**
+   *  The repository for this node type, provides async getter function.
+   */
   public static repository: Repository;
 
 
+  /**
+   *  Constructor, simply assigns the given document as a property
+   */
   constructor(doc: Document) {
     this.doc = doc;
   }
 
 
+  /**
+   *  Internal method for determining the class of a given instance of a Node subclass
+   */
   private _getClass(node: any): NodeClass {
     return <NodeClass> Object.getPrototypeOf(node).constructor;
   }
 
 
+  /**
+   *  Check if this node is a particular Node subclass
+   */
   isNodeType(nc: NodeClass): boolean {
     return this.getClass() === nc;
   }
