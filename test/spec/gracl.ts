@@ -87,4 +87,17 @@ describe("gracl", () => {
   });
 
 
+  it('Resource.allow(Subject, <permission>) should set access to true for permission for subject.', async() => {
+    const resource = new Post(postA1a),
+          subject = new User(userA1);
+
+    const initiallAllowed = await resource.isAllowed(subject, 'view');
+    await resource.allow(subject, 'view');
+    const afterSetAllowed = await resource.isAllowed(subject, 'view');
+
+    expect(initiallAllowed, 'the subject should not yet be allowed to view the resource.').to.equal(false);
+    expect(afterSetAllowed, 'After resource sets permission, they should have access').to.equal(true);
+  });
+
+
 });
