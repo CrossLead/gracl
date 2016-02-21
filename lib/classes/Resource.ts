@@ -20,9 +20,17 @@ export default class Resource extends Node {
   }
 
 
+  getPermission(subject: Subject): Permission {
+    const subjectId = subject.getId(),
+          { permissions } = this.doc;
+    return permissions[permissionIndexOf(permissions, subjectId)] || { subjectId, access: { } };
+  }
+
+
   async isAllowed(subject: Subject, permissionType: string, assertionFn = yes): Promise<Boolean> {
     if (!(await assertionFn())) return false;
-    const allowed = true;
+    const access = this.getPermission(subject).access[permissionType];
+    if (access === true || access === false) return access;
     return await this.parentsAllowed(subject, permissionType, assertionFn);
   }
 
@@ -57,14 +65,6 @@ export default class Resource extends Node {
   }
 
 
-  async setPermissionSuperAccess(subject: Subject, permissionType: string, access: boolean): Promise<Resource> {
-    return this.updatePermission(subject, permission => {
-      permission.superAccess = access;
-      return permission;
-    });
-  }
-
-
   async allow(subject: Subject, permissionType: string): Promise<Resource> {
     return this.setPermissionAccess(subject, permissionType, true);
   }
@@ -72,16 +72,6 @@ export default class Resource extends Node {
 
   async deny(subject: Subject, permissionType: string): Promise<Resource> {
     return this.setPermissionAccess(subject, permissionType, false);
-  }
-
-
-  async allowSuperAccess(subject: Subject, permissionType: string): Promise<Resource> {
-    return this.setPermissionSuperAccess(subject, permissionType, true);
-  }
-
-
-  async denySuperAccess(subject: Subject, permissionType: string): Promise<Resource> {
-    return this.setPermissionSuperAccess(subject, permissionType, false);
   }
 
 

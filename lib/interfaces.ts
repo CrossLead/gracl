@@ -11,7 +11,6 @@ export interface Repository {
 
 export interface Permission {
   subjectId: string,
-  superAccess?: boolean,
   access?: {
     [key: string]: boolean
   }
