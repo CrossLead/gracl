@@ -75,29 +75,30 @@ export class OrganizationSubject extends Subject {
 export class Team extends OrganizationSubject {
   static repository = TeamModel;
   // necessary method implementation, determines how to retrieve parent objects from this document
+  // the document itself is stored in `this.doc`
   async getParents() {
-    return [ await this.getParentObject(this.organizationId) ];
+    return [ await this.getParentObject(this.doc.organizationId) ];
   }
 }
 
 export class User extends Team {
   static repository = UserModel;
   async getParents() {
-    return Promise.all(this.teamIds.map(::this.getParentObject));
+    return Promise.all(this.doc.teamIds.map(::this.getParentObject));
   }
 }
 
 export class Blog extends OrganizationResource {
   static repository = BlogModel;
   async getParents() {
-    return [ await this.getParentObject(this.organizationId) ];
+    return [ await this.getParentObject(this.doc.organizationId) ];
   }
 }
 
 export class Post extends Blog {
   static repository = PostModel;
   async getParents() {
-    return [ await this.getParentObject(this.blogId) ];
+    return [ await this.getParentObject(this.doc.blogId) ];
   }
 }
 
