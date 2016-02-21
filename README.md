@@ -51,6 +51,87 @@ Note, in this example, organizations are __both__ subjects and resources.
 
 To implement this example model using `gracl`, we would implement the requisite resource and subject classes.
 
+```javascript
+// =>> graclClasses.js
+
+// for this example, assume we use mongodb, with separate collections for each entity
+// assume we have models defined with getEntity(id: string) => Promise<Document> methods defined
+import { OrganizationModel, TeamModel, UserModel, BlogModel, PostModel } from './models';
+
+// import the gracl base classes
+import { Subject, Resource } from 'gracl';
+
+export class OrganizationResource extends Resource {
+  static id = '_id';
+  static repository = OrganizationModel;
+}
+
+export class OrganizationSubject extends Subject {
+  static id = '_id';
+  static repository = OrganizationModel;
+}
+
+// Moving down the subject hierarchy chain, we simply extend the upper class
+export class Team extends OrganizationSubject {
+  static repository = TeamModel;
+  // necessary method implementation, determines how to retrieve parent objects from this document
+  async getParents() {
+    return [ await this.getParentObject(this.organizationId) ];
+  }
+}
+
+export class User extends Team {
+  static repository = UserModel;
+  async getParents() {
+    return Promise.all(this.teamIds.map(::this.getParentObject));
+  }
+}
+
+export class Blog extends OrganizationResource {
+  static repository = BlogModel;
+  async getParents() {
+    return [ await this.getParentObject(this.organizationId) ];
+  }
+}
+
+export class Post extends Blog {
+  static repository = PostModel;
+  async getParents() {
+    return [ await this.getParentObject(this.blogId) ];
+  }
+}
+
+```
+
+Once we've implemented the classes, we can use them to add / deny permission and check for access.
+
+```javascript
+import {
+  OrganizationSubject,
+  OrganizationResource,
+  User,
+  Team,
+  Blog,
+  Post
+} from './graclClasses';
+
+export async function checkUserViewPermissionForPost(user, post) {
+  const subject = new User(user),
+        resource = new Post(post);
+
+  // recursively entire hierarchy graph
+  return await subject.isAllowed(resource, 'view');
+}
+
+export async function giveUserViewPermissionForPost(user, post) {
+  const subject = new User(user),
+        resource = new Post(post);
+
+  // add specific permission for this subject to view this resource.
+  return await resource.allow(subject, 'view');
+}
+```
+
 ## Dev setup
 
   1. run `npm install`
