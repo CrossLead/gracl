@@ -17,6 +17,4 @@ export interface Permission {
 }
 
 
-export interface Document {
-  permissions?: Array<Permission>
-}
+export type Document = any;

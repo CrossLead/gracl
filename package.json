@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run typings && npm run tscompile && npm run browserify && npm run minify",
     "pretest": "rm -rf ./dist/test && npm run tscompile",
-    "test": "mocha dist/test/**/*.js --require babel-polyfill --compilers js:babel-register",
+    "test": "mocha dist/test/spec/**/*.js --require babel-polyfill --compilers js:babel-register",
     "tscompile": "./node_modules/typescript/bin/tsc -p ./",
     "typings": "./node_modules/typings/dist/bin/typings.js install",
     "browserify": "./node_modules/browserify/bin/cmd.js ./dist/lib/index.js -o ./dist/gracl.js -t [ babelify ]",
