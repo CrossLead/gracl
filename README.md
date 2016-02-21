@@ -1,11 +1,11 @@
-## Graph ACL [![Build Status](https://travis-ci.org/CrossLead/gracl.svg?branch=master)](https://travis-ci.org/CrossLead/gracl)
+# Graph ACL [![Build Status](https://travis-ci.org/CrossLead/gracl.svg?branch=master)](https://travis-ci.org/CrossLead/gracl)
 
   `gracl` is an Access Control List library for managing permission models utilizing a hierarchy. In `gracl`, the permissions
   hierarchy is implemented using the prototype chain, and (Java/Type)script's great reflection capabilities.
 
-### Usage Example
+## Usage Example
 
-#### Example problem...
+### Example problem...
 
 Say you built an app for managing blogs within organizations. Within your database, you may different organizations (clients),
 which each have different blogs, which each have unique posts. Additionally, users within each organization belong to specific
@@ -47,16 +47,16 @@ for a given organization.
 
 Note, in this example, organizations are __both__ subjects and resources.
 
-#### Example code
+### Example code
 
 To implement this example model using `gracl`, we would implement the requisite resource and subject classes.
 
-### Dev setup
+## Dev setup
 
   1. run `npm install`
   2. run `npm run build`
 
-### Build chain
+## Build chain
   1. Compile with `tsc` targeting ES6 to allow async functions, outputting directory to `./dist`
   2. Run `browserify` with `babelify` to convert ES6 -> ES5 and pull in modules, writing to `./dist/gracl.js`
   3. Uglify `./dist/gracl.js` -> `./dist/gracl.min.js`
