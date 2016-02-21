@@ -4,15 +4,25 @@ import { Resource } from './Resource';
 import { yes } from '../util';
 
 
-// union of subclasses for inherited method signatures
+/**
+ * union of subclasses for inherited method signatures
+ */
 type HierarchyClass = Subject | Resource;
 
 
+/**
+ *  General NodeClass metaclass type -- Node and any derivative classes.
+    Example instances:
+      - Node
+      - Subject
+      - Resource
+ */
 export interface NodeClass {
   new (doc: Document): Node,
   repository: Repository,
   id: string
 }
+
 
 /**
  *  Abstract base class from which all gracl hierachy nodes inherit.
@@ -36,6 +46,7 @@ export class Node {
 
   /**
    *  The repository for this node type, provides async getter function.
+      Must follow the Repository interface spec.
    */
   public static repository: Repository;
 
@@ -64,42 +75,67 @@ export class Node {
   }
 
 
+  /**
+   *  Get the relative super class constructor of this instance
+   */
   getParentClass(): NodeClass {
     return this._getClass(this.constructor.prototype);
   }
 
 
+  /**
+   *  Get the class of this instance
+   */
   getClass(): NodeClass {
     return this._getClass(this);
   }
 
 
+  /**
+   *  Check if this class direcly inherits from HierarchyClass by
+      checking if the class two levels up is Node
+   */
   hierarchyRoot() {
-    // check if two parents up the prototype chain is the Node Class
     return this._getClass(this.getParentClass().prototype) === Node;
   }
 
 
+  /**
+   *  Get the id value on the document contained in this node
+   */
   getId(): string {
     return this.doc[this.getClass().id];
   }
 
 
+  /**
+   *  Get the repository for this class
+   */
   getRepository(): Repository {
     return this.getClass().repository;
   }
 
 
+  /**
+   *  Check if a node is allowed access to this node. Must be overridden by subclasses.
+   */
   async isAllowed(node: HierarchyClass, permissionType: string, assertionFn = yes): Promise<Boolean> {
     throw new Error(`Calling isAllowed on Node, must implement on subclass!`);
   }
 
 
+  /**
+   *  Get the parent objects of an instance of this node. Must be overriden by subclass.
+   */
   async getParents(): Promise<Array<Node>> {
     throw new Error(`getParents not implemented for ${this.getClass().name}`);
   };
 
 
+  /**
+   *  Given an id of a parent of this node, create a Node instance of that object.
+      @param data Either the <string> id of the object, or the raw document itself.
+   */
   async getParentObject(data: string|Document): Promise<Node> {
     const ParentClass = this.getParentClass();
     let doc: Document;
@@ -118,6 +154,9 @@ export class Node {
   }
 
 
+  /**
+   *  Check if other node is allowed access to any of this nodes parents.
+   */
   async parentsAllowed(node: HierarchyClass, permissionType: string, assertionFn = yes) {
     if (this.hierarchyRoot()) return false;
 
