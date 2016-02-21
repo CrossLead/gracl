@@ -6,10 +6,10 @@
   "scripts": {
     "build": "npm run typings && npm run tscompile && npm run browserify && npm run minify",
     "pretest": "rm -rf ./dist/test && npm run tscompile",
-    "test": "mocha dist/es6/test/spec/**/*.js --require babel-polyfill --compilers js:babel-register",
+    "test": "mocha dist/es6/test/spec/**/*.js --require babel-polyfill --compilers js:babel-core/register",
     "tscompile": "./node_modules/typescript/bin/tsc -p ./",
     "typings": "./node_modules/typings/dist/bin/typings.js install",
-    "browserify": "mkdir -p ./dist/es5 && ./node_modules/browserify/bin/cmd.js ./dist/es6/lib/index.js -o ./dist/es5/gracl.js -t [ babelify ]",
+    "browserify": "mkdir -p ./dist/es5 && ./node_modules/browserify/bin/cmd.js ./dist/es6/lib/index.js -o ./dist/es5/gracl.js -t [ babelify --plugins [ transform-runtime ] ]",
     "minify": "./node_modules/uglifyjs/bin/uglifyjs ./dist/es5/gracl.js --screw-ie8 --mangle -o  ./dist/es5/gracl.min.js",
     "docs": "./node_modules/typedoc/bin/typedoc --theme minimal --experimentalAsyncFunctions --target es6 --out ./docs/ ./lib/",
     "ghpages": "npm run docs && node -e \"require('gulp').src('./docs/**/*').pipe(require('gulp-gh-pages')())\""
@@ -27,14 +27,12 @@
     "presets": [
       "es2015"
     ],
-    "plugins": [
-      "transform-runtime"
-    ],
     "sourceMaps": true
   },
   "homepage": "https://github.com/CrossLead/gracl",
   "devDependencies": {
     "babel-cli": "^6.5.1",
+    "babel-core": "^6.5.2",
     "babel-plugin-transform-runtime": "^6.5.2",
     "babel-polyfill": "^6.5.0",
     "babel-preset-es2015": "^6.5.0",

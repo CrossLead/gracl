@@ -4,3 +4,4 @@ node_modules/*
 tmp/*
 docs/*
 .publish/*
+npm-debug.log

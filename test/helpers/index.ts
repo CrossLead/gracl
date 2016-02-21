@@ -10,30 +10,30 @@ export function org() {
   }
 }
 
-export function user(teamIds) {
+export function user(teamIds = []) {
   return {
     id: uid(),
-    teamIds
+    teamIds: teamIds.map(t => t.id)
   }
 }
 
-export function team(organizationId) {
+export function team(organization) {
   return {
     id: uid(),
-    organizationId
+    organizationId: organization.id
   }
 }
 
-export function blog(organizationId) {
+export function blog(organization) {
   return {
     id: uid(),
-    organizationId
+    organizationId: organization.id
   }
 }
 
-export function post(blogId) {
+export function post(blogDoc) {
   return {
     id: uid(),
-    blogId
+    blogId: blogDoc.id
   }
 }

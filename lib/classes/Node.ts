@@ -68,6 +68,14 @@ export class Node {
 
 
   /**
+   *  Pretty printing
+   */
+  toString(): string {
+    return `<Node: type = ${this.getClass().name}, documentId = ${this.getId()}>`
+  }
+
+
+  /**
    *  Check if this node is a particular Node subclass
    */
   isNodeType(nc: NodeClass): boolean {
@@ -120,7 +128,8 @@ export class Node {
    *  Check if a node is allowed access to this node. Must be overridden by subclasses.
    */
   async isAllowed(node: HierarchyClass, permissionType: string, assertionFn = yes): Promise<Boolean> {
-    throw new Error(`Calling isAllowed on Node, must implement on subclass!`);
+    console.warn(`Calling Node.isAllowed(), must implement on subclass!`);
+    return false;
   }
 
 
@@ -128,7 +137,8 @@ export class Node {
    *  Get the parent objects of an instance of this node. Must be overriden by subclass.
    */
   async getParents(): Promise<Array<Node>> {
-    throw new Error(`getParents not implemented for ${this.getClass().name}`);
+    console.warn(`Calling Node.getParents(), must implement on subclass!`);
+    return [];
   };
 
 
