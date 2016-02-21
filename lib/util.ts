@@ -20,7 +20,7 @@ export function binaryIndexOf(arr: Array<any>, el, compare = baseCompare) {
     else                return pivot;
   }
 
-  return -low - 1;
+  return -1;
 }
 
 export function permissionCompare(a: Permission, b: Permission) {
