@@ -2,3 +2,5 @@ dist/*
 typings/*
 node_modules/*
 tmp/*
+docs/*
+.publish/*

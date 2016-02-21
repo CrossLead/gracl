@@ -10,7 +10,9 @@
     "tscompile": "./node_modules/typescript/bin/tsc -p ./",
     "typings": "./node_modules/typings/dist/bin/typings.js install",
     "browserify": "./node_modules/browserify/bin/cmd.js ./dist/lib/index.js -o ./dist/gracl.js -t [ babelify ]",
-    "minify": "./node_modules/uglifyjs/bin/uglifyjs ./dist/gracl.js --screw-ie8 --mangle -o  ./dist/gracl.min.js"
+    "minify": "./node_modules/uglifyjs/bin/uglifyjs ./dist/gracl.js --screw-ie8 --mangle -o  ./dist/gracl.min.js",
+    "docs": "./node_modules/typedoc/bin/typedoc --theme minimal --experimentalAsyncFunctions --target es6 --out ./docs/ ./lib/",
+    "ghpages": "npm run docs && node -e \"require('gulp').src('./docs/**/*').pipe(require('gulp-gh-pages')())\""
   },
   "repository": {
     "type": "git",
@@ -41,10 +43,13 @@
     "babelify": "^7.2.0",
     "browserify": "^13.0.0",
     "chai": "^3.5.0",
+    "gulp": "^3.9.1",
+    "gulp-gh-pages": "^0.5.4",
     "jasmine-core": "^2.4.1",
     "mocha": "^2.4.5",
     "mocha-babel": "^3.0.3",
     "ts-node": "^0.5.5",
+    "typedoc": "^0.3.12",
     "typescript": "^1.7.5",
     "typings": "^0.6.8",
     "uglifyjs": "^2.4.10"
