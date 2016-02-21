@@ -1311,12 +1311,18 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 				<li>run <code>npm install</code></li>
 				<li>run <code>npm run build</code></li>
 			</ol>
-			<h2 id="build-chain">Build chain</h2>
-			<ol>
-				<li>Compile with <code>tsc</code> targeting ES6 to allow async functions, outputting directory to <code>./dist</code></li>
-				<li>Run <code>browserify</code> with <code>babelify</code> to convert ES6 -&gt; ES5 and pull in modules, writing to <code>./dist/gracl.js</code></li>
-				<li>Uglify <code>./dist/gracl.js</code> -&gt; <code>./dist/gracl.min.js</code></li>
-			</ol>
+			<h2 id="development-tasks-npm-run-task-">Development tasks (<code>npm run &lt;task&gt;</code>)</h2>
+			<ul>
+				<li><code>build</code> : install type definintions and compile the project</li>
+				<li><code>pretest</code> : recompile for testing</li>
+				<li><code>test</code> : run mocha tests</li>
+				<li><code>tscompile</code> : compile typescript -&gt; es6</li>
+				<li><code>typings</code> : install type definitions</li>
+				<li><code>browserify</code> : compile es6 -&gt; es5</li>
+				<li><code>minify</code> : minify es5 output</li>
+				<li><code>docs</code> : build documentation locally</li>
+				<li><code>ghpages</code> : build documentation and publish to github pages</li>
+			</ul>
 		</div>
 		<div style="position:relative;"><a name="typedoc-main-index" class="tsd-anchor"></a></div>
 		<section class="tsd-panel-group tsd-index-group">
