@@ -1,6 +1,6 @@
 import { Repository, Permission, Document } from '../interfaces';
-import Subject from './Subject';
-import Resource from './Resource';
+import { Subject } from './Subject';
+import { Resource } from './Resource';
 import { yes } from '../util';
 
 
@@ -15,7 +15,7 @@ export interface NodeClass {
 }
 
 
-export default class Node {
+export class Node {
 
 
   public doc: Document;

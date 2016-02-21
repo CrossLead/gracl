@@ -3,7 +3,7 @@ import { Repository, Document } from "../interfaces";
 /**
  * Trivial in memory repository for example / testing
  */
-export default class MemoryRepository implements Repository {
+export class MemoryRepository implements Repository {
 
   private data;
 

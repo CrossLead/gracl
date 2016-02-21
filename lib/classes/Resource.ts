@@ -1,10 +1,10 @@
-import Subject from './Subject';
-import Node from './Node';
+import { Subject } from './Subject';
+import { Node } from './Node';
 import { permissionCompare, permissionIndexOf, yes } from '../util';
 import { Document, Permission } from '../interfaces';
 
 
-export default class Resource extends Node {
+export class Resource extends Node {
 
 
   constructor(doc: Document) {

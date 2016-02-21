@@ -1,8 +1,8 @@
 import { yes } from '../util';
-import Resource from './Resource';
-import Node from './Node';
+import { Resource } from './Resource';
+import { Node } from './Node';
 
-export default class Subject extends Node {
+export class Subject extends Node {
 
 
   async isAllowed(resource: Resource, permissionType: string, assertionFn = yes): Promise<Boolean> {
