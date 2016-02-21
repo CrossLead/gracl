@@ -1,5 +1,8 @@
 ## Graph ACL
 
+  `gracl` is an Access Control List library for managing permission models utilizing a hierarchy. In `gracl`, the permissions
+  hierarchy is implemented using the prototype chain, and (Java/Type)script's great reflection capabilities.
+
 ### Dev setup
 
   1. run `npm install`

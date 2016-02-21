@@ -5,7 +5,7 @@ import { yes } from '../util';
 
 
 // union of subclasses for inherited method signatures
-type HiearchyClass = Subject | Resource;
+type HierarchyClass = Subject | Resource;
 
 
 export interface NodeClass {
@@ -64,7 +64,7 @@ export default class Node {
   }
 
 
-  async isAllowed(node: HiearchyClass, permissionType: string, assertionFn = yes): Promise<Boolean> {
+  async isAllowed(node: HierarchyClass, permissionType: string, assertionFn = yes): Promise<Boolean> {
     throw new Error(`Calling isAllowed on Node, must implement on subclass!`);
   }
 
@@ -92,7 +92,7 @@ export default class Node {
   }
 
 
-  async parentsAllowed(node: HiearchyClass, permissionType: string, assertionFn = yes) {
+  async parentsAllowed(node: HierarchyClass, permissionType: string, assertionFn = yes) {
     if (this.hierarchyRoot()) return false;
 
     const parents = await this.getParents(),
