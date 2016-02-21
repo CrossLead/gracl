@@ -138,7 +138,13 @@ export async function giveUserViewPermissionForPost(user, post) {
   1. run `npm install`
   2. run `npm run build`
 
-## Build chain
-  1. Compile with `tsc` targeting ES6 to allow async functions, outputting directory to `./dist`
-  2. Run `browserify` with `babelify` to convert ES6 -> ES5 and pull in modules, writing to `./dist/gracl.js`
-  3. Uglify `./dist/gracl.js` -> `./dist/gracl.min.js`
+## Development tasks (`npm run <task>`)
+  - `build` : install type definintions and compile the project
+  - `pretest` : recompile for testing
+  - `test` : run mocha tests
+  - `tscompile` : compile typescript -> es6
+  - `typings` : install type definitions
+  - `browserify` : compile es6 -> es5
+  - `minify` : minify es5 output
+  - `docs` : build documentation locally
+  - `ghpages` : build documentation and publish to github pages
