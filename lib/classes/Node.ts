@@ -95,11 +95,9 @@ export default class Node {
   async parentsAllowed(node: HierarchyClass, permissionType: string, assertionFn = yes) {
     if (this.hierarchyRoot()) return false;
 
-    const parents = await this.getParents(),
+    const parents = await this.getParents() || [],
           parentsAllowed = await Promise.all(
-            parents.map(
-              p => p.isAllowed(node, permissionType, assertionFn)
-            )
+            parents.map(p => p.isAllowed(node, permissionType, assertionFn))
           );
 
     return parentsAllowed.some(Boolean);
