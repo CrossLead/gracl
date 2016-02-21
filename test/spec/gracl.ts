@@ -92,7 +92,12 @@ describe("gracl", () => {
           subject = new User(userA1);
 
     const initiallAllowed = await resource.isAllowed(subject, 'view');
-    await resource.allow(subject, 'view');
+
+    expect(
+      await resource.allow(subject, 'view'),
+      'Setting permission should return same resource type.'
+    ).to.be.instanceof(Post);
+
     const afterSetAllowed = await resource.isAllowed(subject, 'view');
 
     expect(initiallAllowed, 'the subject should not yet be allowed to view the resource.').to.equal(false);

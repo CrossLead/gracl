@@ -1,7 +1,12 @@
 import { Subject } from './Subject';
-import { Node } from './Node';
+import { Node, NodeClass } from './Node';
 import { permissionCompare, permissionIndexOf, yes } from '../util';
 import { Document, Permission } from '../interfaces';
+
+
+interface ResourceCass extends NodeClass {
+  new (doc: Document): Resource;
+}
 
 
 /**
@@ -62,7 +67,8 @@ export class Resource extends Node {
           { permissions } = doc,
           subjectId = subject.getId();
 
-    const existingPermissionIndex = permissionIndexOf(permissions, subjectId);
+    const existingPermissionIndex = permissionIndexOf(permissions, subjectId),
+          CurrentResourceClass = <ResourceCass> this.getClass();
 
     if (existingPermissionIndex >= 0) {
       permissions[existingPermissionIndex] = action(permissions[existingPermissionIndex])
@@ -73,9 +79,9 @@ export class Resource extends Node {
 
     // save updated document
     const id = this.getId(),
-          updated = await this.getRepository().saveEntity(id, doc);
+          updated = await CurrentResourceClass.repository.saveEntity(id, doc);
 
-    return new Resource(updated);
+    return new CurrentResourceClass(updated);
   }
 
 
