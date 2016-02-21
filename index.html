@@ -1197,7 +1197,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 <div class="container container-main">
 	<div class="content-wrap">
 		<div class="tsd-panel tsd-typography">
-			<h1 id="-gracl-graph-acl-https-github-com-crosslead-gracl-build-status-https-travis-ci-org-crosslead-gracl-svg-branch-master-https-travis-ci-org-crosslead-gracl-"><a href="https://github.com/CrossLead/gracl"><code>gracl</code> -- Graph ACL</a> <a href="https://travis-ci.org/CrossLead/gracl"><img src="https://travis-ci.org/CrossLead/gracl.svg?branch=master" alt="Build Status"></a></h1>
+			<h1 id="-gracl-https-github-com-crosslead-gracl-graph-acl-build-status-https-travis-ci-org-crosslead-gracl-svg-branch-master-https-travis-ci-org-crosslead-gracl-"><a href="https://github.com/CrossLead/gracl"><code>gracl</code></a> - Graph ACL <a href="https://travis-ci.org/CrossLead/gracl"><img src="https://travis-ci.org/CrossLead/gracl.svg?branch=master" alt="Build Status"></a></h1>
 			<p>  <code>gracl</code> is an Access Control List library for managing permission models utilizing a hierarchy. In <code>gracl</code>, the permissions
 			hierarchy is implemented using the prototype chain, and (Java/Type)script&#39;s great reflection capabilities.</p>
 			<h2 id="usage-example">Usage Example</h2>
@@ -1258,29 +1258,30 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 <span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Team</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">OrganizationSubject</span> </span>{
   static repository = TeamModel;
   <span class="hljs-comment">// necessary method implementation, determines how to retrieve parent objects from this document</span>
+  <span class="hljs-comment">// the document itself is stored in `this.doc`</span>
   <span class="hljs-keyword">async</span> getParents() {
-    <span class="hljs-keyword">return</span> [ <span class="hljs-keyword">await</span> <span class="hljs-keyword">this</span>.getParentObject(<span class="hljs-keyword">this</span>.organizationId) ];
+    <span class="hljs-keyword">return</span> [ <span class="hljs-keyword">await</span> <span class="hljs-keyword">this</span>.getParentObject(<span class="hljs-keyword">this</span>.doc.organizationId) ];
   }
 }
 
 <span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Team</span> </span>{
   static repository = UserModel;
   <span class="hljs-keyword">async</span> getParents() {
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.all(<span class="hljs-keyword">this</span>.teamIds.map(::<span class="hljs-keyword">this</span>.getParentObject));
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.all(<span class="hljs-keyword">this</span>.doc.teamIds.map(::<span class="hljs-keyword">this</span>.getParentObject));
   }
 }
 
 <span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Blog</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">OrganizationResource</span> </span>{
   static repository = BlogModel;
   <span class="hljs-keyword">async</span> getParents() {
-    <span class="hljs-keyword">return</span> [ <span class="hljs-keyword">await</span> <span class="hljs-keyword">this</span>.getParentObject(<span class="hljs-keyword">this</span>.organizationId) ];
+    <span class="hljs-keyword">return</span> [ <span class="hljs-keyword">await</span> <span class="hljs-keyword">this</span>.getParentObject(<span class="hljs-keyword">this</span>.doc.organizationId) ];
   }
 }
 
 <span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Post</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Blog</span> </span>{
   static repository = PostModel;
   <span class="hljs-keyword">async</span> getParents() {
-    <span class="hljs-keyword">return</span> [ <span class="hljs-keyword">await</span> <span class="hljs-keyword">this</span>.getParentObject(<span class="hljs-keyword">this</span>.blogId) ];
+    <span class="hljs-keyword">return</span> [ <span class="hljs-keyword">await</span> <span class="hljs-keyword">this</span>.getParentObject(<span class="hljs-keyword">this</span>.doc.blogId) ];
   }
 }
 </code></pre>
