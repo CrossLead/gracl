@@ -105,20 +105,39 @@ import {
   PostResource
 } from './graclClasses';
 
-export async function checkUserViewPermissionForPost(user, post) {
-  const subject = new UserSubject(user),
-        resource = new PostResource(post);
-
-  // recursively entire hierarchy graph
-  return await subject.isAllowed(resource, 'view');
-}
 
 export async function giveUserViewPermissionForPost(user, post) {
   const subject = new UserSubject(user),
         resource = new PostResource(post);
 
-  // add specific permission for this subject to view this resource.
+  /**
+   *  add specific permission for this subject to view this resource.
+
+      Note: the permission values here (second parameter of allow()) can be
+      any arbitrary string. calling resource.allow(subject, permissionString) will create a permissions
+      entry on the resource as follows:
+
+      resource === {
+        ...other_properties,
+        permissions: [
+          { subjectId: <subjectId>,
+            access: {
+              [permissionString]: true,
+              ...(other permissions if exist)
+            }
+          }, ...(other subjects if exist)
+        ]
+      }
+   */
   return await resource.allow(subject, 'view');
+}
+
+export async function checkUserViewPermissionForPost(user, post) {
+  const subject = new UserSubject(user),
+        resource = new PostResource(post);
+
+  // recursively check entire hierarchy
+  return await subject.isAllowed(resource, 'view');
 }
 ```
 
