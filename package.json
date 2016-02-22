@@ -11,8 +11,8 @@
     "typings": "./node_modules/typings/dist/bin/typings.js install",
     "browserify": "mkdir -p ./dist/es5 && ./node_modules/browserify/bin/cmd.js ./dist/es6/lib/index.js -o ./dist/es5/gracl.js -t [ babelify --plugins [ transform-runtime ] ]",
     "minify": "./node_modules/uglifyjs/bin/uglifyjs ./dist/es5/gracl.js --screw-ie8 --mangle -o  ./dist/es5/gracl.min.js",
-    "docs": "./node_modules/typedoc/bin/typedoc --theme minimal --experimentalAsyncFunctions --target es6 --out ./docs/ ./lib/",
-    "ghpages": "npm run docs && node -e \"require('gulp').src('./docs/**/*').pipe(require('gulp-gh-pages')())\" && rm -rf ./.publish/",
+    "docs": "rm -rf ./docs/ && ./node_modules/typedoc/bin/typedoc --theme default --experimentalAsyncFunctions --target es6 --out ./docs/ ./lib/",
+    "ghpages": "npm run docs && ./node_modules/gh-pages/bin/gh-pages -d ./docs/",
     "lint": "./node_modules/tslint/bin/tslint -c ./tslint.json ./{test,lib}/**/*.ts"
   },
   "repository": {
@@ -42,8 +42,8 @@
     "babelify": "^7.2.0",
     "browserify": "^13.0.0",
     "chai": "^3.5.0",
+    "gh-pages": "^0.10.0",
     "gulp": "^3.9.1",
-    "gulp-gh-pages": "^0.5.4",
     "jasmine-core": "^2.4.1",
     "mocha": "^2.4.5",
     "mocha-babel": "^3.0.3",
