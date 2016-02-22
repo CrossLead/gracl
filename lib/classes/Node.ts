@@ -163,11 +163,11 @@ export class Node {
       const parentIds = <Array<DocumentData> | DocumentData> this.doc[parentId] || [];
       if (Array.isArray(parentIds)) {
         const promises = <Array<Promise<DocumentData>>> parentIds.map(id => {
-          return this.getParentObject(<DocumentData> id);
+          return this.getParentNode(<DocumentData> id);
         });
         return await Promise.all(promises);
       } else {
-        return [ await this.getParentObject(parentIds) ];
+        return [ await this.getParentNode(parentIds) ];
       }
     } else {
       console.warn(`Calling Node.getParents() without Node.parentId, must implement on subclass!`);
@@ -180,7 +180,7 @@ export class Node {
    *  Given an id of a parent of this node, create a Node instance of that object.
       @param data Either the <string> id of the object, or the raw document itself.
    */
-  async getParentObject(data: DocumentData): Promise<Node> {
+  async getParentNode(data: DocumentData): Promise<Node> {
     const ParentClass = this.getParentClass();
     let doc: Document;
 
