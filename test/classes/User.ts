@@ -5,5 +5,5 @@ export const userModel = new Repo();
 
 export class User extends Team {
   static repository = userModel;
-  static parentIdProperty = 'teamIds';
+  static parentId = 'teamIds';
 }

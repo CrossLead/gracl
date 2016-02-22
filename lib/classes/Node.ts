@@ -28,7 +28,7 @@ export interface NodeClass {
   new (doc: Document): Node;
   repository: Repository;
   id: string;
-  parentIdProperty?: string;
+  parentId?: string;
 }
 
 
@@ -50,7 +50,7 @@ export class Node {
    *  String indicating the property on this nodes document
       that contains the id(s) of its parent.
    */
-  public parentIdProperty: string;
+  public parentId: string;
 
 
   /**
@@ -154,19 +154,19 @@ export class Node {
 
   /**
    *  Get the parent objects of an instance of this node.
-      Must be overriden by subclass unless the static parentIdProperty is defined.
+      Must be overriden by subclass unless the static parentId is defined.
    */
   async getParents(): Promise<Array<Node>> {
-    const { parentIdProperty } = this.getClass();
-    if (parentIdProperty) {
-      const parentIds = <Array<string>|string> this.doc[parentIdProperty] || [];
+    const { parentId } = this.getClass();
+    if (parentId) {
+      const parentIds = <Array<string>|string> this.doc[parentId] || [];
       if (Array.isArray(parentIds)) {
         return await Promise.all(parentIds.map(id => this.getParentObject(id)));
       } else {
         return [ await this.getParentObject(parentIds) ];
       }
     } else {
-      console.warn(`Calling Node.getParents() without Node.parentIdProperty, must implement on subclass!`);
+      console.warn(`Calling Node.getParents() without Node.parentId, must implement on subclass!`);
       return [];
     }
   };

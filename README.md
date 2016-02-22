@@ -77,22 +77,22 @@ export class Team extends OrganizationSubject {
   // we need to define the property on Team documents which contains the parent id(s)
   // -- alternatively, a method of signature getParents() => Promise<Resource|Subject> can be
   //    directly defined.
-  static parentIdProperty = 'organizationId';
+  static parentId = 'organizationId';
 }
 
 export class User extends Team {
   static repository = UserModel;
-  static parentIdProperty = 'teamIds';
+  static parentId = 'teamIds';
 }
 
 export class Blog extends OrganizationResource {
   static repository = BlogModel;
-  static parentIdProperty = 'organizationId';
+  static parentId = 'organizationId';
 }
 
 export class Post extends Blog {
   static repository = PostModel;
-  static parentIdProperty = 'blogId';
+  static parentId = 'blogId';
 }
 
 ```
