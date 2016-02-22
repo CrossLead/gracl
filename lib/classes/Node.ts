@@ -10,10 +10,10 @@ import { yes } from '../util';
 type HierarchyNode = Subject | Resource;
 
 
-export interface PermissionsGraph {
+export interface PermissionsHierarchy {
   node: string;
   permissions: Array<Permission>;
-  parents?: Array<PermissionsGraph>;
+  parents?: Array<PermissionsHierarchy>;
 }
 
 
@@ -224,7 +224,7 @@ export class Node {
   /**
    *  Retrieve permissions hierarchy for this node.
    */
-  async getPermissionsHierarchy(): Promise<PermissionsGraph> {
+  async getPermissionsHierarchy(): Promise<PermissionsHierarchy> {
     const { permissions = [] } = this.doc;
 
     const graph = {
