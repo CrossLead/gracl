@@ -950,7 +950,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 							<a href="index.html#_classes_node_.node.doc" class="tsd-kind-icon">doc</a>
 						</li>
 						<li class=" tsd-kind-property tsd-parent-kind-class">
-							<a href="index.html#_classes_node_.node.parentidproperty" class="tsd-kind-icon">parent<wbr>IdProperty</a>
+							<a href="index.html#_classes_node_.node.parentid" class="tsd-kind-icon">parent<wbr>Id</a>
 						</li>
 						<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
 							<a href="index.html#_classes_node_.node.id" class="tsd-kind-icon">id</a>
@@ -1012,7 +1012,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 							<a href="index.html#_classes_node_.nodeclass.id-1" class="tsd-kind-icon">id</a>
 						</li>
 						<li class=" tsd-kind-property tsd-parent-kind-interface">
-							<a href="index.html#_classes_node_.nodeclass.parentidproperty-1" class="tsd-kind-icon">parent<wbr>IdProperty</a>
+							<a href="index.html#_classes_node_.nodeclass.parentid-1" class="tsd-kind-icon">parent<wbr>Id</a>
 						</li>
 						<li class=" tsd-kind-property tsd-parent-kind-interface">
 							<a href="index.html#_classes_node_.nodeclass.repository-1" class="tsd-kind-icon">repository</a>
@@ -1051,7 +1051,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 							<a href="index.html#_classes_resource_.resource.doc" class="tsd-kind-icon">doc</a>
 						</li>
 						<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-							<a href="index.html#_classes_resource_.resource.parentidproperty" class="tsd-kind-icon">parent<wbr>IdProperty</a>
+							<a href="index.html#_classes_resource_.resource.parentid" class="tsd-kind-icon">parent<wbr>Id</a>
 						</li>
 						<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
 							<a href="index.html#_classes_resource_.resource.id" class="tsd-kind-icon">id</a>
@@ -1128,7 +1128,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 							<a href="index.html#_classes_resource_.resourcecass.id-1" class="tsd-kind-icon">id</a>
 						</li>
 						<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-not-exported">
-							<a href="index.html#_classes_resource_.resourcecass.parentidproperty-1" class="tsd-kind-icon">parent<wbr>IdProperty</a>
+							<a href="index.html#_classes_resource_.resourcecass.parentid-1" class="tsd-kind-icon">parent<wbr>Id</a>
 						</li>
 						<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-not-exported">
 							<a href="index.html#_classes_resource_.resourcecass.repository-1" class="tsd-kind-icon">repository</a>
@@ -1150,7 +1150,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 							<a href="index.html#_classes_subject_.subject.doc" class="tsd-kind-icon">doc</a>
 						</li>
 						<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-							<a href="index.html#_classes_subject_.subject.parentidproperty" class="tsd-kind-icon">parent<wbr>IdProperty</a>
+							<a href="index.html#_classes_subject_.subject.parentid" class="tsd-kind-icon">parent<wbr>Id</a>
 						</li>
 						<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
 							<a href="index.html#_classes_subject_.subject.id" class="tsd-kind-icon">id</a>
@@ -1325,22 +1325,22 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
   <span class="hljs-comment">// we need to define the property on Team documents which contains the parent id(s)</span>
   <span class="hljs-comment">// -- alternatively, a method of signature getParents() =&gt; Promise&lt;Resource|Subject&gt; can be</span>
   <span class="hljs-comment">//    directly defined.</span>
-  static parentIdProperty = <span class="hljs-string">'organizationId'</span>;
+  static parentId = <span class="hljs-string">'organizationId'</span>;
 }
 
 <span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Team</span> </span>{
   static repository = UserModel;
-  static parentIdProperty = <span class="hljs-string">'teamIds'</span>;
+  static parentId = <span class="hljs-string">'teamIds'</span>;
 }
 
 <span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Blog</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">OrganizationResource</span> </span>{
   static repository = BlogModel;
-  static parentIdProperty = <span class="hljs-string">'organizationId'</span>;
+  static parentId = <span class="hljs-string">'organizationId'</span>;
 }
 
 <span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Post</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Blog</span> </span>{
   static repository = PostModel;
-  static parentIdProperty = <span class="hljs-string">'blogId'</span>;
+  static parentId = <span class="hljs-string">'blogId'</span>;
 }
 </code></pre>
 			<p>Once we&#39;ve implemented the classes, we can use them to add / deny permission and check for access.</p>
@@ -1589,9 +1589,9 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 						</div>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-						<a name="_classes_node_.node.parentidproperty" class="tsd-anchor"></a>
-						<h3>parent<wbr>IdProperty</h3>
-						<div class="tsd-signature tsd-kind-icon">parent<wbr>IdProperty<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+						<a name="_classes_node_.node.parentid" class="tsd-anchor"></a>
+						<h3>parent<wbr>Id</h3>
+						<div class="tsd-signature tsd-kind-icon">parent<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 						<aside class="tsd-sources">
 							<ul>
 								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L53">classes/Node.ts:53</a></li>
@@ -1798,7 +1798,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 								<div class="tsd-comment tsd-typography">
 									<div class="lead">
 										<p> Get the parent objects of an instance of this node.
-										Must be overriden by subclass unless the static parentIdProperty is defined.</p>
+										Must be overriden by subclass unless the static parentId is defined.</p>
 									</div>
 								</div>
 								<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="index.html#_classes_node_.node" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -2045,9 +2045,9 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 						</aside>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-						<a name="_classes_node_.nodeclass.parentidproperty-1" class="tsd-anchor"></a>
-						<h3>parent<wbr>IdProperty</h3>
-						<div class="tsd-signature tsd-kind-icon">parent<wbr>IdProperty<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+						<a name="_classes_node_.nodeclass.parentid-1" class="tsd-anchor"></a>
+						<h3>parent<wbr>Id</h3>
+						<div class="tsd-signature tsd-kind-icon">parent<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 						<aside class="tsd-sources">
 							<ul>
 								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L31">classes/Node.ts:31</a></li>
@@ -2193,11 +2193,11 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 						</div>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-						<a name="_classes_resource_.resource.parentidproperty" class="tsd-anchor"></a>
-						<h3>parent<wbr>IdProperty</h3>
-						<div class="tsd-signature tsd-kind-icon">parent<wbr>IdProperty<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+						<a name="_classes_resource_.resource.parentid" class="tsd-anchor"></a>
+						<h3>parent<wbr>Id</h3>
+						<div class="tsd-signature tsd-kind-icon">parent<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 						<aside class="tsd-sources">
-							<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.parentidproperty">parentIdProperty</a></p>
+							<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.parentid">parentId</a></p>
 							<ul>
 								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L53">classes/Node.ts:53</a></li>
 							</ul>
@@ -2445,7 +2445,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 								<div class="tsd-comment tsd-typography">
 									<div class="lead">
 										<p> Get the parent objects of an instance of this node.
-										Must be overriden by subclass unless the static parentIdProperty is defined.</p>
+										Must be overriden by subclass unless the static parentId is defined.</p>
 									</div>
 								</div>
 								<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="index.html#_classes_node_.node" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -2826,11 +2826,11 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 						</aside>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-not-exported">
-						<a name="_classes_resource_.resourcecass.parentidproperty-1" class="tsd-anchor"></a>
-						<h3>parent<wbr>IdProperty</h3>
-						<div class="tsd-signature tsd-kind-icon">parent<wbr>IdProperty<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+						<a name="_classes_resource_.resourcecass.parentid-1" class="tsd-anchor"></a>
+						<h3>parent<wbr>Id</h3>
+						<div class="tsd-signature tsd-kind-icon">parent<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 						<aside class="tsd-sources">
-							<p>Inherited from <a href="index.html#_classes_node_.nodeclass">NodeClass</a>.<a href="index.html#_classes_node_.nodeclass.parentidproperty-1">parentIdProperty</a></p>
+							<p>Inherited from <a href="index.html#_classes_node_.nodeclass">NodeClass</a>.<a href="index.html#_classes_node_.nodeclass.parentid-1">parentId</a></p>
 							<ul>
 								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L31">classes/Node.ts:31</a></li>
 							</ul>
@@ -2920,11 +2920,11 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 						</div>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-						<a name="_classes_subject_.subject.parentidproperty" class="tsd-anchor"></a>
-						<h3>parent<wbr>IdProperty</h3>
-						<div class="tsd-signature tsd-kind-icon">parent<wbr>IdProperty<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+						<a name="_classes_subject_.subject.parentid" class="tsd-anchor"></a>
+						<h3>parent<wbr>Id</h3>
+						<div class="tsd-signature tsd-kind-icon">parent<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 						<aside class="tsd-sources">
-							<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.parentidproperty">parentIdProperty</a></p>
+							<p>Inherited from <a href="index.html#_classes_node_.node">Node</a>.<a href="index.html#_classes_node_.node.parentid">parentId</a></p>
 							<ul>
 								<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L53">classes/Node.ts:53</a></li>
 							</ul>
@@ -3110,7 +3110,7 @@ input[type=checkbox]:checked + .tsd-widget:before { background-position: -160px 
 								<div class="tsd-comment tsd-typography">
 									<div class="lead">
 										<p> Get the parent objects of an instance of this node.
-										Must be overriden by subclass unless the static parentIdProperty is defined.</p>
+										Must be overriden by subclass unless the static parentId is defined.</p>
 									</div>
 								</div>
 								<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="index.html#_classes_node_.node" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
