@@ -123,7 +123,7 @@
 }
 
 <span class="hljs-comment">// Moving down the subject hierarchy chain, we simply extend the upper class</span>
-<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Team</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">OrganizationSubject</span> </span>{
+<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TeamSubject</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">OrganizationSubject</span> </span>{
   static repository = TeamModel;
   <span class="hljs-comment">// we need to define the property on Team documents which contains the parent id(s)</span>
   <span class="hljs-comment">// -- alternatively, a method of signature getParents() =&gt; Promise&lt;Resource|Subject&gt; can be</span>
@@ -131,42 +131,38 @@
   static parentId = <span class="hljs-string">'organizationId'</span>;
 }
 
-<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Team</span> </span>{
+<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserSubject</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">TeamSubject</span> </span>{
   static repository = UserModel;
   static parentId = <span class="hljs-string">'teamIds'</span>;
 }
 
-<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Blog</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">OrganizationResource</span> </span>{
+<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BlogResource</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">OrganizationResource</span> </span>{
   static repository = BlogModel;
   static parentId = <span class="hljs-string">'organizationId'</span>;
 }
 
-<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Post</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Blog</span> </span>{
+<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PostResource</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BlogResource</span> </span>{
   static repository = PostModel;
   static parentId = <span class="hljs-string">'blogId'</span>;
 }
 </code></pre>
 				<p>Once we&#39;ve implemented the classes, we can use them to add / deny permission and check for access.</p>
 				<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> {
-  OrganizationSubject,
-  OrganizationResource,
-  User,
-  Team,
-  Blog,
-  Post
+  UserSubject,
+  PostResource
 } <span class="hljs-keyword">from</span> <span class="hljs-string">'./graclClasses'</span>;
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkUserViewPermissionForPost</span>(<span class="hljs-params">user, post</span>) </span>{
-  <span class="hljs-keyword">const</span> subject = <span class="hljs-keyword">new</span> User(user),
-        resource = <span class="hljs-keyword">new</span> Post(post);
+  <span class="hljs-keyword">const</span> subject = <span class="hljs-keyword">new</span> UserSubject(user),
+        resource = <span class="hljs-keyword">new</span> PostResource(post);
 
   <span class="hljs-comment">// recursively entire hierarchy graph</span>
   <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> subject.isAllowed(resource, <span class="hljs-string">'view'</span>);
 }
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">giveUserViewPermissionForPost</span>(<span class="hljs-params">user, post</span>) </span>{
-  <span class="hljs-keyword">const</span> subject = <span class="hljs-keyword">new</span> User(user),
-        resource = <span class="hljs-keyword">new</span> Post(post);
+  <span class="hljs-keyword">const</span> subject = <span class="hljs-keyword">new</span> UserSubject(user),
+        resource = <span class="hljs-keyword">new</span> PostResource(post);
 
   <span class="hljs-comment">// add specific permission for this subject to view this resource.</span>
   <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> resource.allow(subject, <span class="hljs-string">'view'</span>);
@@ -232,10 +228,10 @@
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#document" class="tsd-kind-icon">Document</a>
 					</li>
-					<li class=" tsd-kind-type-alias tsd-is-not-exported">
+					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#documentdata" class="tsd-kind-icon">Document<wbr>Data</a>
 					</li>
-					<li class=" tsd-kind-type-alias tsd-is-not-exported">
+					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#hierarchynode" class="tsd-kind-icon">Hierarchy<wbr>Node</a>
 					</li>
 					<li class=" tsd-kind-function">
