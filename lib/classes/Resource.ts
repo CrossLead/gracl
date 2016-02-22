@@ -67,7 +67,7 @@ export class Resource extends Node {
    *  Modify a permission on this Resource for a given Subject, using `action`
       to modify the permissions object. If no permission exists, a new permission is created.
    */
-  async updatePermission(subject: Subject, action: (Permission) => Permission): Promise<Resource> {
+  async updatePermission(subject: Subject, action: (p: Permission) => Permission): Promise<Resource> {
     const { doc } = this,
           { permissions } = doc,
           subjectId = subject.getId();
