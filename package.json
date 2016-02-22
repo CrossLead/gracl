@@ -11,7 +11,7 @@
     "typings": "./node_modules/typings/dist/bin/typings.js install",
     "browserify": "mkdir -p ./dist/es5 && ./node_modules/browserify/bin/cmd.js ./dist/es6/lib/index.js -o ./dist/es5/gracl.js -t [ babelify --plugins [ transform-runtime ] ]",
     "minify": "./node_modules/uglifyjs/bin/uglifyjs ./dist/es5/gracl.js --screw-ie8 --mangle -o  ./dist/es5/gracl.min.js",
-    "docs": "rm -rf ./docs/ && ./node_modules/typedoc/bin/typedoc --theme default --experimentalAsyncFunctions --target es6 --out ./docs/ ./lib/ && touch ./docs/.nojekyll",
+    "docs": "rm -rf ./docs/ && ./node_modules/typedoc/bin/typedoc --mode file --theme default --experimentalAsyncFunctions --target es6 --out ./docs/ ./lib/ && touch ./docs/.nojekyll",
     "ghpages": "npm run docs && ./node_modules/gh-pages/bin/gh-pages --dotfiles true -d ./docs/",
     "lint": "./node_modules/tslint/bin/tslint -c ./tslint.json ./{test,lib}/**/*.ts"
   },
