@@ -114,8 +114,8 @@ export async function giveUserViewPermissionForPost(user, post) {
    *  add specific permission for this subject to view this resource.
 
       Note: the permission values here (second parameter of allow()) can be
-      any arbitrary string. calling resource.allow(subject, permissionString) will create a permissions
-      entry on the resource as follows:
+      any arbitrary string. calling resource.allow(subject, permissionString)
+      will create a permissions entry on the resource as follows:
 
       resource === {
         ...other_properties,
