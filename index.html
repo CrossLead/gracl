@@ -152,20 +152,39 @@
   PostResource
 } <span class="hljs-keyword">from</span> <span class="hljs-string">'./graclClasses'</span>;
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkUserViewPermissionForPost</span>(<span class="hljs-params">user, post</span>) </span>{
-  <span class="hljs-keyword">const</span> subject = <span class="hljs-keyword">new</span> UserSubject(user),
-        resource = <span class="hljs-keyword">new</span> PostResource(post);
-
-  <span class="hljs-comment">// recursively entire hierarchy graph</span>
-  <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> subject.isAllowed(resource, <span class="hljs-string">'view'</span>);
-}
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">giveUserViewPermissionForPost</span>(<span class="hljs-params">user, post</span>) </span>{
   <span class="hljs-keyword">const</span> subject = <span class="hljs-keyword">new</span> UserSubject(user),
         resource = <span class="hljs-keyword">new</span> PostResource(post);
 
-  <span class="hljs-comment">// add specific permission for this subject to view this resource.</span>
+  <span class="hljs-comment">/**
+   *  add specific permission for this subject to view this resource.
+
+      Note: the permission values here (second parameter of allow()) can be
+      any arbitrary string. calling resource.allow(subject, permissionString) will create a permissions
+      entry on the resource as follows:
+
+      resource === {
+        ...other_properties,
+        permissions: [
+          { subjectId: &lt;subjectId&gt;,
+            access: {
+              [permissionString]: true,
+              ...(other permissions if exist)
+            }
+          }, ...(other subjects if exist)
+        ]
+      }
+   */</span>
   <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> resource.allow(subject, <span class="hljs-string">'view'</span>);
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkUserViewPermissionForPost</span>(<span class="hljs-params">user, post</span>) </span>{
+  <span class="hljs-keyword">const</span> subject = <span class="hljs-keyword">new</span> UserSubject(user),
+        resource = <span class="hljs-keyword">new</span> PostResource(post);
+
+  <span class="hljs-comment">// recursively check entire hierarchy</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> subject.isAllowed(resource, <span class="hljs-string">'view'</span>);
 }
 </code></pre>
 				<h2 id="dev-setup">Dev setup</h2>
