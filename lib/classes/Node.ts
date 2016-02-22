@@ -8,6 +8,7 @@ import { yes } from '../util';
  * union of subclasses for inherited method signatures
  */
 type HierarchyNode = Subject | Resource;
+type DocumentData = string | Document;
 
 
 export interface PermissionsHierarchy {
@@ -159,9 +160,12 @@ export class Node {
   async getParents(): Promise<Array<Node>> {
     const { parentId } = this.getClass();
     if (parentId) {
-      const parentIds = <Array<string>|string> this.doc[parentId] || [];
+      const parentIds = <Array<DocumentData> | DocumentData> this.doc[parentId] || [];
       if (Array.isArray(parentIds)) {
-        return await Promise.all(parentIds.map(id => this.getParentObject(id)));
+        const promises = <Array<Promise<DocumentData>>> parentIds.map(id => {
+          return this.getParentObject(<DocumentData> id);
+        });
+        return await Promise.all(promises);
       } else {
         return [ await this.getParentObject(parentIds) ];
       }
@@ -176,7 +180,7 @@ export class Node {
    *  Given an id of a parent of this node, create a Node instance of that object.
       @param data Either the <string> id of the object, or the raw document itself.
    */
-  async getParentObject(data: string | Document): Promise<Node> {
+  async getParentObject(data: DocumentData): Promise<Node> {
     const ParentClass = this.getParentClass();
     let doc: Document;
 
