@@ -1,9 +1,9 @@
 import { MemoryRepository as Repo } from '../../lib/index';
-import { Blog } from './Blog';
+import { BlogResource } from './BlogResource';
 
 export const postModel = new Repo();
 
-export class Post extends Blog {
+export class PostResource extends BlogResource {
   static repository = postModel;
   static parentId = 'blogId';
 }

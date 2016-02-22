@@ -78,23 +78,23 @@ describe('gracl', () => {
 
 
   it('Resource.getParents() should return Resource instances of parent objects', async() => {
-    const resource = new classes.Post(postA1a);
+    const resource = new classes.PostResource(postA1a);
     const [ parent ] = await resource.getParents();
-    expect(parent, 'Returned parent should be gracl node instance.').to.be.instanceof(classes.Blog);
+    expect(parent, 'Returned parent should be gracl node instance.').to.be.instanceof(classes.BlogResource);
     expect(parent.getId(), 'Correct parent should be returned.').to.equal(blogA1.id);
   });
 
 
   it('Resource.allow(Subject, <perm>) -> subject can access resource.', async() => {
-    const resource = new classes.Post(postA1a),
-          subject = new classes.User(userA1);
+    const resource = new classes.PostResource(postA1a),
+          subject = new classes.UserSubject(userA1);
 
     const initialAllowed = await resource.isAllowed(subject, 'view');
 
     expect(
       await resource.allow(subject, 'view'),
       'Setting permission should return same resource type.'
-    ).to.be.instanceof(classes.Post);
+    ).to.be.instanceof(classes.PostResource);
 
     const afterSetAllowed = await resource.isAllowed(subject, 'view');
 
@@ -104,16 +104,16 @@ describe('gracl', () => {
 
 
   it('Resource.allow(parentSubject, <perm>) -> child subject can access resource.', async() => {
-    const parentResource = new classes.Blog(blogA1),
-          childResource = new classes.Post(postA1a),
-          subject = new classes.User(userA1);
+    const parentResource = new classes.BlogResource(blogA1),
+          childResource = new classes.PostResource(postA1a),
+          subject = new classes.UserSubject(userA1);
 
     const initialAllowed = await childResource.isAllowed(subject, 'view');
 
     expect(
       await parentResource.allow(subject, 'view'),
       'Setting permission for parentSubject should return same resource type.'
-    ).to.be.instanceof(classes.Blog);
+    ).to.be.instanceof(classes.BlogResource);
 
     const afterSetAllowed = await childResource.isAllowed(subject, 'view');
 
@@ -123,17 +123,17 @@ describe('gracl', () => {
 
 
   it('parentResource.allow(parentSubject, <perm>) -> child subject can access child resource.', async() => {
-    const parentResource = new classes.Blog(blogA1),
-          childResource  = new classes.Post(postA1a),
-          parentSubject  = new classes.Team(teamA1),
-          childSubject   = new classes.User(userA1);
+    const parentResource = new classes.BlogResource(blogA1),
+          childResource  = new classes.PostResource(postA1a),
+          parentSubject  = new classes.TeamSubject(teamA1),
+          childSubject   = new classes.UserSubject(userA1);
 
     const initialAllowed = await childResource.isAllowed(childSubject, 'view');
 
     expect(
       await parentResource.allow(parentSubject, 'view'),
       'Setting permission for parentSubject should return same resource type.'
-    ).to.be.instanceof(classes.Blog);
+    ).to.be.instanceof(classes.BlogResource);
 
     const afterSetAllowed = await childResource.isAllowed(childSubject, 'view');
 
@@ -143,9 +143,9 @@ describe('gracl', () => {
 
 
   it('Permissions should be visible through resource.getPermissionsHierarchy()', async() => {
-    const parentResource = new classes.Blog(blogA1),
-          childResource = new classes.Post(postA1a),
-          subject = new classes.User(userA1);
+    const parentResource = new classes.BlogResource(blogA1),
+          childResource = new classes.PostResource(postA1a),
+          subject = new classes.UserSubject(userA1);
 
     await parentResource.allow(subject, 'view');
 

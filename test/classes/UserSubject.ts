@@ -1,9 +1,9 @@
 import { MemoryRepository as Repo } from '../../lib/index';
-import { Team } from './Team';
+import { TeamSubject } from './TeamSubject';
 
 export const userModel = new Repo();
 
-export class User extends Team {
+export class UserSubject extends TeamSubject {
   static repository = userModel;
   static parentId = 'teamIds';
 }

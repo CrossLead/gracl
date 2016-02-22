@@ -72,7 +72,7 @@ export class OrganizationSubject extends Subject {
 }
 
 // Moving down the subject hierarchy chain, we simply extend the upper class
-export class Team extends OrganizationSubject {
+export class TeamSubject extends OrganizationSubject {
   static repository = TeamModel;
   // we need to define the property on Team documents which contains the parent id(s)
   // -- alternatively, a method of signature getParents() => Promise<Resource|Subject> can be
@@ -80,17 +80,17 @@ export class Team extends OrganizationSubject {
   static parentId = 'organizationId';
 }
 
-export class User extends Team {
+export class UserSubject extends TeamSubject {
   static repository = UserModel;
   static parentId = 'teamIds';
 }
 
-export class Blog extends OrganizationResource {
+export class BlogResource extends OrganizationResource {
   static repository = BlogModel;
   static parentId = 'organizationId';
 }
 
-export class Post extends Blog {
+export class PostResource extends BlogResource {
   static repository = PostModel;
   static parentId = 'blogId';
 }
@@ -101,25 +101,21 @@ Once we've implemented the classes, we can use them to add / deny permission and
 
 ```javascript
 import {
-  OrganizationSubject,
-  OrganizationResource,
-  User,
-  Team,
-  Blog,
-  Post
+  UserSubject,
+  PostResource
 } from './graclClasses';
 
 export async function checkUserViewPermissionForPost(user, post) {
-  const subject = new User(user),
-        resource = new Post(post);
+  const subject = new UserSubject(user),
+        resource = new PostResource(post);
 
   // recursively entire hierarchy graph
   return await subject.isAllowed(resource, 'view');
 }
 
 export async function giveUserViewPermissionForPost(user, post) {
-  const subject = new User(user),
-        resource = new Post(post);
+  const subject = new UserSubject(user),
+        resource = new PostResource(post);
 
   // add specific permission for this subject to view this resource.
   return await resource.allow(subject, 'view');

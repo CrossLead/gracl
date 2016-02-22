@@ -7,8 +7,8 @@ import { yes } from '../util';
 /**
  * union of subclasses for inherited method signatures
  */
-type HierarchyNode = Subject | Resource;
-type DocumentData = string | Document;
+export type HierarchyNode = Subject | Resource;
+export type DocumentData = string | Document;
 
 
 export interface PermissionsHierarchy {
