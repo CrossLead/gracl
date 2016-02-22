@@ -141,3 +141,4 @@ export async function giveUserViewPermissionForPost(user, post) {
   - `minify` : minify es5 output
   - `docs` : build documentation locally
   - `ghpages` : build documentation and publish to github pages
+  - `lint` : run tslint on project
