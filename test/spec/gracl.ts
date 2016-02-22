@@ -1,4 +1,4 @@
-/// <reference path="../../typings/main.d.ts" />
+/// <reference path='../../typings/main.d.ts' />
 import { expect } from 'chai';
 
 import {
@@ -17,7 +17,7 @@ import {
 
 import { user, team, org, post, blog, uidReset } from '../helpers/index';
 
-describe("gracl", () => {
+describe('gracl', () => {
   let orgA,
       orgB,
       teamA1,

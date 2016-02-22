@@ -1,4 +1,4 @@
-import { Repository, Document } from "../interfaces";
+import { Repository, Document } from '../interfaces';
 
 /**
  * Trivial in memory repository for example / testing

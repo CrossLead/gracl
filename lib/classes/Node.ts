@@ -11,9 +11,9 @@ type HierarchyNode = Subject | Resource;
 
 
 export interface PermissionsGraph {
-  node: string,
-  permissions: Array<Permission>,
-  parents?: Array<PermissionsGraph>
+  node: string;
+  permissions: Array<Permission>;
+  parents?: Array<PermissionsGraph>;
 }
 
 
@@ -25,9 +25,9 @@ export interface PermissionsGraph {
       - Resource
  */
 export interface NodeClass {
-  new (doc: Document): Node,
-  repository: Repository,
-  id: string
+  new (doc: Document): Node;
+  repository: Repository;
+  id: string;
 }
 
 
@@ -82,7 +82,7 @@ export class Node {
           className = this.getClass().name,
           id = this.getId();
 
-    return `<${nodeSubclassName}:${className} id=${id}>`
+    return `<${nodeSubclassName}:${className} id=${id}>`;
   }
 
 

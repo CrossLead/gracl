@@ -76,7 +76,7 @@ export class Resource extends Node {
           CurrentResourceClass = <ResourceCass> this.getClass();
 
     if (existingPermissionIndex >= 0) {
-      permissions[existingPermissionIndex] = action(permissions[existingPermissionIndex])
+      permissions[existingPermissionIndex] = action(permissions[existingPermissionIndex]);
     } else {
       // add permission
       permissions.push(action({ subjectId }));

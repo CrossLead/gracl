@@ -1,25 +1,25 @@
-/// <reference path="../../typings/main.d.ts" />
+/// <reference path='../../typings/main.d.ts' />
 import { expect } from 'chai';
 import * as util from '../../lib/util';
 
 
-describe("utility functions", () => {
+describe('utility functions', () => {
 
-  it("yes() should return true", () => {
+  it('yes() should return true', () => {
     expect(util.yes()).to.equal(true);
   });
 
-  it("noop() should return void", () => {
+  it('noop() should return void', () => {
     expect(util.noop()).to.equal(void 0);
   });
 
-  it("baseCompare() should correctly order items", () => {
+  it('baseCompare() should correctly order items', () => {
     expect(util.baseCompare('x', 'y'), 'a < b  -> -1').to.equal(-1);
     expect(util.baseCompare('y', 'x'), 'a > b  -> 1').to.equal(1);
     expect(util.baseCompare('x', 'x'), 'a == b -> 0').to.equal(0);
   });
 
-  it("binaryIndexOf() should correctly find indexes on sorted arrays", () => {
+  it('binaryIndexOf() should correctly find indexes on sorted arrays', () => {
     const A = [ 'a', 'b', 'c', 'd' ],
           B = [ 't', 'u', 'v', 'w', 'x', 'y', 'z' ];
 
