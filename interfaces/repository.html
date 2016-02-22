@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;classes/Subject&quot; | gracl</title>
+	<title>Repository | gracl</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -57,27 +57,101 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="_classes_subject_.html">&quot;classes/Subject&quot;</a>
+					<a href="repository.html">Repository</a>
 				</li>
 			</ul>
-			<h1>External module &quot;classes/Subject&quot;</h1>
+			<h1>Interface Repository</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>External repository / database / storage engine</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">Repository</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel">
+				<h3>Implemented by</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../classes/memoryrepository.html" class="tsd-signature-type">MemoryRepository</a></li>
+				</ul>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Classes</h3>
+							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-class tsd-parent-kind-external-module"><a href="../classes/_classes_subject_.subject.html" class="tsd-kind-icon">Subject</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="repository.html#getentity" class="tsd-kind-icon">get<wbr>Entity</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="repository.html#saveentity" class="tsd-kind-icon">save<wbr>Entity</a></li>
 							</ul>
 						</section>
 					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="getentity" class="tsd-anchor"></a>
+					<h3>get<wbr>Entity</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Entity<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../globals.html#document" class="tsd-signature-type">Document</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/interfaces.ts#L5">interfaces.ts:5</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>id: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../globals.html#document" class="tsd-signature-type">Document</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="saveentity" class="tsd-anchor"></a>
+					<h3>save<wbr>Entity</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">save<wbr>Entity<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, doc<span class="tsd-signature-symbol">: </span><a href="../globals.html#document" class="tsd-signature-type">Document</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../globals.html#document" class="tsd-signature-type">Document</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/interfaces.ts#L6">interfaces.ts:6</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>id: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>doc: <a href="../globals.html#document" class="tsd-signature-type">Document</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../globals.html#document" class="tsd-signature-type">Document</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -87,33 +161,72 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_builtins_memoryrepository_.html">"builtins/<wbr>Memory<wbr>Repository"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_classes_node_.html">"classes/<wbr>Node"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_classes_resource_.html">"classes/<wbr>Resource"</a>
-					</li>
-					<li class="current tsd-kind-external-module">
-						<a href="_classes_subject_.html">"classes/<wbr>Subject"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_index_.html">"index"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_interfaces_.html">"interfaces"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_util_.html">"util"</a>
-					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_classes_subject_.subject.html" class="tsd-kind-icon">Subject</a>
+					<li class=" tsd-kind-class">
+						<a href="../classes/memoryrepository.html" class="tsd-kind-icon">Memory<wbr>Repository</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="../classes/node.html" class="tsd-kind-icon">Node</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="../classes/resource.html" class="tsd-kind-icon">Resource</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="../classes/subject.html" class="tsd-kind-icon">Subject</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="nodeclass.html" class="tsd-kind-icon">Node<wbr>Class</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="permission.html" class="tsd-kind-icon">Permission</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="permissionshierarchy.html" class="tsd-kind-icon">Permissions<wbr>Hierarchy</a>
+					</li>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface">
+						<a href="repository.html" class="tsd-kind-icon">Repository</a>
+						<ul>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="repository.html#getentity" class="tsd-kind-icon">get<wbr>Entity</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="repository.html#saveentity" class="tsd-kind-icon">save<wbr>Entity</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-is-not-exported">
+						<a href="resourcecass.html" class="tsd-kind-icon">Resource<wbr>Cass</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../globals.html#document" class="tsd-kind-icon">Document</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-is-not-exported">
+						<a href="../globals.html#hierarchynode" class="tsd-kind-icon">Hierarchy<wbr>Node</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#basecompare" class="tsd-kind-icon">base<wbr>Compare</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#binaryindexof" class="tsd-kind-icon">binary<wbr>Index<wbr>Of</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#noop" class="tsd-kind-icon">noop</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#permissioncompare" class="tsd-kind-icon">permission<wbr>Compare</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#permissionindexof" class="tsd-kind-icon">permission<wbr>Index<wbr>Of</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#yes" class="tsd-kind-icon">yes</a>
 					</li>
 				</ul>
 			</nav>
