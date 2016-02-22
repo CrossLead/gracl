@@ -28,6 +28,7 @@ export interface NodeClass {
   new (doc: Document): Node;
   repository: Repository;
   id: string;
+  parentIdProperty?: string;
 }
 
 
@@ -43,6 +44,13 @@ export class Node {
       to contain the acl permissions.
    */
   public doc: Document;
+
+
+  /**
+   *  String indicating the property on this nodes document
+      that contains the id(s) of its parent.
+   */
+  public parentIdProperty: string;
 
 
   /**
@@ -145,11 +153,22 @@ export class Node {
 
 
   /**
-   *  Get the parent objects of an instance of this node. Must be overriden by subclass.
+   *  Get the parent objects of an instance of this node.
+      Must be overriden by subclass unless the static parentIdProperty is defined.
    */
   async getParents(): Promise<Array<Node>> {
-    console.warn(`Calling Node.getParents(), must implement on subclass!`);
-    return [];
+    const { parentIdProperty } = this.getClass();
+    if (parentIdProperty) {
+      const parentIds = <Array<string>|string> this.doc[parentIdProperty] || [];
+      if (Array.isArray(parentIds)) {
+        return await Promise.all(parentIds.map(id => this.getParentObject(id)));
+      } else {
+        return [ await this.getParentObject(parentIds) ];
+      }
+    } else {
+      console.warn(`Calling Node.getParents() without Node.parentIdProperty, must implement on subclass!`);
+      return [];
+    }
   };
 
 

@@ -5,7 +5,5 @@ export const blogModel = new Repo();
 
 export class Blog extends OrganizationResource {
   static repository = blogModel;
-  async getParents() {
-    return [ await this.getParentObject(this.doc.organizationId) ];
-  }
+  static parentIdProperty = 'organizationId';
 }

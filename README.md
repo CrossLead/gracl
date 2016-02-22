@@ -74,32 +74,25 @@ export class OrganizationSubject extends Subject {
 // Moving down the subject hierarchy chain, we simply extend the upper class
 export class Team extends OrganizationSubject {
   static repository = TeamModel;
-  // necessary method implementation, determines how to retrieve parent objects from this document
-  // the document itself is stored in `this.doc`
-  async getParents() {
-    return [ await this.getParentObject(this.doc.organizationId) ];
-  }
+  // we need to define the property on Team documents which contains the parent id(s)
+  // -- alternatively, a method of signature getParents() => Promise<Resource|Subject> can be
+  //    directly defined.
+  static parentIdProperty = 'organizationId';
 }
 
 export class User extends Team {
   static repository = UserModel;
-  async getParents() {
-    return Promise.all(this.doc.teamIds.map(::this.getParentObject));
-  }
+  static parentIdProperty = 'teamIds';
 }
 
 export class Blog extends OrganizationResource {
   static repository = BlogModel;
-  async getParents() {
-    return [ await this.getParentObject(this.doc.organizationId) ];
-  }
+  static parentIdProperty = 'organizationId';
 }
 
 export class Post extends Blog {
   static repository = PostModel;
-  async getParents() {
-    return [ await this.getParentObject(this.doc.blogId) ];
-  }
+  static parentIdProperty = 'blogId';
 }
 
 ```
