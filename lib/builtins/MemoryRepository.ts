@@ -5,7 +5,7 @@ import { Repository, Document } from '../interfaces';
  */
 export class MemoryRepository implements Repository {
 
-  private data;
+  private data: { [key: string]: any };
 
   constructor(data = {}) {
     this.data = data;

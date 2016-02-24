@@ -3,11 +3,11 @@ import { Permission } from './interfaces';
 export function noop() { }
 export function yes() { return true; }
 
-export function baseCompare(a, b) {
+export function baseCompare(a: any, b: any) {
   return Number(a > b) - Number(a < b);
 }
 
-export function binaryIndexOf(arr: Array<any>, el, compare = baseCompare) {
+export function binaryIndexOf(arr: Array<any>, el: any, compare = baseCompare) {
   let low = 0,
       high = arr.length - 1;
 

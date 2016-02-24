@@ -162,8 +162,8 @@ export class Node {
     if (parentId) {
       const parentIds = <Array<DocumentData> | DocumentData> this.doc[parentId] || [];
       if (Array.isArray(parentIds)) {
-        const promises = <Array<Promise<DocumentData>>> parentIds.map(id => {
-          return this.getParentNode(<DocumentData> id);
+        const promises = <Array<Promise<DocumentData>>> parentIds.map((id: DocumentData) => {
+          return this.getParentNode(id);
         });
         return await Promise.all(promises);
       } else {
@@ -229,17 +229,21 @@ export class Node {
    *  Retrieve permissions hierarchy for this node.
    */
   async getPermissionsHierarchy(): Promise<PermissionsHierarchy> {
-    const { permissions = [] } = this.doc;
+    const { permissions = [] } = <{ permissions?: any[] }> this.doc;
 
-    const graph = {
+    const graph: PermissionsHierarchy = {
       node: this.toString(),
-      permissions: <Array<Permission>> permissions
+      permissions: <Array<Permission>> permissions,
+      parents: []
     };
 
     if (!this.hierarchyRoot()) {
       const parents = await this.getParents();
       if (parents.length) {
-        graph['parents'] = await Promise.all(parents.map(p => p.getPermissionsHierarchy()));
+        const parentHierarchies = await Promise.all(
+          parents.map(p => p.getPermissionsHierarchy())
+        );
+        graph.parents.push(...parentHierarchies);
       }
     }
 

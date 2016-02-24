@@ -4,20 +4,20 @@ import * as classes from '../classes/index';
 import * as helpers from '../helpers/index';
 
 describe('gracl', () => {
-  let orgA,
-      orgB,
-      teamA1,
-      teamA2,
-      teamA3,
-      teamB1,
-      userA1,
-      userA2,
-      userB1,
-      blogA1,
-      blogB1,
-      postB1a,
-      postB1b,
-      postA1a;
+  let orgA: any,
+      orgB: any,
+      teamA1: any,
+      teamA2: any,
+      teamA3: any,
+      teamB1: any,
+      userA1: any,
+      userA2: any,
+      userB1: any,
+      blogA1: any,
+      blogB1: any,
+      postB1a: any,
+      postB1b: any,
+      postA1a: any;
 
   const resetTestData = async () => {
     helpers.uidReset();
