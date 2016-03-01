@@ -2,6 +2,7 @@
 import { expect } from 'chai';
 import * as classes from '../classes/index';
 import * as helpers from '../helpers/index';
+import { Resource, Subject } from '../../lib/index';
 
 describe('gracl', () => {
   let orgA: any,
@@ -67,6 +68,13 @@ describe('gracl', () => {
 
   // run before each test
   beforeEach(resetTestData);
+
+  it('Creating a node subclass without a repository should throw on instantiation', () => {
+    class TestResource extends Resource {};
+    class TestSubject extends Subject {};
+    expect(() => new TestResource({}), 'Instantiate Resource').to.throw();
+    expect(() => new TestResource({}), 'Instantiate Subject').to.throw();
+  });
 
 
   it('Retrieving document from repository should work', async() => {
@@ -160,21 +168,14 @@ describe('gracl', () => {
 
   /**
    *
-     Subject Hierarchy           Resource Hierarchy
+      Post(Blog):
+        - deny team access
 
-    +------------+             +------------+
-    |Organization|             |Organization| allow
-    +------+-----+             +------+-----+
-           |                          |
-           v         /               v
-        +--+-+       |              +--+-+
-        |Team| ----->|              |Blog| allow
-        +--+-+       |              +--+-+
-           |         \                 |
-           v                           v
-        +--+-+                      +--+-+
-        |User|                      |Post| deny
-        +----+                      +----+
+      Blog:
+        - allow team acces
+
+      results:
+        - user and team can access whole blog, except post
    */
   it('Lowest node on hierarchy wins conflicts (deny post for team)', async () => {
     const parentResource = new classes.BlogResource(blogA1),
@@ -194,6 +195,16 @@ describe('gracl', () => {
 
     expect(
       await parentResource.isAllowed(parentSubject, 'view'),
+      'Team should have access to blog after permission set'
+    ).to.equal(true);
+
+    expect(
+      await childResource.isAllowed(parentSubject, 'view'),
+      'Team should not have access to post after permission set.'
+    ).to.equal(false);
+
+    expect(
+      await parentResource.isAllowed(childSubject, 'view'),
       'User should have access to blog after permission set'
     ).to.equal(true);
 
@@ -203,5 +214,60 @@ describe('gracl', () => {
     ).to.equal(false);
   });
 
+
+  /**
+   *
+      Post(Blog):
+        - deny team access
+        - allow user access
+
+      Blog:
+        - deny user access
+        - allow team acces
+
+      results:
+        - user can access specific post, but not blog itself
+        - team can access blog wholistically, but not specific post
+   */
+  it('Lowest node on hierarchy wins conflicts (deny post for team, but allow for user)', async () => {
+    const parentResource = new classes.BlogResource(blogA1),
+          childResource  = new classes.PostResource(postA1a),
+          parentSubject  = new classes.TeamSubject(teamA1),
+          childSubject   = new classes.UserSubject(userA1);
+
+    expect(
+      await childResource.isAllowed(childSubject, 'view'),
+      'User should not have access to post before permission set.'
+    ).to.equal(false);
+
+    // allow team -> blog access
+    await parentResource.allow(parentSubject, 'view');
+    // deny team specific access to post
+    await childResource.deny(parentSubject, 'view');
+    // allow child specifically to access post
+    await childResource.allow(childSubject, 'view');
+    // deny child specifically to access blog
+    await parentResource.deny(childSubject, 'view');
+
+    expect(
+      await parentResource.isAllowed(parentSubject, 'view'),
+      'Team should have access to blog after permission set'
+    ).to.equal(true);
+
+    expect(
+      await childResource.isAllowed(parentSubject, 'view'),
+      'Team should not have access to post after permission set.'
+    ).to.equal(false);
+
+    expect(
+      await parentResource.isAllowed(childSubject, 'view'),
+      'User should have access to blog after permission set'
+    ).to.equal(false);
+
+    expect(
+      await childResource.isAllowed(childSubject, 'view'),
+      'User should have access to post after permission set.'
+    ).to.equal(true);
+  });
 
 });

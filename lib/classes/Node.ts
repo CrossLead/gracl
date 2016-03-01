@@ -79,7 +79,18 @@ export class Node {
    *  Constructor, simply assigns the given document as a property
    */
   constructor(doc: Document) {
+    // ensure that this class has a repository
+    const { name, repository } = this.getClass();
+
+    if (!doc) {
+      throw new Error(`No document provided to ${name} constructor!`);
+    }
+
     this.doc = doc;
+
+    if (!repository) {
+      throw new Error(`No repository static property defined on ${name}!`);
+    }
   }
 
 
