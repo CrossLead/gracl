@@ -1,7 +1,29 @@
 import { Subject } from './Subject';
-import { Node, NodeClass } from './Node';
-import { permissionCompare, permissionIndexOf, yes } from '../util';
+import { Node, NodeClass, IsAllowedOptions } from './Node';
+import { permissionCompare, permissionIndexOf, yes, baseCompare } from '../util';
 import { Document, Permission } from '../interfaces';
+
+
+/**
+ * Create formatted string for verbose permission checks
+ */
+export function logPermissionCheckResult(
+  res: Resource,
+  sub: Subject,
+  permissionType: string,
+  message?: string,
+  result?: boolean
+) {
+  let padding = '  ';
+  const checkString = `${res.toString()}.isAllowed(${sub.toString()}, ${permissionType})`;
+
+  if (message) {
+    console.log(`${padding}--> ${checkString} === ${result} (${message})`);
+  }
+
+  return { checkString, padding };
+};
+
 
 
 interface ResourceCass extends NodeClass {
@@ -35,6 +57,13 @@ export class Resource extends Node {
   }
 
 
+  setDoc(doc: Document) {
+    this.doc = doc;
+    this.sortPermissions();
+    return this;
+  }
+
+
   /**
    *  Retrieve a permission for a given subject via binary search.
       Returns an empty permission object if none is found.
@@ -46,20 +75,125 @@ export class Resource extends Node {
   }
 
 
+
   /**
    *  Retrieve a permission for a given subject via binary search.
       Returns an empty permission object if none is found.
+
+      Steps for checking access for a given permission:
+        1. If an assertion function is provided, make sure it returns true
+            - return false if not
+        2. Check if there is a permission on this resource specifically referencing the given subject
+            - return true || false if the permission is not undefined
+        3. Recurse up resource hierarchy, checking if parent resource has access to this resource.
+            - if a parent subject specifically has true / false access -- return that boolean
+        4. Recurse up subject hierarchy
    */
-  async isAllowed(subject: Subject, permissionType: string, assertionFn = yes): Promise<Boolean> {
-    if (!(await assertionFn())) return false;
+  async isAllowed(subject: Subject, permissionType: string, options?: IsAllowedOptions): Promise<Boolean> {
+    // permission check options
+    const {
+      assertionFn = yes,
+      verbose = false
+    } = options || {};
 
-    // check specific permission boolean value for this subject on this resource
-    const access = this.getPermission(subject).access[permissionType];
-    if (access === true || access === false) return access;
 
-    if (await subject.parentsAllowed(this, permissionType, assertionFn)) return true;
+    if (verbose) {
+      const { checkString } = logPermissionCheckResult(this, subject, permissionType);
+      console.log(
+        `Checking ${checkString}...`
+      );
+    }
 
-    return await this.parentsAllowed(subject, permissionType, assertionFn);
+
+    /**
+     * Check if assertion function has returned true
+     */
+    if (!(await assertionFn())) {
+      if (verbose) {
+        logPermissionCheckResult(this, subject, permissionType, 'failed assertion function', false);
+      }
+      return false;
+    } else if (verbose) {
+      logPermissionCheckResult(this, subject, permissionType, 'passed assertion function', true);
+    }
+
+
+
+    /**
+     *  Recurse up resource chain
+     */
+    const resources: Array<Resource> = [];
+    let currentResources: Array<Resource>  = [ this ];
+    while (currentResources.length) {
+
+      for (const res of currentResources) {
+        const access = res.getPermission(subject).access[permissionType];
+        if (access === true || access === false) {
+          if (verbose) {
+            logPermissionCheckResult(res, subject, permissionType, 'specific permission check', access);
+          }
+          return access;
+        }
+      }
+
+      resources.push(...currentResources);
+      const parentResources: Array<Resource> = [];
+
+      for (const res of currentResources) {
+        if (!res.hierarchyRoot()) {
+          const thisParents = <Array<Resource>> (await res.getParents());
+          parentResources.push(...thisParents);
+        }
+      }
+
+      currentResources = parentResources;
+    }
+
+    // sort nodes by depth
+    resources.sort((a, b) => {
+      const aDepth = a.getNodeDepth(),
+            bDepth = b.getNodeDepth();
+      // invert, so deeper nodes come first
+      return 0 - baseCompare(aDepth, bDepth);
+    });
+
+
+    /**
+     *  Recurse up subject chain
+     */
+    let currentSubjects: Array<Subject> = [ subject ];
+    while (currentSubjects.length) {
+
+      /**
+       *  for a given subject, check against all resources
+       */
+      for (const sub of currentSubjects) {
+        for (const res of resources) {
+          const access = res.getPermission(sub).access[permissionType];
+          if (access === true || access === false) {
+            if (verbose) {
+              logPermissionCheckResult(res, sub, permissionType, 'specific permission check', access);
+            }
+            return access;
+          }
+        }
+      }
+
+      const parentSubjects: Array<Subject> = [];
+      for (const sub of currentSubjects) {
+        if (!sub.hierarchyRoot()) {
+          const thisParents = <Array<Resource>> (await sub.getParents());
+          parentSubjects.push(...thisParents);
+        }
+      }
+
+      currentSubjects = parentSubjects;
+    }
+
+    if (verbose) {
+      logPermissionCheckResult(this, subject, permissionType, 'no permissions found', false);
+    }
+    return false;
   }
 
 
@@ -86,7 +220,7 @@ export class Resource extends Node {
     const id = this.getId(),
           updated = await CurrentResourceClass.repository.saveEntity(id, doc);
 
-    return new CurrentResourceClass(updated);
+    return this.setDoc(updated);
   }
 
 

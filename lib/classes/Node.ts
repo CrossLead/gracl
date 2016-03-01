@@ -11,6 +11,14 @@ export type HierarchyNode = Subject | Resource;
 export type DocumentData = string | Document;
 
 
+export type IsAllowedOptions = {
+  // additional function check for permissions.
+  assertionFn?: () => boolean;
+  // log each step of the check recursion.
+  verbose?: boolean;
+}
+
+
 export interface PermissionsHierarchy {
   node: string;
   permissions: Array<Permission>;
@@ -147,7 +155,7 @@ export class Node {
   /**
    *  Check if a node is allowed access to this node. Must be overridden by subclasses.
    */
-  async isAllowed(node: HierarchyNode, permissionType: string, assertionFn = yes): Promise<Boolean> {
+  async isAllowed(node: HierarchyNode, permissionType: string, options: IsAllowedOptions): Promise<Boolean> {
     console.warn(`Calling Node.isAllowed(), must implement on subclass!`);
     return false;
   }
@@ -201,15 +209,34 @@ export class Node {
   /**
    *  Check if other node is allowed access to any of this nodes parents.
    */
-  async parentsAllowed(node: HierarchyNode, permissionType: string, assertionFn = yes) {
-    if (this.hierarchyRoot()) return false;
+  async parentsAllowed(node: HierarchyNode, permissionType: string, options: IsAllowedOptions) {
+    if (this.hierarchyRoot()) return undefined;
 
     const parents = await this.getParents() || [],
           parentsAllowed = await Promise.all(
-            parents.map(p => p.isAllowed(node, permissionType, assertionFn))
+            parents.map(p => p.isAllowed(node, permissionType, options))
           );
 
-    return parentsAllowed.some(Boolean);
+    let allow: boolean;
+    while (parentsAllowed.length) {
+      const result = parentsAllowed.pop();
+      // if an individual parent has allow === true, set allow to true for now
+      if (result === true) allow = true;
+      // if any parent has false, return deny
+      if (result === false) return false;
+    }
+
+    return allow;
+  }
+
+
+  /**
+   *  Ensure that a given class inherits from Node
+   */
+  assertNodeClass(nodeClass: NodeClass) {
+    if (!(nodeClass.prototype instanceof Node)) {
+      throw new Error(`Link in hierarchy chain (${nodeClass.name}) is not an instance of Node!`);
+    }
   }
 
 
@@ -218,10 +245,25 @@ export class Node {
    */
   getNodeSubclass(): NodeClass {
     let nodeClass = this.getClass();
+    this.assertNodeClass(nodeClass);
     while (this._getClassOf(nodeClass.prototype) !== Node) {
       nodeClass = this._getClassOf(nodeClass.prototype);
+      this.assertNodeClass(nodeClass);
     }
     return nodeClass;
+  }
+
+  /**
+   *  Determine what subclass of node this node is.
+   */
+  getNodeDepth(): number {
+    let depth = 0;
+    let nodeClass = this.getClass();
+    while (this._getClassOf(nodeClass.prototype) !== Node) {
+      depth++;
+      nodeClass = this._getClassOf(nodeClass.prototype);
+    }
+    return depth;
   }
 
 

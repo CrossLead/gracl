@@ -158,4 +158,50 @@ describe('gracl', () => {
   });
 
 
+  /**
+   *
+     Subject Hierarchy           Resource Hierarchy
+
+    +------------+             +------------+
+    |Organization|             |Organization| allow
+    +------+-----+             +------+-----+
+           |                          |
+           v         /               v
+        +--+-+       |              +--+-+
+        |Team| ----->|              |Blog| allow
+        +--+-+       |              +--+-+
+           |         \                 |
+           v                           v
+        +--+-+                      +--+-+
+        |User|                      |Post| deny
+        +----+                      +----+
+   */
+  it('Lowest node on hierarchy wins conflicts (deny post for team)', async () => {
+    const parentResource = new classes.BlogResource(blogA1),
+          childResource  = new classes.PostResource(postA1a),
+          parentSubject  = new classes.TeamSubject(teamA1),
+          childSubject   = new classes.UserSubject(userA1);
+
+    expect(
+      await childResource.isAllowed(childSubject, 'view'),
+      'User should not have access to post before permission set.'
+    ).to.equal(false);
+
+    // allow team -> blog access
+    await parentResource.allow(parentSubject, 'view');
+    // deny team specific access to post
+    await childResource.deny(parentSubject, 'view');
+
+    expect(
+      await parentResource.isAllowed(parentSubject, 'view'),
+      'User should have access to blog after permission set'
+    ).to.equal(true);
+
+    expect(
+      await childResource.isAllowed(childSubject, 'view'),
+      'User should not have access to post after permission set.'
+    ).to.equal(false);
+  });
+
+
 });
