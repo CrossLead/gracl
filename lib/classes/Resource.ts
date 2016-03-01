@@ -26,6 +26,7 @@ export function logPermissionCheckResult(
 
 
 export type AccessResult = {
+  type: string,
   access: boolean,
   reason: string
 }
@@ -82,8 +83,7 @@ export class Resource extends Node {
 
 
   /**
-   *  Retrieve a permission for a given subject via binary search.
-      Returns an empty permission object if none is found.
+   *  Determine access to a given permission, provide a reason for access result.
 
       Steps for checking access for a given permission:
         1. If an assertion function is provided, make sure it returns true
@@ -101,6 +101,7 @@ export class Resource extends Node {
     } = options || {};
 
     const result = {
+      type: permissionType,
       access: false,
       reason: 'No permissions were set specifically for this subject/resource combination.'
     };
