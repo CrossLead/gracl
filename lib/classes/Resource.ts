@@ -1,5 +1,5 @@
 import { Subject } from './Subject';
-import { Node, NodeClass, IsAllowedOptions } from './Node';
+import { Node, NodeClass, PermOpts } from './Node';
 import { permissionCompare, permissionIndexOf, yes, baseCompare } from '../util';
 import { Document, Permission } from '../interfaces';
 
@@ -24,6 +24,11 @@ export function logPermissionCheckResult(
   return { checkString, padding };
 };
 
+
+export type AccessResult = {
+  access: boolean,
+  reason: string
+}
 
 
 interface ResourceCass extends NodeClass {
@@ -89,32 +94,25 @@ export class Resource extends Node {
             - if a parent subject specifically has true / false access -- return that boolean
         4. Recurse up subject hierarchy
    */
-  async isAllowed(subject: Subject, permissionType: string, options?: IsAllowedOptions): Promise<Boolean> {
+  async determineAccess(subject: Subject, permissionType: string, options?: PermOpts): Promise<AccessResult> {
     // permission check options
     const {
-      assertionFn = yes,
-      verbose = false
+      assertionFn = yes
     } = options || {};
 
-
-    if (verbose) {
-      const { checkString } = logPermissionCheckResult(this, subject, permissionType);
-      console.log(
-        `Checking ${checkString}...`
-      );
-    }
+    const result = {
+      access: false,
+      reason: 'No permissions were set specifically for this subject/resource combination.'
+    };
 
 
     /**
      * Check if assertion function has returned true
      */
     if (!(await assertionFn())) {
-      if (verbose) {
-        logPermissionCheckResult(this, subject, permissionType, 'failed assertion function', false);
-      }
-      return false;
-    } else if (verbose) {
-      logPermissionCheckResult(this, subject, permissionType, 'passed assertion function', true);
+      result.access = false;
+      result.reason = 'Failed assertion function check.';
+      return result;
     }
 
 
@@ -129,10 +127,9 @@ export class Resource extends Node {
       for (const res of currentResources) {
         const access = res.getPermission(subject).access[permissionType];
         if (access === true || access === false) {
-          if (verbose) {
-            logPermissionCheckResult(res, subject, permissionType, 'specific permission check', access);
-          }
-          return access;
+          result.access = access;
+          result.reason = `Permission set on ${res.toString()} for ${subject.toString()} = ${access}`;
+          return result;
         }
       }
 
@@ -171,10 +168,9 @@ export class Resource extends Node {
         for (const res of resources) {
           const access = res.getPermission(sub).access[permissionType];
           if (access === true || access === false) {
-            if (verbose) {
-              logPermissionCheckResult(res, sub, permissionType, 'specific permission check', access);
-            }
-            return access;
+            result.access = access;
+            result.reason = `Permission set on ${res.toString()} for ${sub.toString()} = ${access}`;
+            return result;
           }
         }
       }
@@ -182,7 +178,7 @@ export class Resource extends Node {
       const parentSubjects: Array<Subject> = [];
       for (const sub of currentSubjects) {
         if (!sub.hierarchyRoot()) {
-          const thisParents = <Array<Resource>> (await sub.getParents());
+          const thisParents = <Array<Subject>> (await sub.getParents());
           parentSubjects.push(...thisParents);
         }
       }
@@ -190,10 +186,25 @@ export class Resource extends Node {
       currentSubjects = parentSubjects;
     }
 
-    if (verbose) {
-      logPermissionCheckResult(this, subject, permissionType, 'no permissions found', false);
-    }
-    return false;
+    return result;
+  }
+
+
+  /**
+   *  Check if a subject has access to this resource.
+   */
+  async isAllowed(subject: Subject, permissionType: string, options?: PermOpts): Promise<boolean> {
+    const result = await this.determineAccess(subject, permissionType, options);
+    return result.access;
+  }
+
+
+  /**
+   *  Get a string explaining why a subject has a permission set to a particular value for a given resource.
+   */
+  async explainPermission(subject: Subject, permissionType: string, options?: PermOpts): Promise<string> {
+    const result = await this.determineAccess(subject, permissionType, options);
+    return result.reason;
   }
 
 

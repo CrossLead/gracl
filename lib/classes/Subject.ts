@@ -1,18 +1,28 @@
 import { yes } from '../util';
-import { Resource } from './Resource';
-import { Node, IsAllowedOptions } from './Node';
+import { Resource, AccessResult } from './Resource';
+import { Node, PermOpts } from './Node';
 
-/**
- * Subject class, resources contain permission for Subjects to access them.
- */
 export class Subject extends Node {
 
   /**
-   * Check if a subject has access for a given permission type to a given resource.
+   * Call resource method of the same name
    */
-  async isAllowed(resource: Resource, permissionType: string, options: IsAllowedOptions): Promise<Boolean> {
-    // flip permission check onto resource
-    return await resource.isAllowed(this, permissionType, options);
+  async determineAccess(resource: Resource, permissionType: string, options?: PermOpts): Promise<AccessResult> {
+    return resource.determineAccess(this, permissionType, options);
+  }
+
+  /**
+   * Call resource method of the same name
+   */
+  async isAllowed(resource: Resource, permissionType: string, options?: PermOpts): Promise<boolean> {
+    return resource.isAllowed(this, permissionType, options);
+  }
+
+  /**
+   * Call resource method of the same name
+   */
+  async explainPermission(resource: Resource, permissionType: string, options?: PermOpts): Promise<string> {
+    return resource.explainPermission(this, permissionType, options);
   }
 
 }

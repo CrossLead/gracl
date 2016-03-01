@@ -11,11 +11,9 @@ export type HierarchyNode = Subject | Resource;
 export type DocumentData = string | Document;
 
 
-export type IsAllowedOptions = {
+export type PermOpts = {
   // additional function check for permissions.
   assertionFn?: () => boolean;
-  // log each step of the check recursion.
-  verbose?: boolean;
 }
 
 
@@ -166,7 +164,7 @@ export class Node {
   /**
    *  Check if a node is allowed access to this node. Must be overridden by subclasses.
    */
-  async isAllowed(node: HierarchyNode, permissionType: string, options: IsAllowedOptions): Promise<Boolean> {
+  async isAllowed(node: HierarchyNode, permissionType: string, options: PermOpts): Promise<Boolean> {
     console.warn(`Calling Node.isAllowed(), must implement on subclass!`);
     return false;
   }

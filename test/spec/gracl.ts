@@ -268,6 +268,62 @@ describe('gracl', () => {
       await childResource.isAllowed(childSubject, 'view'),
       'User should have access to post after permission set.'
     ).to.equal(true);
+
   });
+
+
+  it('Permission explainations should be accurate', async () => {
+    const parentResource = new classes.BlogResource(blogA1),
+          childResource  = new classes.PostResource(postA1a),
+          parentSubject  = new classes.TeamSubject(teamA1),
+          childSubject   = new classes.UserSubject(userA1);
+
+    // allow team -> blog access
+    await parentResource.allow(parentSubject, 'view');
+    // deny team specific access to post
+    await childResource.deny(parentSubject, 'view');
+
+    const reason = 'Permission set on <Resource:PostResource id=uid14> for <Subject:TeamSubject id=uid3> = false';
+
+    expect(
+      await childResource.explainPermission(childSubject, 'view'),
+      'Explaining why child subject cannot access child resource'
+    ).to.equal(reason);
+  });
+
+
+  it('Subject method results should equal resource method results', async () => {
+    const parentResource: Resource = new classes.BlogResource(blogA1),
+          childResource: Resource  = new classes.PostResource(postA1a),
+          parentSubject: Subject  = new classes.TeamSubject(teamA1),
+          childSubject: Subject   = new classes.UserSubject(userA1);
+
+    // allow team -> blog access
+    await parentResource.allow(parentSubject, 'view');
+    // deny team specific access to post
+    await childResource.deny(parentSubject, 'view');
+
+    expect(
+      await parentResource.isAllowed(parentSubject, 'view'),
+      'Team should have access to blog after permission set'
+    ).to.equal(await parentSubject.isAllowed(parentResource, 'view'));
+
+    expect(
+      await childResource.isAllowed(parentSubject, 'view'),
+      'Team should not have access to post after permission set.'
+    ).to.equal(await parentSubject.isAllowed(childResource, 'view'));
+
+    expect(
+      await parentResource.isAllowed(childSubject, 'view'),
+      'User should have access to blog after permission set'
+    ).to.equal(await childSubject.isAllowed(parentResource, 'view'));
+
+    expect(
+      await childResource.isAllowed(childSubject, 'view'),
+      'User should have access to post after permission set.'
+    ).to.equal(await childSubject.isAllowed(childResource, 'view'));
+  });
+
+
 
 });
