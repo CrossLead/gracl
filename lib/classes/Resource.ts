@@ -4,27 +4,6 @@ import { permissionCompare, permissionIndexOf, yes, baseCompare } from '../util'
 import { Document, Permission } from '../interfaces';
 
 
-/**
- * Create formatted string for verbose permission checks
- */
-export function logPermissionCheckResult(
-  res: Resource,
-  sub: Subject,
-  permissionType: string,
-  message?: string,
-  result?: boolean
-) {
-  let padding = '  ';
-  const checkString = `${res.toString()}.isAllowed(${sub.toString()}, ${permissionType})`;
-
-  if (message) {
-    console.log(`${padding}--> ${checkString} === ${result} (${message})`);
-  }
-
-  return { checkString, padding };
-};
-
-
 export type AccessResult = {
   type: string,
   access: boolean,
@@ -32,7 +11,7 @@ export type AccessResult = {
 }
 
 
-interface ResourceCass extends NodeClass {
+export interface ResourceCass extends NodeClass {
   new (doc: Document): Resource;
 }
 
