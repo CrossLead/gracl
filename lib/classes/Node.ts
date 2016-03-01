@@ -207,30 +207,6 @@ export class Node {
 
 
   /**
-   *  Check if other node is allowed access to any of this nodes parents.
-   */
-  async parentsAllowed(node: HierarchyNode, permissionType: string, options: IsAllowedOptions) {
-    if (this.hierarchyRoot()) return undefined;
-
-    const parents = await this.getParents() || [],
-          parentsAllowed = await Promise.all(
-            parents.map(p => p.isAllowed(node, permissionType, options))
-          );
-
-    let allow: boolean;
-    while (parentsAllowed.length) {
-      const result = parentsAllowed.pop();
-      // if an individual parent has allow === true, set allow to true for now
-      if (result === true) allow = true;
-      // if any parent has false, return deny
-      if (result === false) return false;
-    }
-
-    return allow;
-  }
-
-
-  /**
    *  Ensure that a given class inherits from Node
    */
   assertNodeClass(nodeClass: NodeClass) {
