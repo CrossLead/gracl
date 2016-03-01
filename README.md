@@ -47,6 +47,21 @@ for a given organization.
 
 Note, in this example, organizations are __both__ subjects and resources.
 
+### Conflict Resolution
+
+Inevitably, conflicts between allows and denies of specific permissions will arise. For example (using the hierarchies above), consider a user being given acces to a specific post within a blog, but being denied the blog as a whole...
+
+```javascript
+await post.allow(user, 'view');
+await blog.deny(user, 'view');
+```
+
+That is, the user is denied access to the blog itself, but allowed to look at a
+specific post. `gracl` reconciles this by making the lowest node in the hierarchy win.
+That means that if a user tries to access the post, it will be granted access, but
+if the user tries to access the blog, it will be denied.
+
+
 ### Example code
 
 To implement this example model using `gracl`, we would implement the requisite resource and subject classes.
