@@ -1,0 +1,8 @@
+import { MemoryRepository as Repo } from '../../lib/index';
+import { TeamSubject } from './TeamSubject';
+export const userModel = new Repo();
+export class UserSubject extends TeamSubject {
+}
+UserSubject.repository = userModel;
+UserSubject.parentId = 'teamIds';
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiVXNlclN1YmplY3QuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi8uLi90ZXN0L2NsYXNzZXMvVXNlclN1YmplY3QudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ik9BQU8sRUFBRSxnQkFBZ0IsSUFBSSxJQUFJLEVBQUUsTUFBTSxpQkFBaUI7T0FDbkQsRUFBRSxXQUFXLEVBQUUsTUFBTSxlQUFlO0FBRTNDLE9BQU8sTUFBTSxTQUFTLEdBQUcsSUFBSSxJQUFJLEVBQUUsQ0FBQztBQUVwQyxpQ0FBaUMsV0FBVztBQUc1QyxDQUFDO0FBRlEsc0JBQVUsR0FBRyxTQUFTLENBQUM7QUFDdkIsb0JBQVEsR0FBRyxTQUFTLENBQzVCIn0=
