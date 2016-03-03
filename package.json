@@ -2,7 +2,7 @@
   "name": "gracl",
   "version": "0.0.0",
   "description": "graph acl in typescript",
-  "main": "./dist/es5/gracl.js",
+  "main": "./lib/index.ts",
   "scripts": {
     "build": "npm run typings && npm run tscompile && npm run browserify && npm run minify",
     "pretest": "npm run tscompile",
