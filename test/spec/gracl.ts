@@ -2,7 +2,7 @@
 import { expect } from 'chai';
 import * as classes from '../classes/index';
 import * as helpers from '../helpers/index';
-import { Resource, Subject } from '../../lib/index';
+import { Resource, Subject, MemoryRepository } from '../../lib/index';
 
 describe('gracl', () => {
   let orgA: any,
@@ -283,7 +283,7 @@ describe('gracl', () => {
     // deny team specific access to post
     await childResource.deny(parentSubject, 'view');
 
-    const reason = 'Permission set on <Resource:PostResource id=uid14> for <Subject:TeamSubject id=uid3> = false';
+    const reason = 'Permission set on <Resource:PostResource id=p0014> for <Subject:TeamSubject id=t003> = false';
 
     expect(
       await childResource.explainPermission(childSubject, 'view'),
@@ -322,6 +322,28 @@ describe('gracl', () => {
       await childResource.isAllowed(childSubject, 'view'),
       'User should have access to post after permission set.'
     ).to.equal(await childSubject.isAllowed(childResource, 'view'));
+  });
+
+
+
+  it('Node.getHierarchyIds() should return flattened array of correct ids', async() => {
+    const childResource: Resource  = new classes.PostResource(postA1a);
+    expect(
+      await childResource.getHierarchyIds(),
+      'Post -> Blog -> Org'
+    ).to.deep.equal([ 'p0014', 'b0010', 'o001' ]);
+  });
+
+
+  it('Should use displayName if provided in Node.toString()', () => {
+    class TestResource extends Resource {
+      static displayName = 'MY_RESOURCE';
+      static repository = new MemoryRepository();
+    }
+
+    const node = new TestResource({ id: 1 });
+    expect(node.getName()).to.equal(TestResource.displayName);
+    expect(node.toString()).to.equal(`<Resource:${TestResource.displayName} id=1>`);
   });
 
 

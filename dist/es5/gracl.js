@@ -166,8 +166,10 @@ var Node = exports.Node = function () {
 
         var name = _getClass.name;
         var repository = _getClass.repository;
+        var id = _getClass.id;
 
         if (!doc) throw new Error('No document provided to ' + name + ' constructor!');
+        if (doc[id] === undefined) throw new Error('No ' + id + ' property on document ' + doc + '!');
         if (!repository) throw new Error('No repository static property defined on ' + name + '!');
     }
 
@@ -177,12 +179,18 @@ var Node = exports.Node = function () {
             return (0, _getPrototypeOf2.default)(node).constructor;
         }
     }, {
+        key: 'getName',
+        value: function getName() {
+            var thisClass = this.getClass(),
+                className = thisClass.displayName || thisClass.name;
+            return className;
+        }
+    }, {
         key: 'toString',
         value: function toString() {
             var nodeSubclassName = this.getNodeSubclass().name,
-                className = this.getClass().name,
                 id = this.getId();
-            return '<' + nodeSubclassName + ':' + className + ' id=' + id + '>';
+            return '<' + nodeSubclassName + ':' + this.getName() + ' id=' + id + '>';
         }
     }, {
         key: 'isNodeType',
@@ -370,53 +378,49 @@ var Node = exports.Node = function () {
             return depth;
         }
     }, {
-        key: 'getPermissionsHierarchy',
-        value: function getPermissionsHierarchy() {
+        key: 'getHierarchyIds',
+        value: function getHierarchyIds() {
             return __awaiter(this, void 0, _promise2.default, _regenerator2.default.mark(function _callee4() {
-                var _doc$permissions, permissions, graph, parents, _graph$parents, parentHierarchies;
+                var ids, parents, _parentIds;
 
                 return _regenerator2.default.wrap(function _callee4$(_context4) {
                     while (1) {
                         switch (_context4.prev = _context4.next) {
                             case 0:
-                                _doc$permissions = this.doc.permissions;
-                                permissions = _doc$permissions === undefined ? [] : _doc$permissions;
-                                graph = {
-                                    node: this.toString(),
-                                    permissions: permissions,
-                                    parents: []
-                                };
+                                ids = [this.getId()];
 
                                 if (this.hierarchyRoot()) {
-                                    _context4.next = 12;
+                                    _context4.next = 10;
                                     break;
                                 }
 
-                                _context4.next = 6;
+                                _context4.next = 4;
                                 return this.getParents();
 
-                            case 6:
+                            case 4:
                                 parents = _context4.sent;
 
                                 if (!parents.length) {
-                                    _context4.next = 12;
+                                    _context4.next = 10;
                                     break;
                                 }
 
-                                _context4.next = 10;
+                                _context4.next = 8;
                                 return _promise2.default.all(parents.map(function (p) {
-                                    return p.getPermissionsHierarchy();
+                                    return p.getHierarchyIds();
                                 }));
 
+                            case 8:
+                                _parentIds = _context4.sent;
+
+                                ids = _parentIds.reduce(function (out, idList) {
+                                    return out.concat(idList);
+                                }, ids);
+
                             case 10:
-                                parentHierarchies = _context4.sent;
+                                return _context4.abrupt('return', ids);
 
-                                (_graph$parents = graph.parents).push.apply(_graph$parents, (0, _toConsumableArray3.default)(parentHierarchies));
-
-                            case 12:
-                                return _context4.abrupt('return', graph);
-
-                            case 13:
+                            case 11:
                             case 'end':
                                 return _context4.stop();
                         }
@@ -424,10 +428,67 @@ var Node = exports.Node = function () {
                 }, _callee4, this);
             }));
         }
+    }, {
+        key: 'getPermissionsHierarchy',
+        value: function getPermissionsHierarchy() {
+            return __awaiter(this, void 0, _promise2.default, _regenerator2.default.mark(function _callee5() {
+                var _doc$permissions, permissions, graph, _parents, _graph$parents, parentHierarchies;
+
+                return _regenerator2.default.wrap(function _callee5$(_context5) {
+                    while (1) {
+                        switch (_context5.prev = _context5.next) {
+                            case 0:
+                                _doc$permissions = this.doc.permissions;
+                                permissions = _doc$permissions === undefined ? [] : _doc$permissions;
+                                graph = {
+                                    node: this.toString(),
+                                    nodeId: this.getId(),
+                                    permissions: permissions,
+                                    parents: []
+                                };
+
+                                if (this.hierarchyRoot()) {
+                                    _context5.next = 12;
+                                    break;
+                                }
+
+                                _context5.next = 6;
+                                return this.getParents();
+
+                            case 6:
+                                _parents = _context5.sent;
+
+                                if (!_parents.length) {
+                                    _context5.next = 12;
+                                    break;
+                                }
+
+                                _context5.next = 10;
+                                return _promise2.default.all(_parents.map(function (p) {
+                                    return p.getPermissionsHierarchy();
+                                }));
+
+                            case 10:
+                                parentHierarchies = _context5.sent;
+
+                                (_graph$parents = graph.parents).push.apply(_graph$parents, (0, _toConsumableArray3.default)(parentHierarchies));
+
+                            case 12:
+                                return _context5.abrupt('return', graph);
+
+                            case 13:
+                            case 'end':
+                                return _context5.stop();
+                        }
+                    }
+                }, _callee5, this);
+            }));
+        }
     }]);
     return Node;
 }();
 
+Node.displayName = '';
 Node.id = 'id';
 
 },{"babel-runtime/core-js/object/get-prototype-of":11,"babel-runtime/core-js/promise":13,"babel-runtime/helpers/classCallCheck":16,"babel-runtime/helpers/createClass":17,"babel-runtime/helpers/toConsumableArray":20,"babel-runtime/regenerator":112}],3:[function(require,module,exports){

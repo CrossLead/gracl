@@ -95,8 +95,8 @@ export class Resource extends Node {
     /**
      *  Recurse up resource chain
      */
-    const resources: Array<Resource> = [];
-    let currentResources: Array<Resource>  = [ this ];
+    const resources: Resource[] = [];
+    let currentResources: Resource[]  = [ this ];
     while (currentResources.length) {
 
       for (const res of currentResources) {
@@ -109,11 +109,11 @@ export class Resource extends Node {
       }
 
       resources.push(...currentResources);
-      const parentResources: Array<Resource> = [];
+      const parentResources: Resource[] = [];
 
       for (const res of currentResources) {
         if (!res.hierarchyRoot()) {
-          const thisParents = <Array<Resource>> (await res.getParents());
+          const thisParents = <Resource[]> (await res.getParents());
           parentResources.push(...thisParents);
         }
       }
@@ -133,7 +133,7 @@ export class Resource extends Node {
     /**
      *  Recurse up subject chain
      */
-    let currentSubjects: Array<Subject> = [ subject ];
+    let currentSubjects: Subject[] = [ subject ];
     while (currentSubjects.length) {
 
       /**
@@ -150,10 +150,10 @@ export class Resource extends Node {
         }
       }
 
-      const parentSubjects: Array<Subject> = [];
+      const parentSubjects: Subject[] = [];
       for (const sub of currentSubjects) {
         if (!sub.hierarchyRoot()) {
-          const thisParents = <Array<Subject>> (await sub.getParents());
+          const thisParents = <Subject[]> (await sub.getParents());
           parentSubjects.push(...thisParents);
         }
       }

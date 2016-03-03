@@ -7,7 +7,7 @@ export function baseCompare(a: any, b: any) {
   return Number(a > b) - Number(a < b);
 }
 
-export function binaryIndexOf(arr: Array<any>, el: any, compare = baseCompare) {
+export function binaryIndexOf(arr: any[], el: any, compare = baseCompare) {
   let low = 0,
       high = arr.length - 1;
 
@@ -27,6 +27,6 @@ export function permissionCompare(a: Permission, b: Permission) {
   return baseCompare(a.subjectId, b.subjectId);
 }
 
-export function permissionIndexOf(arr: Array<Permission>, subjectId: string): number {
+export function permissionIndexOf(arr: Permission[], subjectId: string): number {
   return binaryIndexOf(arr, { subjectId }, permissionCompare);
 }

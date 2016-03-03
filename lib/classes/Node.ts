@@ -19,8 +19,9 @@ export type PermOpts = {
 
 export type PermissionsHierarchy = {
   node: string;
-  permissions: Array<Permission>;
-  parents?: Array<PermissionsHierarchy>;
+  nodeId: string,
+  permissions: Permission[];
+  parents?: PermissionsHierarchy[];
 };
 
 
@@ -29,6 +30,9 @@ export type PermissionsHierarchy = {
  *  Abstract base class from which all gracl hierachy nodes inherit.
  */
 export abstract class Node {
+
+
+  public static displayName: string = '';
 
 
   /**
@@ -56,9 +60,10 @@ export abstract class Node {
    */
   constructor(public doc: Document) {
     // ensure that this class has a repository
-    const { name, repository } = this.getClass();
+    const { name, repository, id } = this.getClass();
 
     if (!doc)        throw new Error(`No document provided to ${name} constructor!`);
+    if (doc[id] === undefined) throw new Error(`No ${id} property on document ${doc}!`);
     if (!repository) throw new Error(`No repository static property defined on ${name}!`);
   }
 
@@ -72,14 +77,24 @@ export abstract class Node {
 
 
   /**
+   *  Get the name of this node
+   */
+  getName() {
+    const thisClass = this.getClass(),
+          className = thisClass.displayName || thisClass.name;
+
+    return className;
+  }
+
+
+  /**
    *  Pretty printing
    */
   toString(): string {
     const nodeSubclassName = this.getNodeSubclass().name,
-          className = this.getClass().name,
           id = this.getId();
 
-    return `<${nodeSubclassName}:${className} id=${id}>`;
+    return `<${nodeSubclassName}:${this.getName()} id=${id}>`;
   }
 
 
@@ -145,10 +160,10 @@ export abstract class Node {
    *  Get the parent objects of an instance of this node.
       Must be overriden by subclass unless the static parentId is defined.
    */
-  async getParents(): Promise<Array<Node>> {
+  async getParents(): Promise<Node[]> {
     const { parentId } = this.getClass();
     if (parentId) {
-      const parentIds = <Array<DocumentData> | DocumentData> this.doc[parentId] || [];
+      const parentIds = <DocumentData[] | DocumentData> this.doc[parentId] || [];
       if (Array.isArray(parentIds)) {
         const promises = <Array<Promise<DocumentData>>> parentIds.map((id: DocumentData) => {
           return this.getParentNode(id);
@@ -223,6 +238,28 @@ export abstract class Node {
   }
 
 
+
+  /**
+   *  Retrieve all ids in the hierarchy of nodes steming from this instance
+   */
+  async getHierarchyIds(): Promise<string[]> {
+    let ids = [ this.getId() ];
+    if (!this.hierarchyRoot()) {
+      const parents = await this.getParents();
+      if (parents.length) {
+        const parentIds = await Promise.all(
+          parents.map(p => p.getHierarchyIds())
+        );
+        ids = parentIds.reduce((out, idList) => {
+          return out.concat(idList);
+        }, ids);
+      }
+    }
+    return ids;
+  }
+
+
+
   /**
    *  Retrieve permissions hierarchy for this node.
    */
@@ -231,7 +268,8 @@ export abstract class Node {
 
     const graph: PermissionsHierarchy = {
       node: this.toString(),
-      permissions: <Array<Permission>> permissions,
+      nodeId: this.getId(),
+      permissions: <Permission[]> permissions,
       parents: []
     };
 
