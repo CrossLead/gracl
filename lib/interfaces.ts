@@ -10,7 +10,7 @@ export interface Repository {
 /**
  * Permission object added by Resource nodes
  */
-export interface Permission {
+export type Permission = {
   subjectId: string;
   access?: {
     [key: string]: boolean

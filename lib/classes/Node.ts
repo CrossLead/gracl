@@ -17,7 +17,7 @@ export type PermOpts = {
 }
 
 
-export interface PermissionsHierarchy {
+export type PermissionsHierarchy = {
   node: string;
   permissions: Array<Permission>;
   parents?: Array<PermissionsHierarchy>;
