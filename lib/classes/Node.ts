@@ -28,7 +28,7 @@ export type PermissionsHierarchy = {
 /**
  *  Abstract base class from which all gracl hierachy nodes inherit.
  */
-export class Node {
+export abstract class Node {
 
 
   /**
@@ -169,7 +169,7 @@ export class Node {
       @param data Either the <string> id of the object, or the raw document itself.
    */
   async getParentNode(data: DocumentData): Promise<Node> {
-    const ParentClass = this.getParentClass();
+    const ParentClass = <typeof Resource | typeof Subject> this.getParentClass();
     let doc: Document;
 
     // data is the id, retrieve from repository
