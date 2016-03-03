@@ -8,7 +8,7 @@ export type AccessResult = {
   type: string,
   access: boolean,
   reason: string
-}
+};
 
 
 /**

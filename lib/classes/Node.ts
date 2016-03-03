@@ -14,14 +14,14 @@ export type DocumentData = string | Document;
 export type PermOpts = {
   // additional function check for permissions.
   assertionFn?: () => boolean;
-}
+};
 
 
 export type PermissionsHierarchy = {
   node: string;
   permissions: Array<Permission>;
   parents?: Array<PermissionsHierarchy>;
-}
+};
 
 
 

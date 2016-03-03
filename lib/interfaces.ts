@@ -4,7 +4,7 @@
 export interface Repository {
   getEntity(id: string): Promise<Document>;
   saveEntity(id: string, doc: Document): Promise<Document>;
-}
+};
 
 
 /**
@@ -13,9 +13,9 @@ export interface Repository {
 export type Permission = {
   subjectId: string;
   access?: {
-    [key: string]: boolean
+    [key: string]: boolean;
   };
-}
+};
 
 
 export type Document = any;
