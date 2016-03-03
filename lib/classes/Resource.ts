@@ -1,5 +1,5 @@
 import { Subject } from './Subject';
-import { Node, NodeClass, PermOpts } from './Node';
+import { Node, PermOpts } from './Node';
 import { permissionCompare, permissionIndexOf, yes, baseCompare } from '../util';
 import { Document, Permission } from '../interfaces';
 
@@ -8,11 +8,6 @@ export type AccessResult = {
   type: string,
   access: boolean,
   reason: string
-}
-
-
-export interface ResourceCass extends NodeClass {
-  new (doc: Document): Resource;
 }
 
 
@@ -198,7 +193,7 @@ export class Resource extends Node {
           subjectId = subject.getId();
 
     const existingPermissionIndex = permissionIndexOf(permissions, subjectId),
-          CurrentResourceClass = <ResourceCass> this.getClass();
+          CurrentResourceClass = <typeof Resource> this.getClass();
 
     if (existingPermissionIndex >= 0) {
       permissions[existingPermissionIndex] = action(permissions[existingPermissionIndex]);

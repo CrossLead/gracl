@@ -24,20 +24,6 @@ export interface PermissionsHierarchy {
 }
 
 
-/**
- *  General NodeClass metaclass type -- Node and any derivative classes.
-    Example instances:
-      - Node
-      - Subject
-      - Resource
- */
-export interface NodeClass {
-  new (doc: Document): Node;
-  repository: Repository;
-  id: string;
-  parentId?: string;
-}
-
 
 /**
  *  Abstract base class from which all gracl hierachy nodes inherit.
@@ -46,18 +32,10 @@ export class Node {
 
 
   /**
-   *  The actual data document assigned to the node,
-      contains arbitrary properties. gracl will set doc.permissions
-      to contain the acl permissions.
-   */
-  public doc: Document;
-
-
-  /**
    *  String indicating the property on this nodes document
       that contains the id(s) of its parent.
    */
-  public parentId: string;
+  public static parentId: string;
 
 
   /**
@@ -76,27 +54,20 @@ export class Node {
   /**
    *  Constructor, simply assigns the given document as a property
    */
-  constructor(doc: Document) {
+  constructor(public doc: Document) {
     // ensure that this class has a repository
     const { name, repository } = this.getClass();
 
-    if (!doc) {
-      throw new Error(`No document provided to ${name} constructor!`);
-    }
-
-    this.doc = doc;
-
-    if (!repository) {
-      throw new Error(`No repository static property defined on ${name}!`);
-    }
+    if (!doc)        throw new Error(`No document provided to ${name} constructor!`);
+    if (!repository) throw new Error(`No repository static property defined on ${name}!`);
   }
 
 
   /**
    *  Internal method for determining the class of a given instance of a Node subclass
    */
-  private _getClassOf(node: any): NodeClass {
-    return <NodeClass> Object.getPrototypeOf(node).constructor;
+  private _getClassOf(node: any): typeof Node {
+    return <typeof Node> Object.getPrototypeOf(node).constructor;
   }
 
 
@@ -115,7 +86,7 @@ export class Node {
   /**
    *  Check if this node is a particular Node subclass
    */
-  isNodeType(nc: NodeClass): boolean {
+  isNodeType(nc: typeof Node): boolean {
     return this.getClass() === nc;
   }
 
@@ -123,7 +94,7 @@ export class Node {
   /**
    *  Get the relative super class constructor of this instance
    */
-  getParentClass(): NodeClass {
+  getParentClass(): typeof Node {
     return this._getClassOf(this.constructor.prototype);
   }
 
@@ -131,7 +102,7 @@ export class Node {
   /**
    *  Get the class of this instance
    */
-  getClass(): NodeClass {
+  getClass(): typeof Node {
     return this._getClassOf(this);
   }
 
@@ -218,7 +189,7 @@ export class Node {
   /**
    *  Ensure that a given class inherits from Node
    */
-  assertNodeClass(nodeClass: NodeClass) {
+  assertNodeClass(nodeClass: typeof Node) {
     if (!(nodeClass.prototype instanceof Node)) {
       throw new Error(`Link in hierarchy chain (${nodeClass.name}) is not an instance of Node!`);
     }
@@ -228,7 +199,7 @@ export class Node {
   /**
    *  Determine what subclass of node this node is.
    */
-  getNodeSubclass(): NodeClass {
+  getNodeSubclass(): typeof Node {
     let nodeClass = this.getClass();
     this.assertNodeClass(nodeClass);
     while (this._getClassOf(nodeClass.prototype) !== Node) {

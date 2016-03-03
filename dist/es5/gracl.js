@@ -160,18 +160,15 @@ var Node = exports.Node = function () {
     function Node(doc) {
         (0, _classCallCheck3.default)(this, Node);
 
+        this.doc = doc;
+
         var _getClass = this.getClass();
 
         var name = _getClass.name;
         var repository = _getClass.repository;
 
-        if (!doc) {
-            throw new Error('No document provided to ' + name + ' constructor!');
-        }
-        this.doc = doc;
-        if (!repository) {
-            throw new Error('No repository static property defined on ' + name + '!');
-        }
+        if (!doc) throw new Error('No document provided to ' + name + ' constructor!');
+        if (!repository) throw new Error('No repository static property defined on ' + name + '!');
     }
 
     (0, _createClass3.default)(Node, [{
