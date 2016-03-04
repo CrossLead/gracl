@@ -62,9 +62,9 @@ export abstract class Node {
     // ensure that this class has a repository
     const { name, repository, id } = this.getClass();
 
-    if (!doc)        throw new Error(`No document provided to ${name} constructor!`);
+    if (!doc)                  throw new Error(`No document provided to ${name} constructor!`);
     if (doc[id] === undefined) throw new Error(`No ${id} property on document ${doc}!`);
-    if (!repository) throw new Error(`No repository static property defined on ${name}!`);
+    if (!repository)           throw new Error(`No repository static property defined on ${name}!`);
   }
 
 
