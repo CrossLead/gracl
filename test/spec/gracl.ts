@@ -2,7 +2,38 @@
 import { expect } from 'chai';
 import * as classes from '../classes/index';
 import * as helpers from '../helpers/index';
-import { Resource, Subject, MemoryRepository } from '../../lib/index';
+import { Resource, Subject, MemoryRepository, Graph } from '../../lib/index';
+
+type TestNodeClasses = {
+  PostResource: typeof Resource;
+  BlogResource: typeof Resource;
+  UserSubject: typeof Subject;
+  TeamSubject: typeof Subject;
+  OrganizationResource: typeof Resource;
+  OrganizationSubject: typeof Subject;
+}
+
+const graph = new Graph({
+  resources: [
+    { name: 'Post', parent: 'Blog', parentId: 'blogId', repository: classes.postModel },
+    { name: 'Blog', parent: 'Organization', parentId: 'organizationId', repository: classes.blogModel },
+    { name: 'Organization', repository: classes.orgModel }
+  ],
+  subjects: [
+    { name: 'User', parent: 'Team', parentId: 'teamIds', repository: classes.userModel },
+    { name: 'Team', parent: 'Organization', parentId: 'organizationId', repository: classes.teamModel },
+    { name: 'Organization', repository: classes.orgModel }
+  ]
+});
+
+const graphClasses = {
+  PostResource: graph.getResource('Post'),
+  BlogResource: graph.getResource('Blog'),
+  UserSubject: graph.getSubject('User'),
+  TeamSubject: graph.getSubject('Team'),
+  OrganizationResource: graph.getResource('Organization'),
+  OrganizationSubject: graph.getSubject('Organization')
+};
 
 describe('gracl', () => {
   let orgA: any,
@@ -66,286 +97,346 @@ describe('gracl', () => {
 
   };
 
-  // run before each test
-  beforeEach(resetTestData);
+  describe('- Class tests', () => {
 
-  it('Creating a node subclass without a repository should throw on instantiation', () => {
-    class TestResource extends Resource {};
-    class TestSubject extends Subject {};
-    expect(() => new TestResource({}), 'Instantiate Resource').to.throw();
-    expect(() => new TestResource({}), 'Instantiate Subject').to.throw();
-  });
+    // run before each test
+    beforeEach(resetTestData);
 
+    it('Creating a node subclass without a repository should throw on instantiation', () => {
+      class TestResource extends Resource {};
+      class TestSubject extends Subject {};
+      expect(() => new TestResource({}), 'Instantiate Resource').to.throw();
+      expect(() => new TestResource({}), 'Instantiate Subject').to.throw();
+    });
 
-  it('Retrieving document from repository should work', async() => {
-    expect(
-      await classes.orgModel.getEntity(orgA.id),
-      'Memory Repository should sucessfully set items'
-    ).to.equal(orgA);
-  });
+    it('Should use displayName if provided in Node.toString()', () => {
+      class TestResource extends Resource {
+        static displayName = 'MY_RESOURCE';
+        static repository = new MemoryRepository();
+      }
 
-
-  it('Resource.getParents() should return Resource instances of parent objects', async() => {
-    const resource = new classes.PostResource(postA1a);
-    const [ parent ] = await resource.getParents();
-    expect(parent, 'Returned parent should be gracl node instance.').to.be.instanceof(classes.BlogResource);
-    expect(parent.getId(), 'Correct parent should be returned.').to.equal(blogA1.id);
-  });
+      const node = new TestResource({ id: 1 });
+      expect(node.getName()).to.equal(TestResource.displayName);
+      expect(node.toString()).to.equal(`<Resource:${TestResource.displayName} id=1>`);
+    });
 
 
-  it('Resource.allow(Subject, <perm>) -> subject can access resource.', async() => {
-    const resource = new classes.PostResource(postA1a),
-          subject = new classes.UserSubject(userA1);
-
-    const initialAllowed = await resource.isAllowed(subject, 'view');
-
-    expect(
-      await resource.allow(subject, 'view'),
-      'Setting permission should return same resource type.'
-    ).to.be.instanceof(classes.PostResource);
-
-    const afterSetAllowed = await resource.isAllowed(subject, 'view');
-
-    expect(initialAllowed, 'the subject should not yet be allowed to view the resource.').to.equal(false);
-    expect(afterSetAllowed, 'After resource sets permission, they should have access').to.equal(true);
-  });
-
-
-  it('Resource.allow(parentSubject, <perm>) -> child subject can access resource.', async() => {
-    const parentResource = new classes.BlogResource(blogA1),
-          childResource = new classes.PostResource(postA1a),
-          subject = new classes.UserSubject(userA1);
-
-    const initialAllowed = await childResource.isAllowed(subject, 'view');
-
-    expect(
-      await parentResource.allow(subject, 'view'),
-      'Setting permission for parentSubject should return same resource type.'
-    ).to.be.instanceof(classes.BlogResource);
-
-    const afterSetAllowed = await childResource.isAllowed(subject, 'view');
-
-    expect(initialAllowed, 'the child subject should not yet be allowed to view the resource.').to.equal(false);
-    expect(afterSetAllowed, 'After resource sets permission, they should have access').to.equal(true);
-  });
-
-
-  it('parentResource.allow(parentSubject, <perm>) -> child subject can access child resource.', async() => {
-    const parentResource = new classes.BlogResource(blogA1),
-          childResource  = new classes.PostResource(postA1a),
-          parentSubject  = new classes.TeamSubject(teamA1),
-          childSubject   = new classes.UserSubject(userA1);
-
-    const initialAllowed = await childResource.isAllowed(childSubject, 'view');
-
-    expect(
-      await parentResource.allow(parentSubject, 'view'),
-      'Setting permission for parentSubject should return same resource type.'
-    ).to.be.instanceof(classes.BlogResource);
-
-    const afterSetAllowed = await childResource.isAllowed(childSubject, 'view');
-
-    expect(initialAllowed, 'the child subject should not yet be allowed to view the resource.').to.equal(false);
-    expect(afterSetAllowed, 'After resource sets permission, they should have access').to.equal(true);
-  });
-
-
-  it('Permissions should be visible through resource.getPermissionsHierarchy()', async() => {
-    const parentResource = new classes.BlogResource(blogA1),
-          childResource = new classes.PostResource(postA1a),
-          subject = new classes.UserSubject(userA1);
-
-    await parentResource.allow(subject, 'view');
-
-    // get hierarchy with childResource as root.
-    const hiearchy = await childResource.getPermissionsHierarchy();
-
-    expect(hiearchy.node, 'Node should be string representation.').to.equal(childResource.toString());
-    expect(hiearchy.parents[0].permissions, 'Parent resource should have one permission.').to.have.length(1);
-    expect(hiearchy.parents[0].permissions[0].access['view'], 'View access should be true').to.equal(true);
-  });
-
-
-  /**
-   *
-      Post(Blog):
-        - deny team access
-
-      Blog:
-        - allow team acces
-
-      results:
-        - user and team can access whole blog, except post
-   */
-  it('Lowest node on hierarchy wins conflicts (deny post for team)', async () => {
-    const parentResource = new classes.BlogResource(blogA1),
-          childResource  = new classes.PostResource(postA1a),
-          parentSubject  = new classes.TeamSubject(teamA1),
-          childSubject   = new classes.UserSubject(userA1);
-
-    expect(
-      await childResource.isAllowed(childSubject, 'view'),
-      'User should not have access to post before permission set.'
-    ).to.equal(false);
-
-    // allow team -> blog access
-    await parentResource.allow(parentSubject, 'view');
-    // deny team specific access to post
-    await childResource.deny(parentSubject, 'view');
-
-    expect(
-      await parentResource.isAllowed(parentSubject, 'view'),
-      'Team should have access to blog after permission set'
-    ).to.equal(true);
-
-    expect(
-      await childResource.isAllowed(parentSubject, 'view'),
-      'Team should not have access to post after permission set.'
-    ).to.equal(false);
-
-    expect(
-      await parentResource.isAllowed(childSubject, 'view'),
-      'User should have access to blog after permission set'
-    ).to.equal(true);
-
-    expect(
-      await childResource.isAllowed(childSubject, 'view'),
-      'User should not have access to post after permission set.'
-    ).to.equal(false);
-  });
-
-
-  /**
-   *
-      Post(Blog):
-        - deny team access
-        - allow user access
-
-      Blog:
-        - deny user access
-        - allow team acces
-
-      results:
-        - user can access specific post, but not blog itself
-        - team can access blog wholistically, but not specific post
-   */
-  it('Lowest node on hierarchy wins conflicts (deny post for team, but allow for user)', async () => {
-    const parentResource = new classes.BlogResource(blogA1),
-          childResource  = new classes.PostResource(postA1a),
-          parentSubject  = new classes.TeamSubject(teamA1),
-          childSubject   = new classes.UserSubject(userA1);
-
-    expect(
-      await childResource.isAllowed(childSubject, 'view'),
-      'User should not have access to post before permission set.'
-    ).to.equal(false);
-
-    // allow team -> blog access
-    await parentResource.allow(parentSubject, 'view');
-    // deny team specific access to post
-    await childResource.deny(parentSubject, 'view');
-    // allow child specifically to access post
-    await childResource.allow(childSubject, 'view');
-    // deny child specifically to access blog
-    await parentResource.deny(childSubject, 'view');
-
-    expect(
-      await parentResource.isAllowed(parentSubject, 'view'),
-      'Team should have access to blog after permission set'
-    ).to.equal(true);
-
-    expect(
-      await childResource.isAllowed(parentSubject, 'view'),
-      'Team should not have access to post after permission set.'
-    ).to.equal(false);
-
-    expect(
-      await parentResource.isAllowed(childSubject, 'view'),
-      'User should have access to blog after permission set'
-    ).to.equal(false);
-
-    expect(
-      await childResource.isAllowed(childSubject, 'view'),
-      'User should have access to post after permission set.'
-    ).to.equal(true);
+    it('Retrieving document from repository should work', async() => {
+      expect(
+        await classes.orgModel.getEntity(orgA.id),
+        'Memory Repository should sucessfully set items'
+      ).to.equal(orgA);
+    });
 
   });
 
+  describe('- Graph specific tests', () => {
 
-  it('Permission explainations should be accurate', async () => {
-    const parentResource = new classes.BlogResource(blogA1),
-          childResource  = new classes.PostResource(postA1a),
-          parentSubject  = new classes.TeamSubject(teamA1),
-          childSubject   = new classes.UserSubject(userA1);
+    // run before each test
+    beforeEach(resetTestData);
 
-    // allow team -> blog access
-    await parentResource.allow(parentSubject, 'view');
-    // deny team specific access to post
-    await childResource.deny(parentSubject, 'view');
+    it('Graph classes should have proper inheritance chain', () => {
+      const {
+        PostResource,
+        BlogResource,
+        UserSubject,
+        TeamSubject,
+        OrganizationResource,
+        OrganizationSubject
+      } = graphClasses;
 
-    const reason = 'Permission set on <Resource:PostResource id=p0014> for <Subject:TeamSubject id=t003> = false';
+      const PostResourceInstance         = new PostResource({ id: 1 });
+      const BlogResourceInstance         = new BlogResource({ id: 1 });
+      const UserSubjectInstance          = new UserSubject({ id: 1 });
+      const TeamSubjectInstance          = new TeamSubject({ id: 1 });
+      const OrganizationResourceInstance = new OrganizationResource({ id: 1 });
+      const OrganizationSubjectInstance  = new OrganizationSubject({ id: 1 });
 
-    expect(
-      await childResource.explainPermission(childSubject, 'view'),
-      'Explaining why child subject cannot access child resource'
-    ).to.equal(reason);
+
+      expect(PostResourceInstance, 'Post -> Blog').to.be.instanceof(BlogResource);
+      expect(PostResourceInstance, 'Post -> Org').to.be.instanceof(OrganizationResource);
+      expect(UserSubjectInstance, 'User -> Team').to.be.instanceof(TeamSubject);
+      expect(UserSubjectInstance, 'User -> Org').to.be.instanceof(OrganizationSubject);
+    });
   });
 
 
-  it('Subject method results should equal resource method results', async () => {
-    const parentResource: Resource = new classes.BlogResource(blogA1),
-          childResource: Resource  = new classes.PostResource(postA1a),
-          parentSubject: Subject  = new classes.TeamSubject(teamA1),
-          childSubject: Subject   = new classes.UserSubject(userA1);
+  describe('- Node permission tests', () => {
 
-    // allow team -> blog access
-    await parentResource.allow(parentSubject, 'view');
-    // deny team specific access to post
-    await childResource.deny(parentSubject, 'view');
+    // run before each test
+    beforeEach(resetTestData);
 
-    expect(
-      await parentResource.isAllowed(parentSubject, 'view'),
-      'Team should have access to blog after permission set'
-    ).to.equal(await parentSubject.isAllowed(parentResource, 'view'));
-
-    expect(
-      await childResource.isAllowed(parentSubject, 'view'),
-      'Team should not have access to post after permission set.'
-    ).to.equal(await parentSubject.isAllowed(childResource, 'view'));
-
-    expect(
-      await parentResource.isAllowed(childSubject, 'view'),
-      'User should have access to blog after permission set'
-    ).to.equal(await childSubject.isAllowed(parentResource, 'view'));
-
-    expect(
-      await childResource.isAllowed(childSubject, 'view'),
-      'User should have access to post after permission set.'
-    ).to.equal(await childSubject.isAllowed(childResource, 'view'));
-  });
+    const testCases = [
+      {
+        description: 'user instantiated classes',
+        classes: classes
+      },
+      {
+        description: 'classes created by graph',
+        classes: graphClasses
+      }
+    ];
 
 
-
-  it('Node.getHierarchyIds() should return flattened array of correct ids', async() => {
-    const childResource: Resource  = new classes.PostResource(postA1a);
-    expect(
-      await childResource.getHierarchyIds(),
-      'Post -> Blog -> Org'
-    ).to.deep.equal([ 'p0014', 'b0010', 'o001' ]);
-  });
+    testCases.forEach(test => {
+      describe('- Permissions tests using ' + test.description, () => {
+        runNodeTestsWithClasses(test.classes);
+      });
+    });
 
 
-  it('Should use displayName if provided in Node.toString()', () => {
-    class TestResource extends Resource {
-      static displayName = 'MY_RESOURCE';
-      static repository = new MemoryRepository();
+    function runNodeTestsWithClasses(nodeClasses: TestNodeClasses) {
+
+
+      it('Resource.getParents() should return Resource instances of parent objects', async() => {
+        const resource = new nodeClasses.PostResource(postA1a);
+        const [ parent ] = await resource.getParents();
+        expect(parent, 'Returned parent should be gracl node instance.').to.be.instanceof(nodeClasses.BlogResource);
+        expect(parent.getId(), 'Correct parent should be returned.').to.equal(blogA1.id);
+      });
+
+
+      it('Resource.allow(Subject, <perm>) -> subject can access resource.', async() => {
+        const resource = new nodeClasses.PostResource(postA1a),
+              subject = new nodeClasses.UserSubject(userA1);
+
+        const initialAllowed = await resource.isAllowed(subject, 'view');
+
+        expect(
+          await resource.allow(subject, 'view'),
+          'Setting permission should return same resource type.'
+        ).to.be.instanceof(nodeClasses.PostResource);
+
+        const afterSetAllowed = await resource.isAllowed(subject, 'view');
+
+        expect(initialAllowed, 'the subject should not yet be allowed to view the resource.').to.equal(false);
+        expect(afterSetAllowed, 'After resource sets permission, they should have access').to.equal(true);
+      });
+
+
+      it('Resource.allow(parentSubject, <perm>) -> child subject can access resource.', async() => {
+        const parentResource = new nodeClasses.BlogResource(blogA1),
+              childResource = new nodeClasses.PostResource(postA1a),
+              subject = new nodeClasses.UserSubject(userA1);
+
+        const initialAllowed = await childResource.isAllowed(subject, 'view');
+
+        expect(
+          await parentResource.allow(subject, 'view'),
+          'Setting permission for parentSubject should return same resource type.'
+        ).to.be.instanceof(nodeClasses.BlogResource);
+
+        const afterSetAllowed = await childResource.isAllowed(subject, 'view');
+
+        expect(initialAllowed, 'the child subject should not yet be allowed to view the resource.').to.equal(false);
+        expect(afterSetAllowed, 'After resource sets permission, they should have access').to.equal(true);
+      });
+
+
+      it('parentResource.allow(parentSubject, <perm>) -> child subject can access child resource.', async() => {
+        const parentResource = new nodeClasses.BlogResource(blogA1),
+              childResource  = new nodeClasses.PostResource(postA1a),
+              parentSubject  = new nodeClasses.TeamSubject(teamA1),
+              childSubject   = new nodeClasses.UserSubject(userA1);
+
+        const initialAllowed = await childResource.isAllowed(childSubject, 'view');
+
+        expect(
+          await parentResource.allow(parentSubject, 'view'),
+          'Setting permission for parentSubject should return same resource type.'
+        ).to.be.instanceof(nodeClasses.BlogResource);
+
+        const afterSetAllowed = await childResource.isAllowed(childSubject, 'view');
+
+        expect(initialAllowed, 'the child subject should not yet be allowed to view the resource.').to.equal(false);
+        expect(afterSetAllowed, 'After resource sets permission, they should have access').to.equal(true);
+      });
+
+
+      it('Permissions should be visible through resource.getPermissionsHierarchy()', async() => {
+        const parentResource = new nodeClasses.BlogResource(blogA1),
+              childResource = new nodeClasses.PostResource(postA1a),
+              subject = new nodeClasses.UserSubject(userA1);
+
+        await parentResource.allow(subject, 'view');
+
+        // get hierarchy with childResource as root.
+        const hiearchy = await childResource.getPermissionsHierarchy();
+
+        expect(hiearchy.node, 'Node should be string representation.').to.equal(childResource.toString());
+        expect(hiearchy.parents[0].permissions, 'Parent resource should have one permission.').to.have.length(1);
+        expect(hiearchy.parents[0].permissions[0].access['view'], 'View access should be true').to.equal(true);
+      });
+
+
+      /**
+       *
+          Post(Blog):
+            - deny team access
+
+          Blog:
+            - allow team acces
+
+          results:
+            - user and team can access whole blog, except post
+       */
+      it('Lowest node on hierarchy wins conflicts (deny post for team)', async () => {
+        const parentResource = new nodeClasses.BlogResource(blogA1),
+              childResource  = new nodeClasses.PostResource(postA1a),
+              parentSubject  = new nodeClasses.TeamSubject(teamA1),
+              childSubject   = new nodeClasses.UserSubject(userA1);
+
+        expect(
+          await childResource.isAllowed(childSubject, 'view'),
+          'User should not have access to post before permission set.'
+        ).to.equal(false);
+
+        // allow team -> blog access
+        await parentResource.allow(parentSubject, 'view');
+        // deny team specific access to post
+        await childResource.deny(parentSubject, 'view');
+
+        expect(
+          await parentResource.isAllowed(parentSubject, 'view'),
+          'Team should have access to blog after permission set'
+        ).to.equal(true);
+
+        expect(
+          await childResource.isAllowed(parentSubject, 'view'),
+          'Team should not have access to post after permission set.'
+        ).to.equal(false);
+
+        expect(
+          await parentResource.isAllowed(childSubject, 'view'),
+          'User should have access to blog after permission set'
+        ).to.equal(true);
+
+        expect(
+          await childResource.isAllowed(childSubject, 'view'),
+          'User should not have access to post after permission set.'
+        ).to.equal(false);
+      });
+
+
+      /**
+       *
+          Post(Blog):
+            - deny team access
+            - allow user access
+
+          Blog:
+            - deny user access
+            - allow team acces
+
+          results:
+            - user can access specific post, but not blog itself
+            - team can access blog wholistically, but not specific post
+       */
+      it('Lowest node on hierarchy wins conflicts (deny post for team, but allow for user)', async () => {
+        const parentResource = new nodeClasses.BlogResource(blogA1),
+              childResource  = new nodeClasses.PostResource(postA1a),
+              parentSubject  = new nodeClasses.TeamSubject(teamA1),
+              childSubject   = new nodeClasses.UserSubject(userA1);
+
+        expect(
+          await childResource.isAllowed(childSubject, 'view'),
+          'User should not have access to post before permission set.'
+        ).to.equal(false);
+
+        // allow team -> blog access
+        await parentResource.allow(parentSubject, 'view');
+        // deny team specific access to post
+        await childResource.deny(parentSubject, 'view');
+        // allow child specifically to access post
+        await childResource.allow(childSubject, 'view');
+        // deny child specifically to access blog
+        await parentResource.deny(childSubject, 'view');
+
+        expect(
+          await parentResource.isAllowed(parentSubject, 'view'),
+          'Team should have access to blog after permission set'
+        ).to.equal(true);
+
+        expect(
+          await childResource.isAllowed(parentSubject, 'view'),
+          'Team should not have access to post after permission set.'
+        ).to.equal(false);
+
+        expect(
+          await parentResource.isAllowed(childSubject, 'view'),
+          'User should have access to blog after permission set'
+        ).to.equal(false);
+
+        expect(
+          await childResource.isAllowed(childSubject, 'view'),
+          'User should have access to post after permission set.'
+        ).to.equal(true);
+
+      });
+
+
+      it('Permission explainations should be accurate', async () => {
+        const parentResource = new nodeClasses.BlogResource(blogA1),
+              childResource  = new nodeClasses.PostResource(postA1a),
+              parentSubject  = new nodeClasses.TeamSubject(teamA1),
+              childSubject   = new nodeClasses.UserSubject(userA1);
+
+        // allow team -> blog access
+        await parentResource.allow(parentSubject, 'view');
+        // deny team specific access to post
+        await childResource.deny(parentSubject, 'view');
+
+        const reason = `Permission set on <Resource:${childResource.getName()} id=p0014> for <Subject:${parentSubject.getName()} id=t003> = false`;
+
+        expect(
+          await childResource.explainPermission(childSubject, 'view'),
+          'Explaining why child subject cannot access child resource'
+        ).to.equal(reason);
+      });
+
+
+      it('Subject method results should equal resource method results', async () => {
+        const parentResource: Resource = new nodeClasses.BlogResource(blogA1),
+              childResource: Resource  = new nodeClasses.PostResource(postA1a),
+              parentSubject: Subject  = new nodeClasses.TeamSubject(teamA1),
+              childSubject: Subject   = new nodeClasses.UserSubject(userA1);
+
+        // allow team -> blog access
+        await parentResource.allow(parentSubject, 'view');
+        // deny team specific access to post
+        await childResource.deny(parentSubject, 'view');
+
+        expect(
+          await parentResource.isAllowed(parentSubject, 'view'),
+          'Team should have access to blog after permission set'
+        ).to.equal(await parentSubject.isAllowed(parentResource, 'view'));
+
+        expect(
+          await childResource.isAllowed(parentSubject, 'view'),
+          'Team should not have access to post after permission set.'
+        ).to.equal(await parentSubject.isAllowed(childResource, 'view'));
+
+        expect(
+          await parentResource.isAllowed(childSubject, 'view'),
+          'User should have access to blog after permission set'
+        ).to.equal(await childSubject.isAllowed(parentResource, 'view'));
+
+        expect(
+          await childResource.isAllowed(childSubject, 'view'),
+          'User should have access to post after permission set.'
+        ).to.equal(await childSubject.isAllowed(childResource, 'view'));
+      });
+
+      it('Node.getHierarchyIds() should return flattened array of correct ids', async() => {
+        const childResource: Resource  = new nodeClasses.PostResource(postA1a);
+        expect(
+          await childResource.getHierarchyIds(),
+          'Post -> Blog -> Org'
+        ).to.deep.equal([ 'p0014', 'b0010', 'o001' ]);
+      });
     }
 
-    const node = new TestResource({ id: 1 });
-    expect(node.getName()).to.equal(TestResource.displayName);
-    expect(node.toString()).to.equal(`<Resource:${TestResource.displayName} id=1>`);
   });
-
 
 
 });

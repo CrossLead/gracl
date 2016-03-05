@@ -7,6 +7,7 @@ import { MemoryRepository } from './builtins/MemoryRepository';
 
 export { Node } from './classes/Node';
 export { Subject } from './classes/Subject';
+export { Graph } from './classes/Graph';
 export { Resource } from './classes/Resource';
 export { MemoryRepository } from './builtins/MemoryRepository';
 export const util = _util;

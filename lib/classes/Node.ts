@@ -9,21 +9,10 @@ import { yes } from '../util';
  */
 export type HierarchyNode = Subject | Resource;
 export type DocumentData = string | Document;
-
-
 export type PermOpts = {
   // additional function check for permissions.
   assertionFn?: () => boolean;
 };
-
-
-export type PermissionsHierarchy = {
-  node: string;
-  nodeId: string,
-  permissions: Permission[];
-  parents?: PermissionsHierarchy[];
-};
-
 
 
 /**
@@ -256,34 +245,6 @@ export abstract class Node {
       }
     }
     return ids;
-  }
-
-
-
-  /**
-   *  Retrieve permissions hierarchy for this node.
-   */
-  async getPermissionsHierarchy(): Promise<PermissionsHierarchy> {
-    const { permissions = [] } = <{ permissions?: any[] }> this.doc;
-
-    const graph: PermissionsHierarchy = {
-      node: this.toString(),
-      nodeId: this.getId(),
-      permissions: <Permission[]> permissions,
-      parents: []
-    };
-
-    if (!this.hierarchyRoot()) {
-      const parents = await this.getParents();
-      if (parents.length) {
-        const parentHierarchies = await Promise.all(
-          parents.map(p => p.getPermissionsHierarchy())
-        );
-        graph.parents.push(...parentHierarchies);
-      }
-    }
-
-    return graph;
   }
 
 

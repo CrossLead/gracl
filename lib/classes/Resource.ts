@@ -11,6 +11,14 @@ export type AccessResult = {
 };
 
 
+export type PermissionsHierarchy = {
+  node: string;
+  nodeId: string,
+  permissions: Permission[];
+  parents?: PermissionsHierarchy[];
+};
+
+
 /**
  * Resource class, permissions are stored on these Nodes, and Subject nodes
    check for access to these nodes.
@@ -234,6 +242,33 @@ export class Resource extends Node {
    */
   deny(subject: Subject, permissionType: string): Promise<Resource> {
     return this.setPermissionAccess(subject, permissionType, false);
+  }
+
+
+  /**
+   *  Retrieve permissions hierarchy for this node.
+   */
+  async getPermissionsHierarchy(): Promise<PermissionsHierarchy> {
+    const { permissions = [] } = <{ permissions?: any[] }> this.doc;
+
+    const graph: PermissionsHierarchy = {
+      node: this.toString(),
+      nodeId: this.getId(),
+      permissions: <Permission[]> permissions,
+      parents: []
+    };
+
+    if (!this.hierarchyRoot()) {
+      const parents = await (<Promise<Resource[]>> this.getParents());
+      if (parents.length) {
+        const parentHierarchies = await Promise.all(
+          parents.map(p => p.getPermissionsHierarchy())
+        );
+        graph.parents.push(...parentHierarchies);
+      }
+    }
+
+    return graph;
   }
 
 
