@@ -156,6 +156,41 @@ export async function checkUserViewPermissionForPost(user, post) {
 }
 ```
 
+### Alternative setup (compact version)
+
+The subject + resource hierarchies can also be created automatically by providing a __schema__...
+
+```javascript
+import { Graph } from 'gracl';
+
+const schema = {
+  resources: [
+    { name: 'Post', parent: 'Blog', parentId: 'blogId', repository: classes.postModel },
+    { name: 'Blog', parent: 'Organization', parentId: 'organizationId', repository: classes.blogModel },
+    { name: 'Organization', repository: classes.orgModel }
+  ],
+  subjects: [
+    { name: 'User', parent: 'Team', parentId: 'teamIds', repository: classes.userModel },
+    { name: 'Team', parent: 'Organization', parentId: 'organizationId', repository: classes.teamModel },
+    { name: 'Organization', repository: classes.orgModel }
+  ]
+};
+
+const graph = new Graph(schema);
+
+// Now, the classes can be extracted from the graph to define the functions above...
+const UserSubject = graph.getSubject('User'),
+      PostResource = graph.getResource('Post');
+
+export async function checkUserViewPermissionForPost(user, post) {
+  const subject = new UserSubject(user),
+        resource = new PostResource(post);
+
+  // recursively check entire hierarchy
+  return await subject.isAllowed(resource, 'view');
+}
+```
+
 ## Dev setup
 
   1. run `npm install`
