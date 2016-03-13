@@ -1,4 +1,5 @@
 import { Permission } from './interfaces';
+import { Node } from './classes/Node';
 
 export function noop() { }
 export function yes() { return true; }
@@ -29,4 +30,8 @@ export function permissionCompare(a: Permission, b: Permission) {
 
 export function permissionIndexOf(arr: Permission[], subjectId: string): number {
   return binaryIndexOf(arr, { subjectId }, permissionCompare);
+}
+
+export function getClassOf(node: any): typeof Node {
+  return <typeof Node> Object.getPrototypeOf(node).constructor;
 }

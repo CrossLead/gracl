@@ -319,10 +319,6 @@ var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
-
-var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-
 var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
@@ -361,6 +357,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
         step((generator = generator.apply(thisArg, _arguments)).next());
     });
 };
+var util_1 = require('../util');
 
 var Node = function () {
     function Node(doc) {
@@ -380,11 +377,6 @@ var Node = function () {
     }
 
     (0, _createClass3.default)(Node, [{
-        key: '_getClassOf',
-        value: function _getClassOf(node) {
-            return (0, _getPrototypeOf2.default)(node).constructor;
-        }
-    }, {
         key: 'getName',
         value: function getName() {
             var thisClass = this.getClass(),
@@ -406,17 +398,17 @@ var Node = function () {
     }, {
         key: 'getParentClass',
         value: function getParentClass() {
-            return this._getClassOf(this.constructor.prototype);
+            return util_1.getClassOf(this.constructor.prototype);
         }
     }, {
         key: 'getClass',
         value: function getClass() {
-            return this._getClassOf(this);
+            return util_1.getClassOf(this);
         }
     }, {
         key: 'hierarchyRoot',
         value: function hierarchyRoot() {
-            return this._getClassOf(this.getParentClass().prototype) === Node;
+            return util_1.getClassOf(this.getParentClass().prototype) === Node;
         }
     }, {
         key: 'getId',
@@ -566,8 +558,8 @@ var Node = function () {
         value: function getNodeSubclass() {
             var nodeClass = this.getClass();
             this.assertNodeClass(nodeClass);
-            while (this._getClassOf(nodeClass.prototype) !== Node) {
-                nodeClass = this._getClassOf(nodeClass.prototype);
+            while (util_1.getClassOf(nodeClass.prototype) !== Node) {
+                nodeClass = util_1.getClassOf(nodeClass.prototype);
                 this.assertNodeClass(nodeClass);
             }
             return nodeClass;
@@ -577,9 +569,9 @@ var Node = function () {
         value: function getNodeDepth() {
             var depth = 0;
             var nodeClass = this.getClass();
-            while (this._getClassOf(nodeClass.prototype) !== Node) {
+            while (util_1.getClassOf(nodeClass.prototype) !== Node) {
                 depth++;
-                nodeClass = this._getClassOf(nodeClass.prototype);
+                nodeClass = util_1.getClassOf(nodeClass.prototype);
             }
             return depth;
         }
@@ -637,12 +629,17 @@ var Node = function () {
     }, {
         key: 'getHierarchyClassNames',
         value: function getHierarchyClassNames() {
+            return this.getClass().getHierarchyClassNames();
+        }
+    }], [{
+        key: 'getHierarchyClassNames',
+        value: function getHierarchyClassNames() {
             var names = [];
-            var nodeClass = this.getClass();
+            var nodeClass = this;
             do {
                 names.push(nodeClass.displayName || nodeClass.name);
-                nodeClass = this._getClassOf(nodeClass.prototype);
-            } while (this._getClassOf(nodeClass.prototype) !== Node);
+                nodeClass = util_1.getClassOf(nodeClass.prototype);
+            } while (util_1.getClassOf(nodeClass.prototype) !== Node);
             return names;
         }
     }]);
@@ -653,7 +650,7 @@ Node.displayName = '';
 Node.id = 'id';
 exports.Node = Node;
 
-},{"babel-runtime/core-js/object/get-prototype-of":13,"babel-runtime/core-js/promise":15,"babel-runtime/helpers/classCallCheck":19,"babel-runtime/helpers/createClass":20,"babel-runtime/regenerator":127}],4:[function(require,module,exports){
+},{"../util":7,"babel-runtime/core-js/promise":15,"babel-runtime/helpers/classCallCheck":19,"babel-runtime/helpers/createClass":20,"babel-runtime/regenerator":127}],4:[function(require,module,exports){
 "use strict";
 
 var _regenerator = require('babel-runtime/regenerator');
@@ -1459,6 +1456,12 @@ exports.permissionIndexOf = util_1.permissionIndexOf;
 },{"./builtins/MemoryRepository":1,"./classes/Graph":2,"./classes/Node":3,"./classes/Resource":4,"./classes/Subject":5,"./util":7}],7:[function(require,module,exports){
 "use strict";
 
+var _getPrototypeOf = require("babel-runtime/core-js/object/get-prototype-of");
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function noop() {}
 exports.noop = noop;
 function yes() {
@@ -1490,8 +1493,12 @@ function permissionIndexOf(arr, subjectId) {
     return binaryIndexOf(arr, { subjectId: subjectId }, permissionCompare);
 }
 exports.permissionIndexOf = permissionIndexOf;
+function getClassOf(node) {
+    return (0, _getPrototypeOf2.default)(node).constructor;
+}
+exports.getClassOf = getClassOf;
 
-},{}],8:[function(require,module,exports){
+},{"babel-runtime/core-js/object/get-prototype-of":13}],8:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/array/from"), __esModule: true };
 },{"core-js/library/fn/array/from":25}],9:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/get-iterator"), __esModule: true };

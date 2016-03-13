@@ -1,7 +1,7 @@
 import { Repository, Permission, Document } from '../interfaces';
 import { Subject } from './Subject';
 import { Resource } from './Resource';
-import { yes } from '../util';
+import { yes, getClassOf } from '../util';
 
 
 /**
@@ -45,6 +45,22 @@ export abstract class Node {
 
 
   /**
+   *  Retrieve all class names in the hierarchy of nodes stemming from this class
+   */
+  public static getHierarchyClassNames() {
+    const names: string[] = [];
+    let nodeClass = this;
+
+    do {
+      names.push(nodeClass.displayName || nodeClass.name);
+      nodeClass = getClassOf(nodeClass.prototype);
+    } while (getClassOf(nodeClass.prototype) !== Node);
+
+    return names;
+  }
+
+
+  /**
    *  Constructor, simply assigns the given document as a property
    */
   constructor(public doc: Document) {
@@ -54,14 +70,6 @@ export abstract class Node {
     if (!doc)                  throw new Error(`No document provided to ${name} constructor!`);
     if (doc[id] === undefined) throw new Error(`No ${id} property on document ${doc}!`);
     if (!repository)           throw new Error(`No repository static property defined on ${name}!`);
-  }
-
-
-  /**
-   *  Internal method for determining the class of a given instance of a Node subclass
-   */
-  private _getClassOf(node: any): typeof Node {
-    return <typeof Node> Object.getPrototypeOf(node).constructor;
   }
 
 
@@ -99,7 +107,7 @@ export abstract class Node {
    *  Get the relative super class constructor of this instance
    */
   getParentClass(): typeof Node {
-    return this._getClassOf(this.constructor.prototype);
+    return getClassOf(this.constructor.prototype);
   }
 
 
@@ -107,7 +115,7 @@ export abstract class Node {
    *  Get the class of this instance
    */
   getClass(): typeof Node {
-    return this._getClassOf(this);
+    return getClassOf(this);
   }
 
 
@@ -116,7 +124,7 @@ export abstract class Node {
       checking if the class two levels up is Node
    */
   hierarchyRoot() {
-    return this._getClassOf(this.getParentClass().prototype) === Node;
+    return getClassOf(this.getParentClass().prototype) === Node;
   }
 
 
@@ -206,8 +214,8 @@ export abstract class Node {
   getNodeSubclass(): typeof Node {
     let nodeClass = this.getClass();
     this.assertNodeClass(nodeClass);
-    while (this._getClassOf(nodeClass.prototype) !== Node) {
-      nodeClass = this._getClassOf(nodeClass.prototype);
+    while (getClassOf(nodeClass.prototype) !== Node) {
+      nodeClass = getClassOf(nodeClass.prototype);
       this.assertNodeClass(nodeClass);
     }
     return nodeClass;
@@ -219,9 +227,9 @@ export abstract class Node {
   getNodeDepth(): number {
     let depth = 0;
     let nodeClass = this.getClass();
-    while (this._getClassOf(nodeClass.prototype) !== Node) {
+    while (getClassOf(nodeClass.prototype) !== Node) {
       depth++;
-      nodeClass = this._getClassOf(nodeClass.prototype);
+      nodeClass = getClassOf(nodeClass.prototype);
     }
     return depth;
   }
@@ -250,18 +258,10 @@ export abstract class Node {
 
 
   /**
-   *  Retrieve all node types in the hierarchy of nodes stemming from this node
+   *  Instance version of static method
    */
   getHierarchyClassNames(): string[] {
-    const names: string[] = [];
-    let nodeClass = this.getClass();
-
-    do {
-      names.push(nodeClass.displayName || nodeClass.name);
-      nodeClass = this._getClassOf(nodeClass.prototype);
-    } while (this._getClassOf(nodeClass.prototype) !== Node);
-
-    return names;
+    return this.getClass().getHierarchyClassNames();
   }
 
 

@@ -12,8 +12,8 @@ export declare abstract class Node {
     static parentId: string;
     static id: string;
     static repository: Repository;
+    static getHierarchyClassNames(): string[];
     constructor(doc: Document);
-    private _getClassOf(node);
     getName(): string;
     toString(): string;
     isNodeType(nc: typeof Node): boolean;
