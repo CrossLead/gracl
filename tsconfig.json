@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "es2015",
-    "declaration": false,
+    "module": "commonjs",
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "removeComments": true,

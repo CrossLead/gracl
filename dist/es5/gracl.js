@@ -1,11 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.MemoryRepository = undefined;
-
 var _regenerator = require("babel-runtime/regenerator");
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
@@ -49,7 +44,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
     });
 };
 
-var MemoryRepository = exports.MemoryRepository = function () {
+var MemoryRepository = function () {
     function MemoryRepository() {
         var data = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
         (0, _classCallCheck3.default)(this, MemoryRepository);
@@ -97,13 +92,10 @@ var MemoryRepository = exports.MemoryRepository = function () {
     return MemoryRepository;
 }();
 
-},{"babel-runtime/core-js/promise":15,"babel-runtime/helpers/classCallCheck":19,"babel-runtime/helpers/createClass":20,"babel-runtime/regenerator":127}],2:[function(require,module,exports){
-'use strict';
+exports.MemoryRepository = MemoryRepository;
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.Graph = undefined;
+},{"babel-runtime/core-js/promise":15,"babel-runtime/helpers/classCallCheck":19,"babel-runtime/helpers/createClass":20,"babel-runtime/regenerator":127}],2:[function(require,module,exports){
+"use strict";
 
 var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
 
@@ -141,13 +133,12 @@ var _createClass2 = require('babel-runtime/helpers/createClass');
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
-var _Subject2 = require('./Subject');
-
-var _Resource2 = require('./Resource');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Graph = exports.Graph = function () {
+var Subject_1 = require('./Subject');
+var Resource_1 = require('./Resource');
+
+var Graph = function () {
     function Graph(schema) {
         (0, _classCallCheck3.default)(this, Graph);
 
@@ -264,8 +255,8 @@ var Graph = exports.Graph = function () {
                         return _a;
                     }(ParentClass), _a.id = node.id || 'id', _a.parentId = node.parentId, _a.displayName = node.name, _a.repository = node.repository, _a));
                 } else {
-                    classGraph.set(node.name, (_b = function (_Resource) {
-                        (0, _inherits3.default)(_b, _Resource);
+                    classGraph.set(node.name, (_b = function (_Resource_1$Resource) {
+                        (0, _inherits3.default)(_b, _Resource_1$Resource);
 
                         function _b() {
                             (0, _classCallCheck3.default)(this, _b);
@@ -273,7 +264,7 @@ var Graph = exports.Graph = function () {
                         }
 
                         return _b;
-                    }(_Resource2.Resource), _b.id = node.id || 'id', _b.displayName = node.name, _b.repository = node.repository, _b));
+                    }(Resource_1.Resource), _b.id = node.id || 'id', _b.displayName = node.name, _b.repository = node.repository, _b));
                 }
                 var _a, _b;
             };
@@ -299,8 +290,8 @@ var Graph = exports.Graph = function () {
                         return _a;
                     }(ParentClass), _a.id = node.id || 'id', _a.parentId = node.parentId, _a.displayName = node.name, _a.repository = node.repository, _a));
                 } else {
-                    classGraph.set(node.name, (_b = function (_Subject) {
-                        (0, _inherits3.default)(_b, _Subject);
+                    classGraph.set(node.name, (_b = function (_Subject_1$Subject) {
+                        (0, _inherits3.default)(_b, _Subject_1$Subject);
 
                         function _b() {
                             (0, _classCallCheck3.default)(this, _b);
@@ -308,7 +299,7 @@ var Graph = exports.Graph = function () {
                         }
 
                         return _b;
-                    }(_Subject2.Subject), _b.id = node.id || 'id', _b.displayName = node.name, _b.repository = node.repository, _b));
+                    }(Subject_1.Subject), _b.id = node.id || 'id', _b.displayName = node.name, _b.repository = node.repository, _b));
                 }
                 var _a, _b;
             };
@@ -319,13 +310,10 @@ var Graph = exports.Graph = function () {
     return Graph;
 }();
 
-},{"./Resource":4,"./Subject":5,"babel-runtime/core-js/get-iterator":9,"babel-runtime/core-js/map":10,"babel-runtime/core-js/object/get-prototype-of":13,"babel-runtime/core-js/set":16,"babel-runtime/helpers/classCallCheck":19,"babel-runtime/helpers/createClass":20,"babel-runtime/helpers/inherits":21,"babel-runtime/helpers/possibleConstructorReturn":22,"babel-runtime/helpers/toConsumableArray":23}],3:[function(require,module,exports){
-'use strict';
+exports.Graph = Graph;
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.Node = undefined;
+},{"./Resource":4,"./Subject":5,"babel-runtime/core-js/get-iterator":9,"babel-runtime/core-js/map":10,"babel-runtime/core-js/object/get-prototype-of":13,"babel-runtime/core-js/set":16,"babel-runtime/helpers/classCallCheck":19,"babel-runtime/helpers/createClass":20,"babel-runtime/helpers/inherits":21,"babel-runtime/helpers/possibleConstructorReturn":22,"babel-runtime/helpers/toConsumableArray":23}],3:[function(require,module,exports){
+"use strict";
 
 var _regenerator = require('babel-runtime/regenerator');
 
@@ -374,7 +362,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
     });
 };
 
-var Node = exports.Node = function () {
+var Node = function () {
     function Node(doc) {
         (0, _classCallCheck3.default)(this, Node);
 
@@ -652,14 +640,10 @@ var Node = exports.Node = function () {
 
 Node.displayName = '';
 Node.id = 'id';
+exports.Node = Node;
 
 },{"babel-runtime/core-js/object/get-prototype-of":13,"babel-runtime/core-js/promise":15,"babel-runtime/helpers/classCallCheck":19,"babel-runtime/helpers/createClass":20,"babel-runtime/regenerator":127}],4:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.Resource = undefined;
+"use strict";
 
 var _regenerator = require('babel-runtime/regenerator');
 
@@ -697,10 +681,6 @@ var _promise = require('babel-runtime/core-js/promise');
 
 var _promise2 = _interopRequireDefault(_promise);
 
-var _Node2 = require('./Node');
-
-var _util = require('../util');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -727,9 +707,11 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
         step((generator = generator.apply(thisArg, _arguments)).next());
     });
 };
+var Node_1 = require('./Node');
+var util_1 = require('../util');
 
-var Resource = exports.Resource = function (_Node) {
-    (0, _inherits3.default)(Resource, _Node);
+var Resource = function (_Node_1$Node) {
+    (0, _inherits3.default)(Resource, _Node_1$Node);
 
     function Resource(doc) {
         (0, _classCallCheck3.default)(this, Resource);
@@ -744,7 +726,7 @@ var Resource = exports.Resource = function (_Node) {
     (0, _createClass3.default)(Resource, [{
         key: 'sortPermissions',
         value: function sortPermissions() {
-            this.doc.permissions.sort(_util.permissionCompare);
+            this.doc.permissions.sort(util_1.permissionCompare);
             return this;
         }
     }, {
@@ -759,7 +741,7 @@ var Resource = exports.Resource = function (_Node) {
         value: function getPermission(subject) {
             var subjectId = subject.getId();var permissions = this.doc.permissions;
 
-            return permissions[(0, _util.permissionIndexOf)(permissions, subjectId)] || { subjectId: subjectId, access: {} };
+            return permissions[util_1.permissionIndexOf(permissions, subjectId)] || { subjectId: subjectId, access: {} };
         }
     }, {
         key: 'determineAccess',
@@ -773,7 +755,7 @@ var Resource = exports.Resource = function (_Node) {
                             case 0:
                                 _ref = options || {};
                                 _ref$assertionFn = _ref.assertionFn;
-                                assertionFn = _ref$assertionFn === undefined ? _util.yes : _ref$assertionFn;
+                                assertionFn = _ref$assertionFn === undefined ? util_1.yes : _ref$assertionFn;
                                 result = {
                                     type: permissionType,
                                     access: false,
@@ -943,7 +925,7 @@ var Resource = exports.Resource = function (_Node) {
                                 resources.sort(function (a, b) {
                                     var aDepth = a.getNodeDepth(),
                                         bDepth = b.getNodeDepth();
-                                    return 0 - (0, _util.baseCompare)(aDepth, bDepth);
+                                    return 0 - util_1.baseCompare(aDepth, bDepth);
                                 });
                                 currentSubjects = [subject];
 
@@ -1212,7 +1194,7 @@ var Resource = exports.Resource = function (_Node) {
                                 doc = this.doc;
                                 permissions = doc.permissions;
                                 subjectId = subject.getId();
-                                existingPermissionIndex = (0, _util.permissionIndexOf)(permissions, subjectId), CurrentResourceClass = this.getClass();
+                                existingPermissionIndex = util_1.permissionIndexOf(permissions, subjectId), CurrentResourceClass = this.getClass();
 
                                 if (existingPermissionIndex >= 0) {
                                     permissions[existingPermissionIndex] = action(permissions[existingPermissionIndex]);
@@ -1311,45 +1293,40 @@ var Resource = exports.Resource = function (_Node) {
         }
     }]);
     return Resource;
-}(_Node2.Node);
+}(Node_1.Node);
+
+exports.Resource = Resource;
 
 },{"../util":7,"./Node":3,"babel-runtime/core-js/get-iterator":9,"babel-runtime/core-js/object/get-prototype-of":13,"babel-runtime/core-js/promise":15,"babel-runtime/helpers/classCallCheck":19,"babel-runtime/helpers/createClass":20,"babel-runtime/helpers/inherits":21,"babel-runtime/helpers/possibleConstructorReturn":22,"babel-runtime/helpers/toConsumableArray":23,"babel-runtime/regenerator":127}],5:[function(require,module,exports){
-'use strict';
+"use strict";
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.Subject = undefined;
-
-var _regenerator = require('babel-runtime/regenerator');
+var _regenerator = require("babel-runtime/regenerator");
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
+var _getPrototypeOf = require("babel-runtime/core-js/object/get-prototype-of");
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = require('babel-runtime/helpers/createClass');
+var _createClass2 = require("babel-runtime/helpers/createClass");
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
-var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+var _possibleConstructorReturn2 = require("babel-runtime/helpers/possibleConstructorReturn");
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = require('babel-runtime/helpers/inherits');
+var _inherits2 = require("babel-runtime/helpers/inherits");
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
-var _promise = require('babel-runtime/core-js/promise');
+var _promise = require("babel-runtime/core-js/promise");
 
 var _promise2 = _interopRequireDefault(_promise);
-
-var _Node2 = require('./Node');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1377,9 +1354,10 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
         step((generator = generator.apply(thisArg, _arguments)).next());
     });
 };
+var Node_1 = require('./Node');
 
-var Subject = exports.Subject = function (_Node) {
-    (0, _inherits3.default)(Subject, _Node);
+var Subject = function (_Node_1$Node) {
+    (0, _inherits3.default)(Subject, _Node_1$Node);
 
     function Subject() {
         (0, _classCallCheck3.default)(this, Subject);
@@ -1387,17 +1365,17 @@ var Subject = exports.Subject = function (_Node) {
     }
 
     (0, _createClass3.default)(Subject, [{
-        key: 'determineAccess',
+        key: "determineAccess",
         value: function determineAccess(resource, permissionType, options) {
             return __awaiter(this, void 0, _promise2.default, _regenerator2.default.mark(function _callee() {
                 return _regenerator2.default.wrap(function _callee$(_context) {
                     while (1) {
                         switch (_context.prev = _context.next) {
                             case 0:
-                                return _context.abrupt('return', resource.determineAccess(this, permissionType, options));
+                                return _context.abrupt("return", resource.determineAccess(this, permissionType, options));
 
                             case 1:
-                            case 'end':
+                            case "end":
                                 return _context.stop();
                         }
                     }
@@ -1405,17 +1383,17 @@ var Subject = exports.Subject = function (_Node) {
             }));
         }
     }, {
-        key: 'isAllowed',
+        key: "isAllowed",
         value: function isAllowed(resource, permissionType, options) {
             return __awaiter(this, void 0, _promise2.default, _regenerator2.default.mark(function _callee2() {
                 return _regenerator2.default.wrap(function _callee2$(_context2) {
                     while (1) {
                         switch (_context2.prev = _context2.next) {
                             case 0:
-                                return _context2.abrupt('return', resource.isAllowed(this, permissionType, options));
+                                return _context2.abrupt("return", resource.isAllowed(this, permissionType, options));
 
                             case 1:
-                            case 'end':
+                            case "end":
                                 return _context2.stop();
                         }
                     }
@@ -1423,17 +1401,17 @@ var Subject = exports.Subject = function (_Node) {
             }));
         }
     }, {
-        key: 'explainPermission',
+        key: "explainPermission",
         value: function explainPermission(resource, permissionType, options) {
             return __awaiter(this, void 0, _promise2.default, _regenerator2.default.mark(function _callee3() {
                 return _regenerator2.default.wrap(function _callee3$(_context3) {
                     while (1) {
                         switch (_context3.prev = _context3.next) {
                             case 0:
-                                return _context3.abrupt('return', resource.explainPermission(this, permissionType, options));
+                                return _context3.abrupt("return", resource.explainPermission(this, permissionType, options));
 
                             case 1:
-                            case 'end':
+                            case "end":
                                 return _context3.stop();
                         }
                     }
@@ -1442,96 +1420,44 @@ var Subject = exports.Subject = function (_Node) {
         }
     }]);
     return Subject;
-}(_Node2.Node);
+}(Node_1.Node);
+
+exports.Subject = Subject;
 
 },{"./Node":3,"babel-runtime/core-js/object/get-prototype-of":13,"babel-runtime/core-js/promise":15,"babel-runtime/helpers/classCallCheck":19,"babel-runtime/helpers/createClass":20,"babel-runtime/helpers/inherits":21,"babel-runtime/helpers/possibleConstructorReturn":22,"babel-runtime/regenerator":127}],6:[function(require,module,exports){
-'use strict';
+"use strict";
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.util = exports.MemoryRepository = exports.Resource = exports.Graph = exports.Subject = exports.Node = undefined;
-
-var _Node = require('./classes/Node');
-
-Object.defineProperty(exports, 'Node', {
-    enumerable: true,
-    get: function get() {
-        return _Node.Node;
-    }
-});
-
-var _Subject = require('./classes/Subject');
-
-Object.defineProperty(exports, 'Subject', {
-    enumerable: true,
-    get: function get() {
-        return _Subject.Subject;
-    }
-});
-
-var _Graph = require('./classes/Graph');
-
-Object.defineProperty(exports, 'Graph', {
-    enumerable: true,
-    get: function get() {
-        return _Graph.Graph;
-    }
-});
-
-var _Resource = require('./classes/Resource');
-
-Object.defineProperty(exports, 'Resource', {
-    enumerable: true,
-    get: function get() {
-        return _Resource.Resource;
-    }
-});
-
-var _MemoryRepository = require('./builtins/MemoryRepository');
-
-Object.defineProperty(exports, 'MemoryRepository', {
-    enumerable: true,
-    get: function get() {
-        return _MemoryRepository.MemoryRepository;
-    }
-});
-
-var _util2 = require('./util');
-
-var _util = _interopRequireWildcard(_util2);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-var util = exports.util = _util;
-exports.default = {
-    util: util,
-    Node: _Node.Node,
-    Graph: _Graph.Graph,
-    Subject: _Subject.Subject,
-    Resource: _Resource.Resource,
-    MemoryRepository: _MemoryRepository.MemoryRepository
-};
+var Node_1 = require('./classes/Node');
+exports.Node = Node_1.Node;
+var Subject_1 = require('./classes/Subject');
+exports.Subject = Subject_1.Subject;
+var Resource_1 = require('./classes/Resource');
+exports.Resource = Resource_1.Resource;
+var Graph_1 = require('./classes/Graph');
+exports.Graph = Graph_1.Graph;
+var MemoryRepository_1 = require('./builtins/MemoryRepository');
+exports.MemoryRepository = MemoryRepository_1.MemoryRepository;
+var util_1 = require('./util');
+exports.baseCompare = util_1.baseCompare;
+exports.binaryIndexOf = util_1.binaryIndexOf;
+exports.noop = util_1.noop;
+exports.yes = util_1.yes;
+exports.permissionCompare = util_1.permissionCompare;
+exports.permissionIndexOf = util_1.permissionIndexOf;
 
 },{"./builtins/MemoryRepository":1,"./classes/Graph":2,"./classes/Node":3,"./classes/Resource":4,"./classes/Subject":5,"./util":7}],7:[function(require,module,exports){
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.noop = noop;
-exports.yes = yes;
-exports.baseCompare = baseCompare;
-exports.binaryIndexOf = binaryIndexOf;
-exports.permissionCompare = permissionCompare;
-exports.permissionIndexOf = permissionIndexOf;
 function noop() {}
+exports.noop = noop;
 function yes() {
     return true;
 }
+exports.yes = yes;
 function baseCompare(a, b) {
     return Number(a > b) - Number(a < b);
 }
+exports.baseCompare = baseCompare;
 function binaryIndexOf(arr, el) {
     var compare = arguments.length <= 2 || arguments[2] === undefined ? baseCompare : arguments[2];
 
@@ -1544,12 +1470,15 @@ function binaryIndexOf(arr, el) {
     }
     return -1;
 }
+exports.binaryIndexOf = binaryIndexOf;
 function permissionCompare(a, b) {
     return baseCompare(a.subjectId, b.subjectId);
 }
+exports.permissionCompare = permissionCompare;
 function permissionIndexOf(arr, subjectId) {
     return binaryIndexOf(arr, { subjectId: subjectId }, permissionCompare);
 }
+exports.permissionIndexOf = permissionIndexOf;
 
 },{}],8:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/array/from"), __esModule: true };
