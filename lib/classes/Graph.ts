@@ -71,8 +71,8 @@ export class Graph {
 
     if (remainingNodes.size) {
       throw new Error(
-        'Schema has at least one circular dependency! Examine definitions for ('
-          + [...remainingNodes].join(', ') + ')'
+        'Schema has a circular dependency or a missing parent! Examine definitions for '
+          + [...remainingNodes].map(x => `"${x}"`).join(', ')
       );
     }
 

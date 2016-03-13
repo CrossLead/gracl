@@ -158,6 +158,43 @@ describe('gracl', () => {
       expect(UserSubjectInstance, 'User -> Team').to.be.instanceof(TeamSubject);
       expect(UserSubjectInstance, 'User -> Org').to.be.instanceof(OrganizationSubject);
     });
+
+    it('Graph should throw if there is an undefined parent', () => {
+      const createGraph = () => new Graph({
+        resources: [
+          { name: 'Post', parent: 'Blog', parentId: 'blogId', repository: classes.postModel },
+          // no blog defined...
+          // { name: 'Blog', parent: 'Organization', parentId: 'organizationId', repository: classes.blogModel },
+          { name: 'Organization', repository: classes.orgModel }
+        ],
+        subjects: [
+          { name: 'User', parent: 'Team', parentId: 'teamIds', repository: classes.userModel },
+          { name: 'Team', parent: 'Organization', parentId: 'organizationId', repository: classes.teamModel },
+          { name: 'Organization', repository: classes.orgModel }
+        ]
+      });
+
+      expect(createGraph).to.throw();
+    });
+
+
+    it('Graph should throw if there is a circular dependency', () => {
+      const createGraph = () => new Graph({
+        resources: [
+          { name: 'Post', parent: 'Blog', parentId: 'blogId', repository: classes.postModel },
+          { name: 'Blog', parent: 'Organization', parentId: 'organizationId', repository: classes.blogModel },
+          { name: 'Organization', parent: 'Post', repository: classes.orgModel }
+        ],
+        subjects: [
+          { name: 'User', parent: 'Team', parentId: 'teamIds', repository: classes.userModel },
+          { name: 'Team', parent: 'Organization', parentId: 'organizationId', repository: classes.teamModel },
+          { name: 'Organization', repository: classes.orgModel }
+        ]
+      });
+
+      expect(createGraph).to.throw();
+    });
+
   });
 
 

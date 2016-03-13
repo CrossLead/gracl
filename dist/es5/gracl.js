@@ -232,7 +232,9 @@ var Graph = function () {
                 }
             }
             if (remainingNodes.size) {
-                throw new Error('Schema has at least one circular dependency! Examine definitions for (' + [].concat((0, _toConsumableArray3.default)(remainingNodes)).join(', ') + ')');
+                throw new Error('Schema has a circular dependency or a missing parent! Examine definitions for ' + [].concat((0, _toConsumableArray3.default)(remainingNodes)).map(function (x) {
+                    return '"' + x + '"';
+                }).join(', '));
             }
             return nodeList;
         }
