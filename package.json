@@ -5,7 +5,7 @@
   "main": "./dist/es6/lib/index.js",
   "typings": "./dist/es6/lib/index.d.ts",
   "scripts": {
-    "build": "npm run typings && npm run tscompile && npm run browserify && npm run minify",
+    "build": "npm run typings && npm run lint && npm run tscompile && npm run browserify && npm run minify",
     "pretest": "npm run tscompile",
     "test": "npm run lint && mocha dist/es6/test/spec/**/*.js --require babel-polyfill --compilers js:babel-core/register",
     "tscompile": "./node_modules/typescript/bin/tsc -d -p ./",

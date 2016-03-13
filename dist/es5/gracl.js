@@ -634,6 +634,17 @@ var Node = function () {
                 }, _callee4, this);
             }));
         }
+    }, {
+        key: 'getHierarchyClassNames',
+        value: function getHierarchyClassNames() {
+            var names = [];
+            var nodeClass = this.getClass();
+            do {
+                names.push(nodeClass.displayName || nodeClass.name);
+                nodeClass = this._getClassOf(nodeClass.prototype);
+            } while (this._getClassOf(nodeClass.prototype) !== Node);
+            return names;
+        }
     }]);
     return Node;
 }();

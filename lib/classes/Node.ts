@@ -248,4 +248,21 @@ export abstract class Node {
   }
 
 
+
+  /**
+   *  Retrieve all node types in the hierarchy of nodes stemming from this node
+   */
+  getHierarchyClassNames(): string[] {
+    const names: string[] = [];
+    let nodeClass = this.getClass();
+
+    do {
+      names.push(nodeClass.displayName || nodeClass.name);
+      nodeClass = this._getClassOf(nodeClass.prototype);
+    } while (this._getClassOf(nodeClass.prototype) !== Node);
+
+    return names;
+  }
+
+
 }

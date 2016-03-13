@@ -434,6 +434,24 @@ describe('gracl', () => {
           'Post -> Blog -> Org'
         ).to.deep.equal([ 'p0014', 'b0010', 'o001' ]);
       });
+
+      it('Node.getHierarchyClassNames() should return array of class names', () => {
+        const childResource: Resource = new nodeClasses.PostResource(postA1a),
+              childSubject: Subject   = new nodeClasses.UserSubject(userA1);
+
+        const name = (c: any) => <string> (c.displayName || c.name);
+
+        expect(childResource.getHierarchyClassNames(), 'resource class names')
+          .to.deep.equal(
+            [ name(nodeClasses.PostResource), name(nodeClasses.BlogResource), name(nodeClasses.OrganizationResource) ]
+          );
+
+        expect(childSubject.getHierarchyClassNames(), 'subject class names')
+          .to.deep.equal(
+            [ name(nodeClasses.UserSubject), name(nodeClasses.TeamSubject), name(nodeClasses.OrganizationSubject) ]
+          );
+
+      });
     }
 
   });

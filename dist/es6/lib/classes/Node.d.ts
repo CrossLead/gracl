@@ -29,4 +29,5 @@ export declare abstract class Node {
     getNodeSubclass(): typeof Node;
     getNodeDepth(): number;
     getHierarchyIds(): Promise<string[]>;
+    getHierarchyClassNames(): string[];
 }
