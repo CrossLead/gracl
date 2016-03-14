@@ -2,16 +2,15 @@
   "name": "gracl",
   "version": "0.0.0",
   "description": "graph acl in typescript",
-  "main": "./dist/es6/lib/index.js",
+  "main": "./dist/es5/lib/index.js",
   "typings": "./dist/es6/lib/index.d.ts",
   "scripts": {
-    "build": "npm run typings && npm run lint && npm run tscompile && npm run browserify && npm run minify",
-    "pretest": "npm run tscompile",
-    "test": "npm run lint && mocha dist/es6/test/spec/**/*.js --require babel-polyfill --compilers js:babel-core/register",
+    "build": "npm run typings && npm run lint && npm run tscompile && npm run babel",
+    "babel":  "./node_modules/.bin/babel ./dist/es6 --out-dir ./dist/es5",
+    "pretest": "npm run build && npm run lint",
+    "test": "mocha dist/es5/test/spec/**/*.js",
     "tscompile": "./node_modules/typescript/bin/tsc -d -p ./",
     "typings": "./node_modules/typings/dist/bin/typings.js install",
-    "browserify": "mkdir -p ./dist/es5 && ./node_modules/browserify/bin/cmd.js ./dist/es6/lib/index.js -o ./dist/es5/gracl.js -t [ babelify --plugins [ transform-runtime ] ]",
-    "minify": "./node_modules/uglifyjs/bin/uglifyjs ./dist/es5/gracl.js --screw-ie8 --mangle -o  ./dist/es5/gracl.min.js",
     "docs": "rm -rf ./docs/ && ./node_modules/typedoc/bin/typedoc --mode file --theme default --experimentalAsyncFunctions --target es6 --out ./docs/ ./lib/ && touch ./docs/.nojekyll",
     "gh-pages": "npm run docs && ./node_modules/gh-pages/bin/gh-pages --dotfiles true -d ./docs/",
     "lint": "./node_modules/tslint/bin/tslint -c ./tslint.json ./{test,lib}/**/*.ts"
@@ -28,6 +27,9 @@
   "babel": {
     "presets": [
       "es2015"
+    ],
+    "plugins": [
+      "transform-runtime"
     ],
     "sourceMaps": true
   },
