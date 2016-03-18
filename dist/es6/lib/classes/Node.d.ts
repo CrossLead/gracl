@@ -6,7 +6,7 @@ export declare type DocumentData = string | Document;
 export declare type PermOpts = {
     assertionFn?: () => boolean;
 };
-export declare abstract class Node {
+export declare class Node {
     doc: Document;
     static displayName: string;
     static parentId: string;

@@ -18,7 +18,7 @@ export type PermOpts = {
 /**
  *  Abstract base class from which all gracl hierachy nodes inherit.
  */
-export abstract class Node {
+export class Node {
 
 
   public static displayName: string = '';

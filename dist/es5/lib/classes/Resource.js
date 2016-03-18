@@ -73,7 +73,6 @@ var Resource = function (_Node_1$Node) {
 
         var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Resource).call(this, doc));
 
-        var permissions = _this.doc.permissions = _this.doc.permissions || [];
         _this.sortPermissions();
         return _this;
     }
@@ -81,6 +80,9 @@ var Resource = function (_Node_1$Node) {
     (0, _createClass3.default)(Resource, [{
         key: 'sortPermissions',
         value: function sortPermissions() {
+            if (!this.doc.permissions) {
+                this.doc.permissions = [];
+            }
             this.doc.permissions.sort(util_1.permissionCompare);
             return this;
         }

@@ -38,6 +38,7 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var Node_1 = require('./Node');
 var Subject_1 = require('./Subject');
 var Resource_1 = require('./Resource');
 
@@ -147,6 +148,7 @@ var Graph = function () {
             var nodeList = Graph.sortSchemaNodes(schemaNodes),
                 classGraph = new _map2.default();
             var createClass = function createClass(node) {
+                var getParentsMethod = node.getParents || Node_1.Node.prototype.getParents;
                 if (node.parent) {
                     var ParentClass = classGraph.get(node.parent);
                     classGraph.set(node.name, (_a = function (_ParentClass) {
@@ -157,6 +159,12 @@ var Graph = function () {
                             return (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(_a).apply(this, arguments));
                         }
 
+                        (0, _createClass3.default)(_a, [{
+                            key: 'getParents',
+                            value: function getParents() {
+                                return getParentsMethod.call(this);
+                            }
+                        }]);
                         return _a;
                     }(ParentClass), _a.id = node.id || 'id', _a.parentId = node.parentId, _a.displayName = node.name, _a.repository = node.repository, _a));
                 } else {
@@ -182,6 +190,7 @@ var Graph = function () {
             var nodeList = Graph.sortSchemaNodes(schemaNodes),
                 classGraph = new _map2.default();
             var createClass = function createClass(node) {
+                var getParentsMethod = node.getParents || Node_1.Node.prototype.getParents;
                 if (node.parent) {
                     var ParentClass = classGraph.get(node.parent);
                     classGraph.set(node.name, (_a = function (_ParentClass2) {
@@ -192,6 +201,12 @@ var Graph = function () {
                             return (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(_a).apply(this, arguments));
                         }
 
+                        (0, _createClass3.default)(_a, [{
+                            key: 'getParents',
+                            value: function getParents() {
+                                return getParentsMethod.call(this);
+                            }
+                        }]);
                         return _a;
                     }(ParentClass), _a.id = node.id || 'id', _a.parentId = node.parentId, _a.displayName = node.name, _a.repository = node.repository, _a));
                 } else {

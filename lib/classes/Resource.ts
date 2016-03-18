@@ -31,7 +31,6 @@ export class Resource extends Node {
    */
   constructor(doc: Document) {
     super(doc);
-    const permissions = this.doc.permissions = this.doc.permissions || [];
     this.sortPermissions();
   }
 
@@ -40,6 +39,9 @@ export class Resource extends Node {
    * Sort the permissions on this document by subjectId to allow for fast searching.
    */
   sortPermissions() {
+    if (!this.doc.permissions) {
+      this.doc.permissions = [];
+    }
     this.doc.permissions.sort(permissionCompare);
     return this;
   }

@@ -1,3 +1,4 @@
+import { Node } from './Node';
 import { Subject } from './Subject';
 import { Resource } from './Resource';
 import { Repository } from '../interfaces';
@@ -9,6 +10,7 @@ export type SchemaNode = {
   id?: string;
   parent?: string;
   parentId?: string;
+  getParents?: () => Promise<Node[]>
 };
 
 
@@ -91,6 +93,8 @@ export class Graph {
           classGraph = new Map<string, typeof Resource>();
 
     const createClass = (node: SchemaNode) => {
+      const getParentsMethod = node.getParents || Node.prototype.getParents;
+
       if (node.parent) {
         const ParentClass = classGraph.get(node.parent);
         classGraph.set(node.name, class extends ParentClass {
@@ -98,6 +102,7 @@ export class Graph {
           static parentId    = node.parentId;
           static displayName = node.name;
           static repository  = node.repository;
+          getParents() { return getParentsMethod.call(this); }
         });
       } else {
         classGraph.set(node.name, class extends Resource {
@@ -124,6 +129,8 @@ export class Graph {
           classGraph = new Map<string, typeof Subject>();
 
     const createClass = (node: SchemaNode) => {
+      const getParentsMethod = node.getParents || Node.prototype.getParents;
+
       if (node.parent) {
         const ParentClass = classGraph.get(node.parent);
         classGraph.set(node.name, class extends ParentClass {
@@ -131,6 +138,7 @@ export class Graph {
           static parentId    = node.parentId;
           static displayName = node.name;
           static repository  = node.repository;
+          getParents() { return getParentsMethod.call(this); }
         });
       } else {
         classGraph.set(node.name, class extends Subject {

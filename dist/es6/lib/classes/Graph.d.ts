@@ -1,3 +1,4 @@
+import { Node } from './Node';
 import { Subject } from './Subject';
 import { Resource } from './Resource';
 import { Repository } from '../interfaces';
@@ -7,6 +8,7 @@ export declare type SchemaNode = {
     id?: string;
     parent?: string;
     parentId?: string;
+    getParents?: () => Promise<Node[]>;
 };
 export declare type Schema = {
     resources: SchemaNode[];
