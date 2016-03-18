@@ -198,7 +198,8 @@ export class Resource extends Node {
   async updatePermission(subject: Subject, action: (p: Permission) => Permission): Promise<Resource> {
     const { doc } = this,
           { permissions } = doc,
-          subjectId = subject.getId();
+          subjectId = subject.getId(),
+          resourceId = this.getId();
 
     const existingPermissionIndex = permissionIndexOf(permissions, subjectId),
           CurrentResourceClass = <typeof Resource> this.getClass();
@@ -207,7 +208,7 @@ export class Resource extends Node {
       permissions[existingPermissionIndex] = action(permissions[existingPermissionIndex]);
     } else {
       // add permission
-      permissions.push(action({ subjectId }));
+      permissions.push(action({ subjectId, resourceId }));
     }
 
     // save updated document

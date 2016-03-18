@@ -3,7 +3,9 @@ export interface Repository {
     saveEntity(id: string, doc: Document): Promise<Document>;
 }
 export declare type Permission = {
+    [key: string]: any;
     subjectId: string;
+    resourceId: string;
     access?: {
         [key: string]: boolean;
     };
