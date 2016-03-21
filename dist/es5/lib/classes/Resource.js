@@ -546,7 +546,7 @@ var Resource = function (_Node_1$Node) {
         key: 'updatePermission',
         value: function updatePermission(subject, action) {
             return __awaiter(this, void 0, _promise2.default, _regenerator2.default.mark(function _callee4() {
-                var doc, permissions, subjectId, resourceId, existingPermissionIndex, CurrentResourceClass, id, updated;
+                var doc, permissions, subjectId, subjectType, resourceId, resourceType, existingPermissionIndex, CurrentResourceClass, id, updated;
                 return _regenerator2.default.wrap(function _callee4$(_context4) {
                     while (1) {
                         switch (_context4.prev = _context4.next) {
@@ -554,23 +554,25 @@ var Resource = function (_Node_1$Node) {
                                 doc = this.doc;
                                 permissions = doc.permissions;
                                 subjectId = subject.getId();
+                                subjectType = subject.getName();
                                 resourceId = this.getId();
+                                resourceType = this.getName();
                                 existingPermissionIndex = util_1.permissionIndexOf(permissions, subjectId), CurrentResourceClass = this.getClass();
 
                                 if (existingPermissionIndex >= 0) {
                                     permissions[existingPermissionIndex] = action(permissions[existingPermissionIndex]);
                                 } else {
-                                    permissions.push(action({ subjectId: subjectId, resourceId: resourceId }));
+                                    permissions.push(action({ subjectId: subjectId, resourceId: resourceId, resourceType: resourceType, subjectType: subjectType }));
                                 }
                                 id = this.getId();
-                                _context4.next = 9;
+                                _context4.next = 11;
                                 return CurrentResourceClass.repository.saveEntity(id, doc, this);
 
-                            case 9:
+                            case 11:
                                 updated = _context4.sent;
                                 return _context4.abrupt('return', this.setDoc(updated));
 
-                            case 11:
+                            case 13:
                             case 'end':
                                 return _context4.stop();
                         }

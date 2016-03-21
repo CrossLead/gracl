@@ -7,6 +7,8 @@ export declare type Permission = {
     [key: string]: any;
     subjectId: string;
     resourceId: string;
+    subjectType: string;
+    resourceType: string;
     access?: {
         [key: string]: boolean;
     };

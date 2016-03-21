@@ -251,6 +251,18 @@ describe('gracl', () => {
       });
 
 
+      it('Resource.allow(Subject, <perm>) -> resource should have permission with subjectType and resourceType set.', async() => {
+        const resource = new nodeClasses.PostResource(postA1a),
+              subject = new nodeClasses.UserSubject(userA1);
+
+        await resource.allow(subject, 'view');
+
+        const [ permission ] = resource.doc.permissions;
+        expect(permission.resourceType).to.equal(resource.getName());
+        expect(permission.subjectType).to.equal(subject.getName());
+      });
+
+
       it('Resource.allow(parentSubject, <perm>) -> child subject can access resource.', async() => {
         const parentResource = new nodeClasses.BlogResource(blogA1),
               childResource = new nodeClasses.PostResource(postA1a),

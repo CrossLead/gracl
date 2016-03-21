@@ -204,7 +204,9 @@ export class Resource extends Node {
     const { doc } = this,
           { permissions } = doc,
           subjectId = subject.getId(),
-          resourceId = this.getId();
+          subjectType = subject.getName(),
+          resourceId = this.getId(),
+          resourceType = this.getName();
 
     const existingPermissionIndex = permissionIndexOf(permissions, subjectId),
           CurrentResourceClass = <typeof Resource> this.getClass();
@@ -213,7 +215,7 @@ export class Resource extends Node {
       permissions[existingPermissionIndex] = action(permissions[existingPermissionIndex]);
     } else {
       // add permission
-      permissions.push(action({ subjectId, resourceId }));
+      permissions.push(action({ subjectId, resourceId, resourceType, subjectType }));
     }
 
     // save updated document

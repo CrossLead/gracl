@@ -320,39 +320,26 @@ describe('gracl', function () {
                     }, _callee4, this);
                 }));
             });
-            it('Resource.allow(parentSubject, <perm>) -> child subject can access resource.', function () {
+            it('Resource.allow(Subject, <perm>) -> resource should have permission with subjectType and resourceType set.', function () {
                 return __awaiter(_this4, void 0, void 0, _regenerator2.default.mark(function _callee5() {
-                    var parentResource, childResource, subject, initialAllowed, afterSetAllowed;
+                    var resource, subject, _resource$doc$permiss, permission;
+
                     return _regenerator2.default.wrap(function _callee5$(_context5) {
                         while (1) {
                             switch (_context5.prev = _context5.next) {
                                 case 0:
-                                    parentResource = new nodeClasses.BlogResource(blogA1), childResource = new nodeClasses.PostResource(postA1a), subject = new nodeClasses.UserSubject(userA1);
+                                    resource = new nodeClasses.PostResource(postA1a), subject = new nodeClasses.UserSubject(userA1);
                                     _context5.next = 3;
-                                    return childResource.isAllowed(subject, 'view');
+                                    return resource.allow(subject, 'view');
 
                                 case 3:
-                                    initialAllowed = _context5.sent;
-                                    _context5.t0 = chai_1;
-                                    _context5.next = 7;
-                                    return parentResource.allow(subject, 'view');
+                                    _resource$doc$permiss = (0, _slicedToArray3.default)(resource.doc.permissions, 1);
+                                    permission = _resource$doc$permiss[0];
+
+                                    chai_1.expect(permission.resourceType).to.equal(resource.getName());
+                                    chai_1.expect(permission.subjectType).to.equal(subject.getName());
 
                                 case 7:
-                                    _context5.t1 = _context5.sent;
-                                    _context5.t2 = nodeClasses.BlogResource;
-
-                                    _context5.t0.expect.call(_context5.t0, _context5.t1, 'Setting permission for parentSubject should return same resource type.').to.be.instanceof(_context5.t2);
-
-                                    _context5.next = 12;
-                                    return childResource.isAllowed(subject, 'view');
-
-                                case 12:
-                                    afterSetAllowed = _context5.sent;
-
-                                    chai_1.expect(initialAllowed, 'the child subject should not yet be allowed to view the resource.').to.equal(false);
-                                    chai_1.expect(afterSetAllowed, 'After resource sets permission, they should have access').to.equal(true);
-
-                                case 15:
                                 case 'end':
                                     return _context5.stop();
                             }
@@ -360,22 +347,22 @@ describe('gracl', function () {
                     }, _callee5, this);
                 }));
             });
-            it('parentResource.allow(parentSubject, <perm>) -> child subject can access child resource.', function () {
+            it('Resource.allow(parentSubject, <perm>) -> child subject can access resource.', function () {
                 return __awaiter(_this4, void 0, void 0, _regenerator2.default.mark(function _callee6() {
-                    var parentResource, childResource, parentSubject, childSubject, initialAllowed, afterSetAllowed;
+                    var parentResource, childResource, subject, initialAllowed, afterSetAllowed;
                     return _regenerator2.default.wrap(function _callee6$(_context6) {
                         while (1) {
                             switch (_context6.prev = _context6.next) {
                                 case 0:
-                                    parentResource = new nodeClasses.BlogResource(blogA1), childResource = new nodeClasses.PostResource(postA1a), parentSubject = new nodeClasses.TeamSubject(teamA1), childSubject = new nodeClasses.UserSubject(userA1);
+                                    parentResource = new nodeClasses.BlogResource(blogA1), childResource = new nodeClasses.PostResource(postA1a), subject = new nodeClasses.UserSubject(userA1);
                                     _context6.next = 3;
-                                    return childResource.isAllowed(childSubject, 'view');
+                                    return childResource.isAllowed(subject, 'view');
 
                                 case 3:
                                     initialAllowed = _context6.sent;
                                     _context6.t0 = chai_1;
                                     _context6.next = 7;
-                                    return parentResource.allow(parentSubject, 'view');
+                                    return parentResource.allow(subject, 'view');
 
                                 case 7:
                                     _context6.t1 = _context6.sent;
@@ -384,7 +371,7 @@ describe('gracl', function () {
                                     _context6.t0.expect.call(_context6.t0, _context6.t1, 'Setting permission for parentSubject should return same resource type.').to.be.instanceof(_context6.t2);
 
                                     _context6.next = 12;
-                                    return childResource.isAllowed(childSubject, 'view');
+                                    return childResource.isAllowed(subject, 'view');
 
                                 case 12:
                                     afterSetAllowed = _context6.sent;
@@ -400,29 +387,39 @@ describe('gracl', function () {
                     }, _callee6, this);
                 }));
             });
-            it('Permissions should be visible through resource.getPermissionsHierarchy()', function () {
+            it('parentResource.allow(parentSubject, <perm>) -> child subject can access child resource.', function () {
                 return __awaiter(_this4, void 0, void 0, _regenerator2.default.mark(function _callee7() {
-                    var parentResource, childResource, subject, hiearchy;
+                    var parentResource, childResource, parentSubject, childSubject, initialAllowed, afterSetAllowed;
                     return _regenerator2.default.wrap(function _callee7$(_context7) {
                         while (1) {
                             switch (_context7.prev = _context7.next) {
                                 case 0:
-                                    parentResource = new nodeClasses.BlogResource(blogA1), childResource = new nodeClasses.PostResource(postA1a), subject = new nodeClasses.UserSubject(userA1);
+                                    parentResource = new nodeClasses.BlogResource(blogA1), childResource = new nodeClasses.PostResource(postA1a), parentSubject = new nodeClasses.TeamSubject(teamA1), childSubject = new nodeClasses.UserSubject(userA1);
                                     _context7.next = 3;
-                                    return parentResource.allow(subject, 'view');
+                                    return childResource.isAllowed(childSubject, 'view');
 
                                 case 3:
-                                    _context7.next = 5;
-                                    return childResource.getPermissionsHierarchy();
+                                    initialAllowed = _context7.sent;
+                                    _context7.t0 = chai_1;
+                                    _context7.next = 7;
+                                    return parentResource.allow(parentSubject, 'view');
 
-                                case 5:
-                                    hiearchy = _context7.sent;
+                                case 7:
+                                    _context7.t1 = _context7.sent;
+                                    _context7.t2 = nodeClasses.BlogResource;
 
-                                    chai_1.expect(hiearchy.node, 'Node should be string representation.').to.equal(childResource.toString());
-                                    chai_1.expect(hiearchy.parents[0].permissions, 'Parent resource should have one permission.').to.have.length(1);
-                                    chai_1.expect(hiearchy.parents[0].permissions[0].access['view'], 'View access should be true').to.equal(true);
+                                    _context7.t0.expect.call(_context7.t0, _context7.t1, 'Setting permission for parentSubject should return same resource type.').to.be.instanceof(_context7.t2);
 
-                                case 9:
+                                    _context7.next = 12;
+                                    return childResource.isAllowed(childSubject, 'view');
+
+                                case 12:
+                                    afterSetAllowed = _context7.sent;
+
+                                    chai_1.expect(initialAllowed, 'the child subject should not yet be allowed to view the resource.').to.equal(false);
+                                    chai_1.expect(afterSetAllowed, 'After resource sets permission, they should have access').to.equal(true);
+
+                                case 15:
                                 case 'end':
                                     return _context7.stop();
                             }
@@ -430,68 +427,29 @@ describe('gracl', function () {
                     }, _callee7, this);
                 }));
             });
-            it('Lowest node on hierarchy wins conflicts (deny post for team)', function () {
+            it('Permissions should be visible through resource.getPermissionsHierarchy()', function () {
                 return __awaiter(_this4, void 0, void 0, _regenerator2.default.mark(function _callee8() {
-                    var parentResource, childResource, parentSubject, childSubject;
+                    var parentResource, childResource, subject, hiearchy;
                     return _regenerator2.default.wrap(function _callee8$(_context8) {
                         while (1) {
                             switch (_context8.prev = _context8.next) {
                                 case 0:
-                                    parentResource = new nodeClasses.BlogResource(blogA1), childResource = new nodeClasses.PostResource(postA1a), parentSubject = new nodeClasses.TeamSubject(teamA1), childSubject = new nodeClasses.UserSubject(userA1);
-                                    _context8.t0 = chai_1;
-                                    _context8.next = 4;
-                                    return childResource.isAllowed(childSubject, 'view');
+                                    parentResource = new nodeClasses.BlogResource(blogA1), childResource = new nodeClasses.PostResource(postA1a), subject = new nodeClasses.UserSubject(userA1);
+                                    _context8.next = 3;
+                                    return parentResource.allow(subject, 'view');
 
-                                case 4:
-                                    _context8.t1 = _context8.sent;
+                                case 3:
+                                    _context8.next = 5;
+                                    return childResource.getPermissionsHierarchy();
 
-                                    _context8.t0.expect.call(_context8.t0, _context8.t1, 'User should not have access to post before permission set.').to.equal(false);
+                                case 5:
+                                    hiearchy = _context8.sent;
 
-                                    _context8.next = 8;
-                                    return parentResource.allow(parentSubject, 'view');
+                                    chai_1.expect(hiearchy.node, 'Node should be string representation.').to.equal(childResource.toString());
+                                    chai_1.expect(hiearchy.parents[0].permissions, 'Parent resource should have one permission.').to.have.length(1);
+                                    chai_1.expect(hiearchy.parents[0].permissions[0].access['view'], 'View access should be true').to.equal(true);
 
-                                case 8:
-                                    _context8.next = 10;
-                                    return childResource.deny(parentSubject, 'view');
-
-                                case 10:
-                                    _context8.t2 = chai_1;
-                                    _context8.next = 13;
-                                    return parentResource.isAllowed(parentSubject, 'view');
-
-                                case 13:
-                                    _context8.t3 = _context8.sent;
-
-                                    _context8.t2.expect.call(_context8.t2, _context8.t3, 'Team should have access to blog after permission set').to.equal(true);
-
-                                    _context8.t4 = chai_1;
-                                    _context8.next = 18;
-                                    return childResource.isAllowed(parentSubject, 'view');
-
-                                case 18:
-                                    _context8.t5 = _context8.sent;
-
-                                    _context8.t4.expect.call(_context8.t4, _context8.t5, 'Team should not have access to post after permission set.').to.equal(false);
-
-                                    _context8.t6 = chai_1;
-                                    _context8.next = 23;
-                                    return parentResource.isAllowed(childSubject, 'view');
-
-                                case 23:
-                                    _context8.t7 = _context8.sent;
-
-                                    _context8.t6.expect.call(_context8.t6, _context8.t7, 'User should have access to blog after permission set').to.equal(true);
-
-                                    _context8.t8 = chai_1;
-                                    _context8.next = 28;
-                                    return childResource.isAllowed(childSubject, 'view');
-
-                                case 28:
-                                    _context8.t9 = _context8.sent;
-
-                                    _context8.t8.expect.call(_context8.t8, _context8.t9, 'User should not have access to post after permission set.').to.equal(false);
-
-                                case 30:
+                                case 9:
                                 case 'end':
                                     return _context8.stop();
                             }
@@ -499,7 +457,7 @@ describe('gracl', function () {
                     }, _callee8, this);
                 }));
             });
-            it('Lowest node on hierarchy wins conflicts (deny post for team, but allow for user)', function () {
+            it('Lowest node on hierarchy wins conflicts (deny post for team)', function () {
                 return __awaiter(_this4, void 0, void 0, _regenerator2.default.mark(function _callee9() {
                     var parentResource, childResource, parentSubject, childSubject;
                     return _regenerator2.default.wrap(function _callee9$(_context9) {
@@ -524,51 +482,43 @@ describe('gracl', function () {
                                     return childResource.deny(parentSubject, 'view');
 
                                 case 10:
-                                    _context9.next = 12;
-                                    return childResource.allow(childSubject, 'view');
-
-                                case 12:
-                                    _context9.next = 14;
-                                    return parentResource.deny(childSubject, 'view');
-
-                                case 14:
                                     _context9.t2 = chai_1;
-                                    _context9.next = 17;
+                                    _context9.next = 13;
                                     return parentResource.isAllowed(parentSubject, 'view');
 
-                                case 17:
+                                case 13:
                                     _context9.t3 = _context9.sent;
 
                                     _context9.t2.expect.call(_context9.t2, _context9.t3, 'Team should have access to blog after permission set').to.equal(true);
 
                                     _context9.t4 = chai_1;
-                                    _context9.next = 22;
+                                    _context9.next = 18;
                                     return childResource.isAllowed(parentSubject, 'view');
 
-                                case 22:
+                                case 18:
                                     _context9.t5 = _context9.sent;
 
                                     _context9.t4.expect.call(_context9.t4, _context9.t5, 'Team should not have access to post after permission set.').to.equal(false);
 
                                     _context9.t6 = chai_1;
-                                    _context9.next = 27;
+                                    _context9.next = 23;
                                     return parentResource.isAllowed(childSubject, 'view');
 
-                                case 27:
+                                case 23:
                                     _context9.t7 = _context9.sent;
 
-                                    _context9.t6.expect.call(_context9.t6, _context9.t7, 'User should have access to blog after permission set').to.equal(false);
+                                    _context9.t6.expect.call(_context9.t6, _context9.t7, 'User should have access to blog after permission set').to.equal(true);
 
                                     _context9.t8 = chai_1;
-                                    _context9.next = 32;
+                                    _context9.next = 28;
                                     return childResource.isAllowed(childSubject, 'view');
 
-                                case 32:
+                                case 28:
                                     _context9.t9 = _context9.sent;
 
-                                    _context9.t8.expect.call(_context9.t8, _context9.t9, 'User should have access to post after permission set.').to.equal(true);
+                                    _context9.t8.expect.call(_context9.t8, _context9.t9, 'User should not have access to post after permission set.').to.equal(false);
 
-                                case 34:
+                                case 30:
                                 case 'end':
                                     return _context9.stop();
                             }
@@ -576,34 +526,76 @@ describe('gracl', function () {
                     }, _callee9, this);
                 }));
             });
-            it('Permission explainations should be accurate', function () {
+            it('Lowest node on hierarchy wins conflicts (deny post for team, but allow for user)', function () {
                 return __awaiter(_this4, void 0, void 0, _regenerator2.default.mark(function _callee10() {
-                    var parentResource, childResource, parentSubject, childSubject, reason;
+                    var parentResource, childResource, parentSubject, childSubject;
                     return _regenerator2.default.wrap(function _callee10$(_context10) {
                         while (1) {
                             switch (_context10.prev = _context10.next) {
                                 case 0:
                                     parentResource = new nodeClasses.BlogResource(blogA1), childResource = new nodeClasses.PostResource(postA1a), parentSubject = new nodeClasses.TeamSubject(teamA1), childSubject = new nodeClasses.UserSubject(userA1);
-                                    _context10.next = 3;
+                                    _context10.t0 = chai_1;
+                                    _context10.next = 4;
+                                    return childResource.isAllowed(childSubject, 'view');
+
+                                case 4:
+                                    _context10.t1 = _context10.sent;
+
+                                    _context10.t0.expect.call(_context10.t0, _context10.t1, 'User should not have access to post before permission set.').to.equal(false);
+
+                                    _context10.next = 8;
                                     return parentResource.allow(parentSubject, 'view');
 
-                                case 3:
-                                    _context10.next = 5;
+                                case 8:
+                                    _context10.next = 10;
                                     return childResource.deny(parentSubject, 'view');
 
-                                case 5:
-                                    reason = 'Permission set on <Resource:' + childResource.getName() + ' id=p0014> for <Subject:' + parentSubject.getName() + ' id=t003> = false';
-                                    _context10.t0 = chai_1;
-                                    _context10.next = 9;
-                                    return childResource.explainPermission(childSubject, 'view');
-
-                                case 9:
-                                    _context10.t1 = _context10.sent;
-                                    _context10.t2 = reason;
-
-                                    _context10.t0.expect.call(_context10.t0, _context10.t1, 'Explaining why child subject cannot access child resource').to.equal(_context10.t2);
+                                case 10:
+                                    _context10.next = 12;
+                                    return childResource.allow(childSubject, 'view');
 
                                 case 12:
+                                    _context10.next = 14;
+                                    return parentResource.deny(childSubject, 'view');
+
+                                case 14:
+                                    _context10.t2 = chai_1;
+                                    _context10.next = 17;
+                                    return parentResource.isAllowed(parentSubject, 'view');
+
+                                case 17:
+                                    _context10.t3 = _context10.sent;
+
+                                    _context10.t2.expect.call(_context10.t2, _context10.t3, 'Team should have access to blog after permission set').to.equal(true);
+
+                                    _context10.t4 = chai_1;
+                                    _context10.next = 22;
+                                    return childResource.isAllowed(parentSubject, 'view');
+
+                                case 22:
+                                    _context10.t5 = _context10.sent;
+
+                                    _context10.t4.expect.call(_context10.t4, _context10.t5, 'Team should not have access to post after permission set.').to.equal(false);
+
+                                    _context10.t6 = chai_1;
+                                    _context10.next = 27;
+                                    return parentResource.isAllowed(childSubject, 'view');
+
+                                case 27:
+                                    _context10.t7 = _context10.sent;
+
+                                    _context10.t6.expect.call(_context10.t6, _context10.t7, 'User should have access to blog after permission set').to.equal(false);
+
+                                    _context10.t8 = chai_1;
+                                    _context10.next = 32;
+                                    return childResource.isAllowed(childSubject, 'view');
+
+                                case 32:
+                                    _context10.t9 = _context10.sent;
+
+                                    _context10.t8.expect.call(_context10.t8, _context10.t9, 'User should have access to post after permission set.').to.equal(true);
+
+                                case 34:
                                 case 'end':
                                     return _context10.stop();
                             }
@@ -611,9 +603,9 @@ describe('gracl', function () {
                     }, _callee10, this);
                 }));
             });
-            it('Subject method results should equal resource method results', function () {
+            it('Permission explainations should be accurate', function () {
                 return __awaiter(_this4, void 0, void 0, _regenerator2.default.mark(function _callee11() {
-                    var parentResource, childResource, parentSubject, childSubject;
+                    var parentResource, childResource, parentSubject, childSubject, reason;
                     return _regenerator2.default.wrap(function _callee11$(_context11) {
                         while (1) {
                             switch (_context11.prev = _context11.next) {
@@ -627,67 +619,18 @@ describe('gracl', function () {
                                     return childResource.deny(parentSubject, 'view');
 
                                 case 5:
-                                    _context11.t1 = chai_1;
-                                    _context11.next = 8;
-                                    return parentResource.isAllowed(parentSubject, 'view');
+                                    reason = 'Permission set on <Resource:' + childResource.getName() + ' id=p0014> for <Subject:' + parentSubject.getName() + ' id=t003> = false';
+                                    _context11.t0 = chai_1;
+                                    _context11.next = 9;
+                                    return childResource.explainPermission(childSubject, 'view');
 
-                                case 8:
-                                    _context11.t2 = _context11.sent;
-                                    _context11.t0 = _context11.t1.expect.call(_context11.t1, _context11.t2, 'Team should have access to blog after permission set').to;
-                                    _context11.next = 12;
-                                    return parentSubject.isAllowed(parentResource, 'view');
+                                case 9:
+                                    _context11.t1 = _context11.sent;
+                                    _context11.t2 = reason;
+
+                                    _context11.t0.expect.call(_context11.t0, _context11.t1, 'Explaining why child subject cannot access child resource').to.equal(_context11.t2);
 
                                 case 12:
-                                    _context11.t3 = _context11.sent;
-
-                                    _context11.t0.equal.call(_context11.t0, _context11.t3);
-
-                                    _context11.t5 = chai_1;
-                                    _context11.next = 17;
-                                    return childResource.isAllowed(parentSubject, 'view');
-
-                                case 17:
-                                    _context11.t6 = _context11.sent;
-                                    _context11.t4 = _context11.t5.expect.call(_context11.t5, _context11.t6, 'Team should not have access to post after permission set.').to;
-                                    _context11.next = 21;
-                                    return parentSubject.isAllowed(childResource, 'view');
-
-                                case 21:
-                                    _context11.t7 = _context11.sent;
-
-                                    _context11.t4.equal.call(_context11.t4, _context11.t7);
-
-                                    _context11.t9 = chai_1;
-                                    _context11.next = 26;
-                                    return parentResource.isAllowed(childSubject, 'view');
-
-                                case 26:
-                                    _context11.t10 = _context11.sent;
-                                    _context11.t8 = _context11.t9.expect.call(_context11.t9, _context11.t10, 'User should have access to blog after permission set').to;
-                                    _context11.next = 30;
-                                    return childSubject.isAllowed(parentResource, 'view');
-
-                                case 30:
-                                    _context11.t11 = _context11.sent;
-
-                                    _context11.t8.equal.call(_context11.t8, _context11.t11);
-
-                                    _context11.t13 = chai_1;
-                                    _context11.next = 35;
-                                    return childResource.isAllowed(childSubject, 'view');
-
-                                case 35:
-                                    _context11.t14 = _context11.sent;
-                                    _context11.t12 = _context11.t13.expect.call(_context11.t13, _context11.t14, 'User should have access to post after permission set.').to;
-                                    _context11.next = 39;
-                                    return childSubject.isAllowed(childResource, 'view');
-
-                                case 39:
-                                    _context11.t15 = _context11.sent;
-
-                                    _context11.t12.equal.call(_context11.t12, _context11.t15);
-
-                                case 41:
                                 case 'end':
                                     return _context11.stop();
                             }
@@ -695,30 +638,114 @@ describe('gracl', function () {
                     }, _callee11, this);
                 }));
             });
-            it('Node.getHierarchyIds() should return flattened array of correct ids', function () {
+            it('Subject method results should equal resource method results', function () {
                 return __awaiter(_this4, void 0, void 0, _regenerator2.default.mark(function _callee12() {
-                    var childResource;
+                    var parentResource, childResource, parentSubject, childSubject;
                     return _regenerator2.default.wrap(function _callee12$(_context12) {
                         while (1) {
                             switch (_context12.prev = _context12.next) {
                                 case 0:
-                                    childResource = new nodeClasses.PostResource(postA1a);
-                                    _context12.t0 = chai_1;
-                                    _context12.next = 4;
-                                    return childResource.getHierarchyIds();
+                                    parentResource = new nodeClasses.BlogResource(blogA1), childResource = new nodeClasses.PostResource(postA1a), parentSubject = new nodeClasses.TeamSubject(teamA1), childSubject = new nodeClasses.UserSubject(userA1);
+                                    _context12.next = 3;
+                                    return parentResource.allow(parentSubject, 'view');
 
-                                case 4:
-                                    _context12.t1 = _context12.sent;
-                                    _context12.t2 = ['p0014', 'b0010', 'o001'];
+                                case 3:
+                                    _context12.next = 5;
+                                    return childResource.deny(parentSubject, 'view');
 
-                                    _context12.t0.expect.call(_context12.t0, _context12.t1, 'Post -> Blog -> Org').to.deep.equal(_context12.t2);
+                                case 5:
+                                    _context12.t1 = chai_1;
+                                    _context12.next = 8;
+                                    return parentResource.isAllowed(parentSubject, 'view');
 
-                                case 7:
+                                case 8:
+                                    _context12.t2 = _context12.sent;
+                                    _context12.t0 = _context12.t1.expect.call(_context12.t1, _context12.t2, 'Team should have access to blog after permission set').to;
+                                    _context12.next = 12;
+                                    return parentSubject.isAllowed(parentResource, 'view');
+
+                                case 12:
+                                    _context12.t3 = _context12.sent;
+
+                                    _context12.t0.equal.call(_context12.t0, _context12.t3);
+
+                                    _context12.t5 = chai_1;
+                                    _context12.next = 17;
+                                    return childResource.isAllowed(parentSubject, 'view');
+
+                                case 17:
+                                    _context12.t6 = _context12.sent;
+                                    _context12.t4 = _context12.t5.expect.call(_context12.t5, _context12.t6, 'Team should not have access to post after permission set.').to;
+                                    _context12.next = 21;
+                                    return parentSubject.isAllowed(childResource, 'view');
+
+                                case 21:
+                                    _context12.t7 = _context12.sent;
+
+                                    _context12.t4.equal.call(_context12.t4, _context12.t7);
+
+                                    _context12.t9 = chai_1;
+                                    _context12.next = 26;
+                                    return parentResource.isAllowed(childSubject, 'view');
+
+                                case 26:
+                                    _context12.t10 = _context12.sent;
+                                    _context12.t8 = _context12.t9.expect.call(_context12.t9, _context12.t10, 'User should have access to blog after permission set').to;
+                                    _context12.next = 30;
+                                    return childSubject.isAllowed(parentResource, 'view');
+
+                                case 30:
+                                    _context12.t11 = _context12.sent;
+
+                                    _context12.t8.equal.call(_context12.t8, _context12.t11);
+
+                                    _context12.t13 = chai_1;
+                                    _context12.next = 35;
+                                    return childResource.isAllowed(childSubject, 'view');
+
+                                case 35:
+                                    _context12.t14 = _context12.sent;
+                                    _context12.t12 = _context12.t13.expect.call(_context12.t13, _context12.t14, 'User should have access to post after permission set.').to;
+                                    _context12.next = 39;
+                                    return childSubject.isAllowed(childResource, 'view');
+
+                                case 39:
+                                    _context12.t15 = _context12.sent;
+
+                                    _context12.t12.equal.call(_context12.t12, _context12.t15);
+
+                                case 41:
                                 case 'end':
                                     return _context12.stop();
                             }
                         }
                     }, _callee12, this);
+                }));
+            });
+            it('Node.getHierarchyIds() should return flattened array of correct ids', function () {
+                return __awaiter(_this4, void 0, void 0, _regenerator2.default.mark(function _callee13() {
+                    var childResource;
+                    return _regenerator2.default.wrap(function _callee13$(_context13) {
+                        while (1) {
+                            switch (_context13.prev = _context13.next) {
+                                case 0:
+                                    childResource = new nodeClasses.PostResource(postA1a);
+                                    _context13.t0 = chai_1;
+                                    _context13.next = 4;
+                                    return childResource.getHierarchyIds();
+
+                                case 4:
+                                    _context13.t1 = _context13.sent;
+                                    _context13.t2 = ['p0014', 'b0010', 'o001'];
+
+                                    _context13.t0.expect.call(_context13.t0, _context13.t1, 'Post -> Blog -> Org').to.deep.equal(_context13.t2);
+
+                                case 7:
+                                case 'end':
+                                    return _context13.stop();
+                            }
+                        }
+                    }, _callee13, this);
                 }));
             });
             it('Node.getHierarchyClassNames() should return array of class names', function () {
