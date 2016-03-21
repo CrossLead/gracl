@@ -189,7 +189,7 @@ export class Node {
       if (!ParentClass.repository) {
         throw new Error(`No static repository property present on ${ParentClass.name} Node!`);
       }
-      doc = await ParentClass.repository.getEntity(<string> data);
+      doc = await ParentClass.repository.getEntity(<string> data, this);
     } else {
       doc = data;
     }

@@ -210,7 +210,7 @@ var Node = function () {
 
                             case 5:
                                 _context3.next = 7;
-                                return ParentClass.repository.getEntity(data);
+                                return ParentClass.repository.getEntity(data, this);
 
                             case 7:
                                 doc = _context3.sent;

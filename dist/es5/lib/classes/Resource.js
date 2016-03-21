@@ -73,6 +73,9 @@ var Resource = function (_Node_1$Node) {
 
         var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Resource).call(this, doc));
 
+        if (!_this.doc.permissions) {
+            _this.doc.permissions = [];
+        }
         _this.sortPermissions();
         return _this;
     }
@@ -80,9 +83,6 @@ var Resource = function (_Node_1$Node) {
     (0, _createClass3.default)(Resource, [{
         key: 'sortPermissions',
         value: function sortPermissions() {
-            if (!this.doc.permissions) {
-                this.doc.permissions = [];
-            }
             this.doc.permissions.sort(util_1.permissionCompare);
             return this;
         }
@@ -90,6 +90,9 @@ var Resource = function (_Node_1$Node) {
         key: 'setDoc',
         value: function setDoc(doc) {
             this.doc = doc;
+            if (!this.doc.permissions) {
+                this.doc.permissions = [];
+            }
             this.sortPermissions();
             return this;
         }
@@ -561,7 +564,7 @@ var Resource = function (_Node_1$Node) {
                                 }
                                 id = this.getId();
                                 _context4.next = 9;
-                                return CurrentResourceClass.repository.saveEntity(id, doc);
+                                return CurrentResourceClass.repository.saveEntity(id, doc, this);
 
                             case 9:
                                 updated = _context4.sent;

@@ -1,6 +1,7 @@
+import { Node } from './classes/Node';
 export interface Repository {
-    getEntity(id: string): Promise<Document>;
-    saveEntity(id: string, doc: Document): Promise<Document>;
+    getEntity(id: string, node?: Node): Promise<Document>;
+    saveEntity(id: string, doc: Document, node?: Node): Promise<Document>;
 }
 export declare type Permission = {
     [key: string]: any;

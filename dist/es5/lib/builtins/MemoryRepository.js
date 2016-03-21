@@ -53,7 +53,7 @@ var MemoryRepository = function () {
 
     (0, _createClass3.default)(MemoryRepository, [{
         key: "getEntity",
-        value: function getEntity(id) {
+        value: function getEntity(id, node) {
             return __awaiter(this, void 0, _promise2.default, _regenerator2.default.mark(function _callee() {
                 return _regenerator2.default.wrap(function _callee$(_context) {
                     while (1) {
@@ -71,7 +71,7 @@ var MemoryRepository = function () {
         }
     }, {
         key: "saveEntity",
-        value: function saveEntity(id, doc) {
+        value: function saveEntity(id, doc, node) {
             return __awaiter(this, void 0, _promise2.default, _regenerator2.default.mark(function _callee2() {
                 return _regenerator2.default.wrap(function _callee2$(_context2) {
                     while (1) {

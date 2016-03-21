@@ -31,6 +31,9 @@ export class Resource extends Node {
    */
   constructor(doc: Document) {
     super(doc);
+    if (!this.doc.permissions) {
+      this.doc.permissions = [];
+    }
     this.sortPermissions();
   }
 
@@ -39,9 +42,6 @@ export class Resource extends Node {
    * Sort the permissions on this document by subjectId to allow for fast searching.
    */
   sortPermissions() {
-    if (!this.doc.permissions) {
-      this.doc.permissions = [];
-    }
     this.doc.permissions.sort(permissionCompare);
     return this;
   }
@@ -49,6 +49,9 @@ export class Resource extends Node {
 
   setDoc(doc: Document) {
     this.doc = doc;
+    if (!this.doc.permissions) {
+      this.doc.permissions = [];
+    }
     this.sortPermissions();
     return this;
   }
@@ -215,7 +218,7 @@ export class Resource extends Node {
 
     // save updated document
     const id = this.getId(),
-          updated = await CurrentResourceClass.repository.saveEntity(id, doc);
+          updated = await CurrentResourceClass.repository.saveEntity(id, doc, this);
 
     return this.setDoc(updated);
   }
