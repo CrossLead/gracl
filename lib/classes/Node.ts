@@ -162,12 +162,12 @@ export class Node {
     if (parentId) {
       const parentIds = <DocumentData[] | DocumentData> this.doc[parentId] || [];
       if (Array.isArray(parentIds)) {
-        const promises = <Array<Promise<DocumentData>>> parentIds.map((id: DocumentData) => {
+        const promises = <Promise<Node>[]> parentIds.map((id: DocumentData) => {
           return this.getParentNode(id);
         });
-        return await Promise.all(promises);
+        return <Node[]> (await Promise.all(promises));
       } else {
-        return [ await this.getParentNode(parentIds) ];
+        return [ <Node> (await this.getParentNode(parentIds)) ];
       }
     } else {
       console.warn(`Calling Node.getParents() without Node.parentId, must implement on subclass!`);

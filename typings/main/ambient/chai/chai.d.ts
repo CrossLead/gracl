@@ -1,4 +1,4 @@
-// Compiled using typings@0.6.8
+// Compiled using typings@0.6.10
 // Source: https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/9c25433c84251bfe72bf0030a95edbbb2c81c9d5/chai/chai.d.ts
 // Type definitions for chai 3.4.0
 // Project: http://chaijs.com/

@@ -1,10 +1,8 @@
-"use strict";
-const index_1 = require('../../lib/index');
-const Organization_1 = require('./Organization');
-exports.teamModel = new index_1.MemoryRepository();
-class TeamSubject extends Organization_1.OrganizationSubject {
+import { MemoryRepository as Repo } from '../../lib/index';
+import { OrganizationSubject } from './Organization';
+export const teamModel = new Repo();
+export class TeamSubject extends OrganizationSubject {
 }
-TeamSubject.repository = exports.teamModel;
+TeamSubject.repository = teamModel;
 TeamSubject.parentId = 'organizationId';
-exports.TeamSubject = TeamSubject;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiVGVhbVN1YmplY3QuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi8uLi90ZXN0L2NsYXNzZXMvVGVhbVN1YmplY3QudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IjtBQUFBLHdCQUF5QyxpQkFBaUIsQ0FBQyxDQUFBO0FBQzNELCtCQUFvQyxnQkFBZ0IsQ0FBQyxDQUFBO0FBRXhDLGlCQUFTLEdBQUcsSUFBSSx3QkFBSSxFQUFFLENBQUM7QUFHcEMsMEJBQWlDLGtDQUFtQjtBQUdwRCxDQUFDO0FBRlEsc0JBQVUsR0FBRyxpQkFBUyxDQUFDO0FBQ3ZCLG9CQUFRLEdBQUcsZ0JBQWdCLENBQUM7QUFGeEIsbUJBQVcsY0FHdkIsQ0FBQSJ9
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiVGVhbVN1YmplY3QuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi8uLi90ZXN0L2NsYXNzZXMvVGVhbVN1YmplY3QudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ik9BQU8sRUFBRSxnQkFBZ0IsSUFBSSxJQUFJLEVBQUUsTUFBTSxpQkFBaUI7T0FDbkQsRUFBRSxtQkFBbUIsRUFBRSxNQUFNLGdCQUFnQjtBQUVwRCxPQUFPLE1BQU0sU0FBUyxHQUFHLElBQUksSUFBSSxFQUFFLENBQUM7QUFHcEMsaUNBQWlDLG1CQUFtQjtBQUdwRCxDQUFDO0FBRlEsc0JBQVUsR0FBRyxTQUFTLENBQUM7QUFDdkIsb0JBQVEsR0FBRyxnQkFBZ0IsQ0FDbkMifQ==
