@@ -87,3 +87,9 @@ Object.defineProperty(exports, 'permissionIndexOf', {
     return _util.permissionIndexOf;
   }
 });
+Object.defineProperty(exports, 'topologicalSort', {
+  enumerable: true,
+  get: function get() {
+    return _util.topologicalSort;
+  }
+});
