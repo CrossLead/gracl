@@ -24,3 +24,5 @@ export type Permission = {
 
 
 export type Document = any;
+
+export type Hash<T> = { [key: string]: T };

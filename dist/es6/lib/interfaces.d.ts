@@ -14,3 +14,6 @@ export declare type Permission = {
     };
 };
 export declare type Document = any;
+export declare type Hash<T> = {
+    [key: string]: T;
+};

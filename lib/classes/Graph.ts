@@ -2,9 +2,11 @@ import { Node } from './Node';
 import { Subject } from './Subject';
 import { Resource } from './Resource';
 import { Repository } from '../interfaces';
+import { topologicalSort } from '../util';
 
 
 export type SchemaNode = {
+  [key: string]: any,
   name: string;
   repository: Repository;
   id?: string;
@@ -33,63 +35,13 @@ export class Graph {
 
 
   /**
-    Run topological sort on nodes
-    https://en.wikipedia.org/wiki/Topological_sorting#Kahn.27s_algorithm
-   */
-  static sortSchemaNodes(schemaNodes: SchemaNode[]): SchemaNode[] {
-    const nodeList: SchemaNode[] = [],
-          noParentList: SchemaNode[] = [],
-          parentMapping = new Map<string, SchemaNode[]>(),
-          remainingNodes = new Set(schemaNodes.map(n => n.name));
-
-
-    for (const schemaNode of schemaNodes) {
-      const { name, parent } = schemaNode;
-
-      if (!parent) {
-        noParentList.push(schemaNode);
-        remainingNodes.delete(schemaNode.name);
-      } else {
-        if (!parentMapping.has(parent)) {
-          parentMapping.set(parent, [ schemaNode ]);
-        } else {
-          parentMapping.get(parent).push(schemaNode);
-        }
-      }
-    }
-
-    while (noParentList.length) {
-      const rootNode = noParentList.pop();
-      nodeList.push(rootNode);
-      if (parentMapping.has(rootNode.name)) {
-        const children = parentMapping.get(rootNode.name);
-        while (children.length) {
-          const child = children.pop();
-          remainingNodes.delete(child.name);
-          noParentList.push(child);
-        }
-      }
-    }
-
-    if (remainingNodes.size) {
-      throw new Error(
-        'Schema has a circular dependency or a missing parent! Examine definitions for '
-          + [...remainingNodes].map(x => `"${x}"`).join(', ')
-      );
-    }
-
-    return nodeList;
-  }
-
-
-  /**
    *  Build map of nodeName -> ResourceClass for gracl hierarchy
       NOTE: unfortunately we need to duplicate this function for subjects
             due to limitations of the way type parameters are handled
         See: https://github.com/Microsoft/TypeScript/issues/4890
    */
   static buildResourceHierachy(schemaNodes: SchemaNode[]): Map<string, typeof Resource> {
-    const nodeList = Graph.sortSchemaNodes(schemaNodes),
+    const nodeList = topologicalSort(schemaNodes),
           classGraph = new Map<string, typeof Resource>();
 
     const createClass = (node: SchemaNode) => {
@@ -125,7 +77,7 @@ export class Graph {
             in the type system.
    */
   static buildSubjectHierachy(schemaNodes: SchemaNode[]): Map<string, typeof Subject> {
-    const nodeList = Graph.sortSchemaNodes(schemaNodes),
+    const nodeList = topologicalSort(schemaNodes),
           classGraph = new Map<string, typeof Subject>();
 
     const createClass = (node: SchemaNode) => {

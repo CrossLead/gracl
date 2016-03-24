@@ -11,7 +11,7 @@ var _Subject = require('./Subject');
 
 var _Resource = require('./Resource');
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+var _util = require('../util');
 
 class Graph {
     constructor(schema) {
@@ -19,45 +19,8 @@ class Graph {
         this.resources = Graph.buildResourceHierachy(schema.resources);
         this.subjects = Graph.buildSubjectHierachy(schema.subjects);
     }
-    static sortSchemaNodes(schemaNodes) {
-        const nodeList = [],
-              noParentList = [],
-              parentMapping = new Map(),
-              remainingNodes = new Set(schemaNodes.map(n => n.name));
-        for (const schemaNode of schemaNodes) {
-            const name = schemaNode.name;
-            const parent = schemaNode.parent;
-
-            if (!parent) {
-                noParentList.push(schemaNode);
-                remainingNodes.delete(schemaNode.name);
-            } else {
-                if (!parentMapping.has(parent)) {
-                    parentMapping.set(parent, [schemaNode]);
-                } else {
-                    parentMapping.get(parent).push(schemaNode);
-                }
-            }
-        }
-        while (noParentList.length) {
-            const rootNode = noParentList.pop();
-            nodeList.push(rootNode);
-            if (parentMapping.has(rootNode.name)) {
-                const children = parentMapping.get(rootNode.name);
-                while (children.length) {
-                    const child = children.pop();
-                    remainingNodes.delete(child.name);
-                    noParentList.push(child);
-                }
-            }
-        }
-        if (remainingNodes.size) {
-            throw new Error('Schema has a circular dependency or a missing parent! Examine definitions for ' + [].concat(_toConsumableArray(remainingNodes)).map(x => `"${ x }"`).join(', '));
-        }
-        return nodeList;
-    }
     static buildResourceHierachy(schemaNodes) {
-        const nodeList = Graph.sortSchemaNodes(schemaNodes),
+        const nodeList = (0, _util.topologicalSort)(schemaNodes),
               classGraph = new Map();
         const createClass = node => {
             const getParentsMethod = node.getParents || _Node.Node.prototype.getParents;
@@ -77,7 +40,7 @@ class Graph {
         return classGraph;
     }
     static buildSubjectHierachy(schemaNodes) {
-        const nodeList = Graph.sortSchemaNodes(schemaNodes),
+        const nodeList = (0, _util.topologicalSort)(schemaNodes),
               classGraph = new Map();
         const createClass = node => {
             const getParentsMethod = node.getParents || _Node.Node.prototype.getParents;

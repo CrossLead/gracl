@@ -3,6 +3,7 @@ import { Subject } from './Subject';
 import { Resource } from './Resource';
 import { Repository } from '../interfaces';
 export declare type SchemaNode = {
+    [key: string]: any;
     name: string;
     repository: Repository;
     id?: string;
@@ -18,7 +19,6 @@ export declare class Graph {
     schema: Schema;
     resources: Map<string, typeof Resource>;
     subjects: Map<string, typeof Subject>;
-    static sortSchemaNodes(schemaNodes: SchemaNode[]): SchemaNode[];
     static buildResourceHierachy(schemaNodes: SchemaNode[]): Map<string, typeof Resource>;
     static buildSubjectHierachy(schemaNodes: SchemaNode[]): Map<string, typeof Subject>;
     constructor(schema: Schema);
