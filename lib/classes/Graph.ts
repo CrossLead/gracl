@@ -12,6 +12,7 @@ export type SchemaNode = {
   id?: string;
   parent?: string;
   parentId?: string;
+  permissionProperty?: string,
   getParents?: () => Promise<Node[]>
 };
 
@@ -54,6 +55,7 @@ export class Graph {
           static parentId    = node.parentId;
           static displayName = node.name;
           static repository  = node.repository;
+          static permissionPropertyKey = node.permissionProperty || 'permissions';
           getParents() { return getParentsMethod.call(this); }
         });
       } else {
@@ -61,6 +63,7 @@ export class Graph {
           static id          = node.id || 'id';
           static displayName = node.name;
           static repository  = node.repository;
+          static permissionPropertyKey = node.permissionProperty || 'permissions';
         });
       }
     };
@@ -90,6 +93,7 @@ export class Graph {
           static parentId    = node.parentId;
           static displayName = node.name;
           static repository  = node.repository;
+          static permissionPropertyKey = node.permissionProperty || 'permissions';
           getParents() { return getParentsMethod.call(this); }
         });
       } else {
@@ -97,6 +101,7 @@ export class Graph {
           static id          = node.id || 'id';
           static displayName = node.name;
           static repository  = node.repository;
+          static permissionPropertyKey = node.permissionProperty || 'permissions';
         });
       }
     };

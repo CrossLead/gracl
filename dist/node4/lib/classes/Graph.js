@@ -30,9 +30,9 @@ class Graph {
                     getParents() {
                         return getParentsMethod.call(this);
                     }
-                }, _a.id = node.id || 'id', _a.parentId = node.parentId, _a.displayName = node.name, _a.repository = node.repository, _a));
+                }, _a.id = node.id || 'id', _a.parentId = node.parentId, _a.displayName = node.name, _a.repository = node.repository, _a.permissionPropertyKey = node.permissionProperty || 'permissions', _a));
             } else {
-                classGraph.set(node.name, (_b = class extends _Resource.Resource {}, _b.id = node.id || 'id', _b.displayName = node.name, _b.repository = node.repository, _b));
+                classGraph.set(node.name, (_b = class extends _Resource.Resource {}, _b.id = node.id || 'id', _b.displayName = node.name, _b.repository = node.repository, _b.permissionPropertyKey = node.permissionProperty || 'permissions', _b));
             }
             var _a, _b;
         };
@@ -50,9 +50,9 @@ class Graph {
                     getParents() {
                         return getParentsMethod.call(this);
                     }
-                }, _a.id = node.id || 'id', _a.parentId = node.parentId, _a.displayName = node.name, _a.repository = node.repository, _a));
+                }, _a.id = node.id || 'id', _a.parentId = node.parentId, _a.displayName = node.name, _a.repository = node.repository, _a.permissionPropertyKey = node.permissionProperty || 'permissions', _a));
             } else {
-                classGraph.set(node.name, (_b = class extends _Subject.Subject {}, _b.id = node.id || 'id', _b.displayName = node.name, _b.repository = node.repository, _b));
+                classGraph.set(node.name, (_b = class extends _Subject.Subject {}, _b.id = node.id || 'id', _b.displayName = node.name, _b.repository = node.repository, _b.permissionPropertyKey = node.permissionProperty || 'permissions', _b));
             }
             var _a, _b;
         };

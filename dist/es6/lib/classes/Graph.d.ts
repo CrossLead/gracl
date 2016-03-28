@@ -9,6 +9,7 @@ export declare type SchemaNode = {
     id?: string;
     parent?: string;
     parentId?: string;
+    permissionProperty?: string;
     getParents?: () => Promise<Node[]>;
 };
 export declare type Schema = {
