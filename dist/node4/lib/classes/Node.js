@@ -170,4 +170,5 @@ class Node {
 }
 exports.Node = Node;
 Node.displayName = '';
+Node.permissionPropertyKey = 'permissions';
 Node.id = 'id';

@@ -20,9 +20,9 @@ export type PermOpts = {
  */
 export class Node {
 
-
   public static displayName: string = '';
 
+  public static permissionPropertyKey: string = 'permissions';
 
   /**
    *  String indicating the property on this nodes document

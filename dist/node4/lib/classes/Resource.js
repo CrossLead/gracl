@@ -38,26 +38,30 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 class Resource extends _Node.Node {
     constructor(doc) {
         super(doc);
-        if (!this.doc.permissions) {
-            this.doc.permissions = [];
+        const key = this.getClass().permissionPropertyKey;
+        if (!this.doc[key]) {
+            this.doc[key] = [];
         }
         this.sortPermissions();
     }
     sortPermissions() {
-        this.doc.permissions.sort(_util.permissionCompare);
+        const key = this.getClass().permissionPropertyKey;
+        this.doc[key].sort(_util.permissionCompare);
         return this;
     }
     setDoc(doc) {
         this.doc = doc;
-        if (!this.doc.permissions) {
-            this.doc.permissions = [];
+        const key = this.getClass().permissionPropertyKey;
+        if (!this.doc[key]) {
+            this.doc[key] = [];
         }
         this.sortPermissions();
         return this;
     }
     getPermission(subject) {
-        const subjectId = subject.getId();const permissions = this.doc.permissions;
-
+        const key = this.getClass().permissionPropertyKey,
+              subjectId = subject.getId(),
+              permissions = this.doc[key];
         return permissions[(0, _util.permissionIndexOf)(permissions, subjectId)] || { subjectId, access: {} };
     }
     determineAccess(subject, permissionType, options) {
@@ -168,9 +172,8 @@ class Resource extends _Node.Node {
     }
     getPermissionsHierarchy() {
         return __awaiter(this, void 0, Promise, function* () {
-            var _doc$permissions = this.doc.permissions;
-            const permissions = _doc$permissions === undefined ? [] : _doc$permissions;
-
+            const key = this.getClass().permissionPropertyKey;
+            const permissions = this.doc[key];
             const graph = {
                 node: this.toString(),
                 nodeId: this.getId(),

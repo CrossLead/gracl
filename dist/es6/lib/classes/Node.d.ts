@@ -9,6 +9,7 @@ export declare type PermOpts = {
 export declare class Node {
     doc: Document;
     static displayName: string;
+    static permissionPropertyKey: string;
     static parentId: string;
     static id: string;
     static repository: Repository;

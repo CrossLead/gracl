@@ -31,8 +31,9 @@ export class Resource extends Node {
    */
   constructor(doc: Document) {
     super(doc);
-    if (!this.doc.permissions) {
-      this.doc.permissions = [];
+    const key = this.getClass().permissionPropertyKey;
+    if (!this.doc[key]) {
+      this.doc[key] = [];
     }
     this.sortPermissions();
   }
@@ -42,15 +43,17 @@ export class Resource extends Node {
    * Sort the permissions on this document by subjectId to allow for fast searching.
    */
   sortPermissions() {
-    this.doc.permissions.sort(permissionCompare);
+    const key = this.getClass().permissionPropertyKey;
+    this.doc[key].sort(permissionCompare);
     return this;
   }
 
 
   setDoc(doc: Document) {
     this.doc = doc;
-    if (!this.doc.permissions) {
-      this.doc.permissions = [];
+    const key = this.getClass().permissionPropertyKey;
+    if (!this.doc[key]) {
+      this.doc[key] = [];
     }
     this.sortPermissions();
     return this;
@@ -62,8 +65,10 @@ export class Resource extends Node {
       Returns an empty permission object if none is found.
    */
   getPermission(subject: Subject): Permission {
-    const subjectId = subject.getId(),
-          { permissions } = this.doc;
+    const key = this.getClass().permissionPropertyKey,
+          subjectId = subject.getId(),
+          permissions = this.doc[key];
+
     return permissions[permissionIndexOf(permissions, subjectId)] || { subjectId, access: { } };
   }
 
@@ -257,7 +262,9 @@ export class Resource extends Node {
    *  Retrieve permissions hierarchy for this node.
    */
   async getPermissionsHierarchy(): Promise<PermissionsHierarchy> {
-    const { permissions = [] } = <{ permissions?: any[] }> this.doc;
+    const key = this.getClass().permissionPropertyKey;
+
+    const permissions = <{ [key: string]: any }> this.doc[key];
 
     const graph: PermissionsHierarchy = {
       node: this.toString(),
