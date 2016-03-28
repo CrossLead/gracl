@@ -4,4 +4,5 @@ export declare const userModel: Repo;
 export declare class UserSubject extends TeamSubject {
     static repository: Repo;
     static parentId: string;
+    static permissionPropertyKey: string;
 }

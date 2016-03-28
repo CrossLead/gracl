@@ -13,16 +13,18 @@ type TestNodeClasses = {
   OrganizationSubject: typeof Subject;
 }
 
+const permissionKey = 'graclPermissions';
+
 const graph = new Graph({
   resources: [
-    { name: 'Post', parent: 'Blog', parentId: 'blogId', repository: classes.postModel },
-    { name: 'Blog', parent: 'Organization', parentId: 'organizationId', repository: classes.blogModel },
-    { name: 'Organization', repository: classes.orgModel }
+    { permissionProperty: permissionKey, name: 'Post', parent: 'Blog', parentId: 'blogId', repository: classes.postModel },
+    { permissionProperty: permissionKey, name: 'Blog', parent: 'Organization', parentId: 'organizationId', repository: classes.blogModel },
+    { permissionProperty: permissionKey, name: 'Organization', repository: classes.orgModel }
   ],
   subjects: [
-    { name: 'User', parent: 'Team', parentId: 'teamIds', repository: classes.userModel },
-    { name: 'Team', parent: 'Organization', parentId: 'organizationId', repository: classes.teamModel },
-    { name: 'Organization', repository: classes.orgModel }
+    { permissionProperty: permissionKey, name: 'User', parent: 'Team', parentId: 'teamIds', repository: classes.userModel },
+    { permissionProperty: permissionKey, name: 'Team', parent: 'Organization', parentId: 'organizationId', repository: classes.teamModel },
+    { permissionProperty: permissionKey, name: 'Organization', repository: classes.orgModel }
   ]
 });
 
@@ -257,7 +259,7 @@ describe('gracl', () => {
 
         await resource.allow(subject, 'view');
 
-        const [ permission ] = resource.doc.permissions;
+        const [ permission ] = resource.doc[permissionKey];
         expect(permission.resourceType).to.equal(resource.getName());
         expect(permission.subjectType).to.equal(subject.getName());
       });

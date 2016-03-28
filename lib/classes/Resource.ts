@@ -207,7 +207,8 @@ export class Resource extends Node {
    */
   async updatePermission(subject: Subject, action: (p: Permission) => Permission): Promise<Resource> {
     const { doc } = this,
-          { permissions } = doc,
+          key = this.getClass().permissionPropertyKey,
+          permissions = doc[key],
           subjectId = subject.getId(),
           subjectType = subject.getName(),
           resourceId = this.getId(),

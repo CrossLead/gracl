@@ -7,4 +7,5 @@ export const teamModel = new Repo();
 export class TeamSubject extends OrganizationSubject {
   static repository = teamModel;
   static parentId = 'organizationId';
+  static permissionPropertyKey = 'graclPermissions';
 }

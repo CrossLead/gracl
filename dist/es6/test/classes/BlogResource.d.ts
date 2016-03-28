@@ -4,4 +4,5 @@ export declare const blogModel: Repo;
 export declare class BlogResource extends OrganizationResource {
     static repository: Repo;
     static parentId: string;
+    static permissionPropertyKey: string;
 }

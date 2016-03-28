@@ -145,7 +145,7 @@ class Resource extends _Node.Node {
     }
     updatePermission(subject, action) {
         return __awaiter(this, void 0, Promise, function* () {
-            const doc = this.doc;const permissions = doc.permissions;const subjectId = subject.getId();const subjectType = subject.getName();const resourceId = this.getId();const resourceType = this.getName();
+            const doc = this.doc;const key = this.getClass().permissionPropertyKey;const permissions = doc[key];const subjectId = subject.getId();const subjectType = subject.getName();const resourceId = this.getId();const resourceType = this.getName();
             const existingPermissionIndex = (0, _util.permissionIndexOf)(permissions, subjectId),
                   CurrentResourceClass = this.getClass();
             if (existingPermissionIndex >= 0) {

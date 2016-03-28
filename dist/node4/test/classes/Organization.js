@@ -12,7 +12,9 @@ class OrganizationResource extends _index.Resource {}
 exports.OrganizationResource = OrganizationResource;
 OrganizationResource.id = 'id';
 OrganizationResource.repository = orgModel;
+OrganizationResource.permissionPropertyKey = 'graclPermissions';
 class OrganizationSubject extends _index.Subject {}
 exports.OrganizationSubject = OrganizationSubject;
 OrganizationSubject.id = 'id';
 OrganizationSubject.repository = orgModel;
+OrganizationSubject.permissionPropertyKey = 'graclPermissions';

@@ -14,3 +14,4 @@ class PostResource extends _BlogResource.BlogResource {}
 exports.PostResource = PostResource;
 PostResource.repository = postModel;
 PostResource.parentId = 'blogId';
+PostResource.permissionPropertyKey = 'graclPermissions';

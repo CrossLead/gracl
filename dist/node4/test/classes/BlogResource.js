@@ -14,3 +14,4 @@ class BlogResource extends _Organization.OrganizationResource {}
 exports.BlogResource = BlogResource;
 BlogResource.repository = blogModel;
 BlogResource.parentId = 'organizationId';
+BlogResource.permissionPropertyKey = 'graclPermissions';

@@ -41,9 +41,10 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
     });
 };
 
+const permissionKey = 'graclPermissions';
 const graph = new _index3.Graph({
-    resources: [{ name: 'Post', parent: 'Blog', parentId: 'blogId', repository: classes.postModel }, { name: 'Blog', parent: 'Organization', parentId: 'organizationId', repository: classes.blogModel }, { name: 'Organization', repository: classes.orgModel }],
-    subjects: [{ name: 'User', parent: 'Team', parentId: 'teamIds', repository: classes.userModel }, { name: 'Team', parent: 'Organization', parentId: 'organizationId', repository: classes.teamModel }, { name: 'Organization', repository: classes.orgModel }]
+    resources: [{ permissionProperty: permissionKey, name: 'Post', parent: 'Blog', parentId: 'blogId', repository: classes.postModel }, { permissionProperty: permissionKey, name: 'Blog', parent: 'Organization', parentId: 'organizationId', repository: classes.blogModel }, { permissionProperty: permissionKey, name: 'Organization', repository: classes.orgModel }],
+    subjects: [{ permissionProperty: permissionKey, name: 'User', parent: 'Team', parentId: 'teamIds', repository: classes.userModel }, { permissionProperty: permissionKey, name: 'Team', parent: 'Organization', parentId: 'organizationId', repository: classes.teamModel }, { permissionProperty: permissionKey, name: 'Organization', repository: classes.orgModel }]
 });
 const graphClasses = {
     PostResource: graph.getResource('Post'),
@@ -172,7 +173,7 @@ describe('gracl', () => {
                       subject = new nodeClasses.UserSubject(userA1);
                 yield resource.allow(subject, 'view');
 
-                var _resource$doc$permiss = _slicedToArray(resource.doc.permissions, 1);
+                var _resource$doc$permiss = _slicedToArray(resource.doc[permissionKey], 1);
 
                 const permission = _resource$doc$permiss[0];
 

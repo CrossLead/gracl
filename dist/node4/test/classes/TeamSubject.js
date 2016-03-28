@@ -14,3 +14,4 @@ class TeamSubject extends _Organization.OrganizationSubject {}
 exports.TeamSubject = TeamSubject;
 TeamSubject.repository = teamModel;
 TeamSubject.parentId = 'organizationId';
+TeamSubject.permissionPropertyKey = 'graclPermissions';
