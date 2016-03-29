@@ -52,18 +52,21 @@ function topologicalSort(nodes) {
           remainingNodes = new Set(nodes.map(n => n[nameKey]));
     for (const schemaNode of nodes) {
         const name = schemaNode[nameKey],
-              parent = schemaNode[parentKey];
+              parentProp = schemaNode[parentKey];
         if (!name) {
             throw new Error(`No ${ nameKey } field on node = ${ schemaNode }`);
         }
-        if (!parent) {
+        const parents = Array.isArray(parentProp) ? parentProp : [parentProp];
+        if (!parentProp) {
             noParentList.push(schemaNode);
             remainingNodes.delete(schemaNode[nameKey]);
         } else {
-            if (!parentMapping.has(parent)) {
-                parentMapping.set(parent, [schemaNode]);
-            } else {
-                parentMapping.get(parent).push(schemaNode);
+            for (const parent of parents) {
+                if (!parentMapping.has(parent)) {
+                    parentMapping.set(parent, [schemaNode]);
+                } else {
+                    parentMapping.get(parent).push(schemaNode);
+                }
             }
         }
     }

@@ -42,29 +42,35 @@ export function getClassOf(node: any): typeof Node {
   Run topological sort on nodes
   https://en.wikipedia.org/wiki/Topological_sorting#Kahn.27s_algorithm
  */
-export function topologicalSort(nodes: Hash<string>[], nameKey = 'name', parentKey = 'parent'): Hash<string>[] {
-  const nodeList: Hash<string>[] = [],
-        noParentList: Hash<string>[] = [],
-        parentMapping = new Map<string, Hash<string>[]>(),
+export function topologicalSort(nodes: Hash<any>[], nameKey = 'name', parentKey = 'parent'): Hash<any>[] {
+  const nodeList: Hash<any>[] = [],
+        noParentList: Hash<any>[] = [],
+        parentMapping = new Map<any, Hash<any>[]>(),
         remainingNodes = new Set(nodes.map(n => n[nameKey]));
 
 
   for (const schemaNode of nodes) {
-    const name   = schemaNode[nameKey],
-          parent = schemaNode[parentKey];
+    const name = schemaNode[nameKey],
+          parentProp = schemaNode[parentKey];
 
     if (!name) {
       throw new Error(`No ${nameKey} field on node = ${schemaNode}`);
     }
 
-    if (!parent) {
+    const parents = Array.isArray(parentProp)
+      ? parentProp
+      : [ parentProp ];
+
+    if (!parentProp) {
       noParentList.push(schemaNode);
       remainingNodes.delete(schemaNode[nameKey]);
     } else {
-      if (!parentMapping.has(parent)) {
-        parentMapping.set(parent, [ schemaNode ]);
-      } else {
-        parentMapping.get(parent).push(schemaNode);
+      for (const parent of parents) {
+        if (!parentMapping.has(parent)) {
+          parentMapping.set(parent, [ schemaNode ]);
+        } else {
+          parentMapping.get(parent).push(schemaNode);
+        }
       }
     }
   }

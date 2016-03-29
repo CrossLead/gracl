@@ -8,4 +8,4 @@ export declare function binaryIndexOf(arr: any[], el: any, compare?: typeof base
 export declare function permissionCompare(a: Permission, b: Permission): number;
 export declare function permissionIndexOf(arr: Permission[], subjectId: string): number;
 export declare function getClassOf(node: any): typeof Node;
-export declare function topologicalSort(nodes: Hash<string>[], nameKey?: string, parentKey?: string): Hash<string>[];
+export declare function topologicalSort(nodes: Hash<any>[], nameKey?: string, parentKey?: string): Hash<any>[];
