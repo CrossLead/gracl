@@ -48,6 +48,7 @@ export function topologicalSort(nodes: Hash<any>[], nameKey = 'name', parentKey 
         parentMapping = new Map<any, Hash<any>[]>(),
         remainingNodes = new Set(nodes.map(n => n[nameKey]));
 
+  const parentCounts: Hash<number> = {};
 
   for (const schemaNode of nodes) {
     const name = schemaNode[nameKey],
@@ -57,15 +58,18 @@ export function topologicalSort(nodes: Hash<any>[], nameKey = 'name', parentKey 
       throw new Error(`No ${nameKey} field on node = ${schemaNode}`);
     }
 
-    const parents = Array.isArray(parentProp)
-      ? parentProp
-      : [ parentProp ];
-
     if (!parentProp) {
       noParentList.push(schemaNode);
       remainingNodes.delete(schemaNode[nameKey]);
+      parentCounts[name] = 0;
     } else {
-      for (const parent of parents) {
+      const parents = Array.isArray(parentProp)
+        ? parentProp
+        : [ parentProp ];
+
+      parentCounts[name] = parents.length;
+
+      for (let parent of parents) {
         if (!parentMapping.has(parent)) {
           parentMapping.set(parent, [ schemaNode ]);
         } else {
@@ -81,9 +85,13 @@ export function topologicalSort(nodes: Hash<any>[], nameKey = 'name', parentKey 
     if (parentMapping.has(rootNode[nameKey])) {
       const children = parentMapping.get(rootNode[nameKey]);
       while (children.length) {
-        const child = children.pop();
-        remainingNodes.delete(child[nameKey]);
-        noParentList.push(child);
+        const child = children.pop(),
+              childName = child[nameKey];
+        // parent child should be added after its last parent
+        if (--parentCounts[childName] === 0) {
+          remainingNodes.delete(childName);
+          noParentList.push(child);
+        }
       }
     }
   }

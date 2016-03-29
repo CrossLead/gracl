@@ -50,18 +50,21 @@ function topologicalSort(nodes) {
           noParentList = [],
           parentMapping = new Map(),
           remainingNodes = new Set(nodes.map(n => n[nameKey]));
+    const parentCounts = {};
     for (const schemaNode of nodes) {
         const name = schemaNode[nameKey],
               parentProp = schemaNode[parentKey];
         if (!name) {
             throw new Error(`No ${ nameKey } field on node = ${ schemaNode }`);
         }
-        const parents = Array.isArray(parentProp) ? parentProp : [parentProp];
         if (!parentProp) {
             noParentList.push(schemaNode);
             remainingNodes.delete(schemaNode[nameKey]);
+            parentCounts[name] = 0;
         } else {
-            for (const parent of parents) {
+            const parents = Array.isArray(parentProp) ? parentProp : [parentProp];
+            parentCounts[name] = parents.length;
+            for (let parent of parents) {
                 if (!parentMapping.has(parent)) {
                     parentMapping.set(parent, [schemaNode]);
                 } else {
@@ -76,9 +79,12 @@ function topologicalSort(nodes) {
         if (parentMapping.has(rootNode[nameKey])) {
             const children = parentMapping.get(rootNode[nameKey]);
             while (children.length) {
-                const child = children.pop();
-                remainingNodes.delete(child[nameKey]);
-                noParentList.push(child);
+                const child = children.pop(),
+                      childName = child[nameKey];
+                if (--parentCounts[childName] === 0) {
+                    remainingNodes.delete(childName);
+                    noParentList.push(child);
+                }
             }
         }
     }
