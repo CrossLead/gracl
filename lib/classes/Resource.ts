@@ -122,7 +122,7 @@ export class Resource extends Node {
         if (access === true || access === false) {
           result.access = access;
           result.reason = `Permission set on ${res.toString()} for ${subject.toString()} = ${access}`;
-          return result;
+          if (access === false) return result;
         }
       }
 
@@ -163,7 +163,7 @@ export class Resource extends Node {
           if (access === true || access === false) {
             result.access = access;
             result.reason = `Permission set on ${res.toString()} for ${sub.toString()} = ${access}`;
-            return result;
+            if (access === false) return result;
           }
         }
       }
