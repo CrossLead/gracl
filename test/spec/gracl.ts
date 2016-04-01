@@ -324,10 +324,8 @@ describe('gracl', () => {
        *
           Post(Blog):
             - deny team access
-
           Blog:
             - allow team acces
-
           results:
             - user and team can access whole blog, except post
        */
@@ -369,35 +367,58 @@ describe('gracl', () => {
       });
 
 
-      it('Explicit false set for permission should win over true set somewhere else in hierarchy (resource)', async () => {
+      /**
+       *
+          Post(Blog):
+            - deny team access
+            - allow user access
+          Blog:
+            - deny user access
+            - allow team acces
+          results:
+            - user can access specific post, but not blog itself
+            - team can access blog wholistically, but not specific post
+       */
+      it('Lowest node on hierarchy wins conflicts (deny post for team, but allow for user)', async () => {
         const parentResource = new nodeClasses.BlogResource(blogA1),
               childResource  = new nodeClasses.PostResource(postA1a),
-              subject        = new nodeClasses.UserSubject(userA1);
-
-        await childResource.allow(subject, 'view');
-        const preDenyAccess = await childResource.isAllowed(subject, 'view');
-
-        await parentResource.deny(subject, 'view');
-        const postDenyAccess = await childResource.isAllowed(subject, 'view');
-
-        expect(preDenyAccess, 'before denying parent, should have access').to.equal(true);
-        expect(postDenyAccess, 'after denying parent, should have access').to.equal(false);
-      });
-
-
-      it('Explicit false set for permission should win over true set somewhere else in hierarchy (subject)', async () => {
-        const resource = new nodeClasses.BlogResource(blogA1),
               parentSubject  = new nodeClasses.TeamSubject(teamA1),
               childSubject   = new nodeClasses.UserSubject(userA1);
 
-        await resource.allow(childSubject, 'view');
-        const preDenyAccess = await resource.isAllowed(childSubject, 'view');
+        expect(
+          await childResource.isAllowed(childSubject, 'view'),
+          'User should not have access to post before permission set.'
+        ).to.equal(false);
 
-        await resource.deny(parentSubject, 'view');
-        const postDenyAccess = await resource.isAllowed(childSubject, 'view');
+        // allow team -> blog access
+        await parentResource.allow(parentSubject, 'view');
+        // deny team specific access to post
+        await childResource.deny(parentSubject, 'view');
+        // allow child specifically to access post
+        await childResource.allow(childSubject, 'view');
+        // deny child specifically to access blog
+        await parentResource.deny(childSubject, 'view');
 
-        expect(preDenyAccess, 'before denying parent, should have access').to.equal(true);
-        expect(postDenyAccess, 'after denying parent, should have access').to.equal(false);
+        expect(
+          await parentResource.isAllowed(parentSubject, 'view'),
+          'Team should have access to blog after permission set'
+        ).to.equal(true);
+
+        expect(
+          await childResource.isAllowed(parentSubject, 'view'),
+          'Team should not have access to post after permission set.'
+        ).to.equal(false);
+
+        expect(
+          await parentResource.isAllowed(childSubject, 'view'),
+          'User should have access to blog after permission set'
+        ).to.equal(false);
+
+        expect(
+          await childResource.isAllowed(childSubject, 'view'),
+          'User should have access to post after permission set.'
+        ).to.equal(true);
+
       });
 
 

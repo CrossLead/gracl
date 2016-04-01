@@ -224,27 +224,20 @@ describe('gracl', () => {
                 (0, _chai.expect)((yield parentResource.isAllowed(childSubject, 'view')), 'User should have access to blog after permission set').to.equal(true);
                 (0, _chai.expect)((yield childResource.isAllowed(childSubject, 'view')), 'User should not have access to post after permission set.').to.equal(false);
             }));
-            it('Explicit false set for permission should win over true set somewhere else in hierarchy (resource)', () => __awaiter(this, void 0, void 0, function* () {
+            it('Lowest node on hierarchy wins conflicts (deny post for team, but allow for user)', () => __awaiter(this, void 0, void 0, function* () {
                 const parentResource = new nodeClasses.BlogResource(blogA1),
                       childResource = new nodeClasses.PostResource(postA1a),
-                      subject = new nodeClasses.UserSubject(userA1);
-                yield childResource.allow(subject, 'view');
-                const preDenyAccess = yield childResource.isAllowed(subject, 'view');
-                yield parentResource.deny(subject, 'view');
-                const postDenyAccess = yield childResource.isAllowed(subject, 'view');
-                (0, _chai.expect)(preDenyAccess, 'before denying parent, should have access').to.equal(true);
-                (0, _chai.expect)(postDenyAccess, 'after denying parent, should have access').to.equal(false);
-            }));
-            it('Explicit false set for permission should win over true set somewhere else in hierarchy (subject)', () => __awaiter(this, void 0, void 0, function* () {
-                const resource = new nodeClasses.BlogResource(blogA1),
                       parentSubject = new nodeClasses.TeamSubject(teamA1),
                       childSubject = new nodeClasses.UserSubject(userA1);
-                yield resource.allow(childSubject, 'view');
-                const preDenyAccess = yield resource.isAllowed(childSubject, 'view');
-                yield resource.deny(parentSubject, 'view');
-                const postDenyAccess = yield resource.isAllowed(childSubject, 'view');
-                (0, _chai.expect)(preDenyAccess, 'before denying parent, should have access').to.equal(true);
-                (0, _chai.expect)(postDenyAccess, 'after denying parent, should have access').to.equal(false);
+                (0, _chai.expect)((yield childResource.isAllowed(childSubject, 'view')), 'User should not have access to post before permission set.').to.equal(false);
+                yield parentResource.allow(parentSubject, 'view');
+                yield childResource.deny(parentSubject, 'view');
+                yield childResource.allow(childSubject, 'view');
+                yield parentResource.deny(childSubject, 'view');
+                (0, _chai.expect)((yield parentResource.isAllowed(parentSubject, 'view')), 'Team should have access to blog after permission set').to.equal(true);
+                (0, _chai.expect)((yield childResource.isAllowed(parentSubject, 'view')), 'Team should not have access to post after permission set.').to.equal(false);
+                (0, _chai.expect)((yield parentResource.isAllowed(childSubject, 'view')), 'User should have access to blog after permission set').to.equal(false);
+                (0, _chai.expect)((yield childResource.isAllowed(childSubject, 'view')), 'User should have access to post after permission set.').to.equal(true);
             }));
             it('Permission explainations should be accurate', () => __awaiter(this, void 0, void 0, function* () {
                 const parentResource = new nodeClasses.BlogResource(blogA1),

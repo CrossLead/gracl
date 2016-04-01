@@ -89,7 +89,7 @@ class Resource extends _Node.Node {
                     if (access === true || access === false) {
                         result.access = access;
                         result.reason = `Permission set on ${ res.toString() } for ${ subject.toString() } = ${ access }`;
-                        if (access === false) return result;
+                        return result;
                     }
                 }
                 resources.push.apply(resources, _toConsumableArray(currentResources));
@@ -115,7 +115,7 @@ class Resource extends _Node.Node {
                         if (access === true || access === false) {
                             result.access = access;
                             result.reason = `Permission set on ${ res.toString() } for ${ sub.toString() } = ${ access }`;
-                            if (access === false) return result;
+                            return result;
                         }
                     }
                 }
