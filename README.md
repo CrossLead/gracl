@@ -1,4 +1,8 @@
-# [`gracl`](https://github.com/CrossLead/gracl) - Graph ACL [![Build Status](https://travis-ci.org/CrossLead/gracl.svg?branch=master)](https://travis-ci.org/CrossLead/gracl)
+# [`gracl`](https://github.com/CrossLead/gracl) - Graph ACL
+
+[![Build Status](https://travis-ci.org/CrossLead/gracl.svg?branch=master)](https://travis-ci.org/CrossLead/gracl)
+[![npm version](https://badge.fury.io/js/gracl.svg)](https://badge.fury.io/js/gracl)
+
 
   `gracl` is an Access Control List library for managing permission models utilizing a hierarchy. In `gracl`, the permissions
   hierarchy is implemented using the prototype chain, and (Java/Type)script's great reflection capabilities.
