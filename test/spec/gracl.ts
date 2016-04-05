@@ -2,7 +2,7 @@
 import { expect } from 'chai';
 import * as classes from '../classes/index';
 import * as helpers from '../helpers/index';
-import { Resource, Subject, MemoryRepository, Graph } from '../../lib/index';
+import { Resource, Subject, MemoryRepository, Graph } from '../../lib/gracl';
 
 type TestNodeClasses = {
   PostResource: typeof Resource;

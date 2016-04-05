@@ -1,4 +1,4 @@
-import { MemoryRepository as Repo } from '../../lib/index';
+import { MemoryRepository as Repo } from '../../lib/gracl';
 import { TeamSubject } from './TeamSubject';
 
 export const userModel = new Repo();

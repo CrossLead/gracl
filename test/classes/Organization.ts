@@ -1,4 +1,4 @@
-import { MemoryRepository as Repo, Subject, Resource } from '../../lib/index';
+import { MemoryRepository as Repo, Subject, Resource } from '../../lib/gracl';
 
 export const orgModel = new Repo();
 

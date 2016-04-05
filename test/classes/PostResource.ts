@@ -1,4 +1,4 @@
-import { MemoryRepository as Repo } from '../../lib/index';
+import { MemoryRepository as Repo } from '../../lib/gracl';
 import { BlogResource } from './BlogResource';
 
 export const postModel = new Repo();
