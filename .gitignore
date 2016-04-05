@@ -3,3 +3,4 @@ tmp/*
 docs/*
 .publish/*
 npm-debug.log
+dist/*

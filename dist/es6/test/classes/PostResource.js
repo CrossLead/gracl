@@ -1,9 +1,0 @@
-import { MemoryRepository as Repo } from '../../lib/index';
-import { BlogResource } from './BlogResource';
-export const postModel = new Repo();
-export class PostResource extends BlogResource {
-}
-PostResource.repository = postModel;
-PostResource.parentId = 'blogId';
-PostResource.permissionPropertyKey = 'graclPermissions';
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiUG9zdFJlc291cmNlLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vLi4vLi4vdGVzdC9jbGFzc2VzL1Bvc3RSZXNvdXJjZS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiT0FBTyxFQUFFLGdCQUFnQixJQUFJLElBQUksRUFBRSxNQUFNLGlCQUFpQjtPQUNuRCxFQUFFLFlBQVksRUFBRSxNQUFNLGdCQUFnQjtBQUU3QyxPQUFPLE1BQU0sU0FBUyxHQUFHLElBQUksSUFBSSxFQUFFLENBQUM7QUFFcEMsa0NBQWtDLFlBQVk7QUFJOUMsQ0FBQztBQUhRLHVCQUFVLEdBQUcsU0FBUyxDQUFDO0FBQ3ZCLHFCQUFRLEdBQUcsUUFBUSxDQUFDO0FBQ3BCLGtDQUFxQixHQUFHLGtCQUFrQixDQUNsRCJ9
