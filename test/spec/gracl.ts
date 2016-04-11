@@ -161,6 +161,18 @@ describe('gracl', () => {
       expect(UserSubjectInstance, 'User -> Org').to.be.instanceof(OrganizationSubject);
     });
 
+
+    it('Graph classes return correct node depth', () => {
+      const {
+        BlogResource,
+        UserSubject
+      } = graphClasses;
+
+      expect(BlogResource.getNodeDepth()).to.equal(2);
+      expect(UserSubject.getNodeDepth()).to.equal(3);
+    });
+
+
     it('Graph should throw if there is an undefined parent', () => {
       const createGraph = () => new Graph({
         resources: [

@@ -60,6 +60,17 @@ export class Node {
   }
 
 
+  public static getNodeDepth() {
+    let depth = 0;
+    let nodeClass = this;
+    while (getClassOf(nodeClass.prototype) !== Node) {
+      depth++;
+      nodeClass = getClassOf(nodeClass.prototype);
+    }
+    return depth;
+  }
+
+
   /**
    *  Constructor, simply assigns the given document as a property
    */
@@ -225,13 +236,7 @@ export class Node {
    *  Determine what subclass of node this node is.
    */
   getNodeDepth(): number {
-    let depth = 0;
-    let nodeClass = this.getClass();
-    while (getClassOf(nodeClass.prototype) !== Node) {
-      depth++;
-      nodeClass = getClassOf(nodeClass.prototype);
-    }
-    return depth;
+    return this.getClass().getNodeDepth();
   }
 
 
