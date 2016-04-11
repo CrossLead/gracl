@@ -422,6 +422,21 @@ describe('gracl', () => {
       });
 
 
+      it('childResource.deny(parentSubject) should win over parentResource.allow(childSubject)', async () => {
+        const parentResource = new nodeClasses.BlogResource(blogA1),
+              childResource  = new nodeClasses.PostResource(postA1a),
+              parentSubject  = new nodeClasses.TeamSubject(teamA1),
+              childSubject   = new nodeClasses.UserSubject(userA1);
+
+        await parentResource.allow(childSubject, 'view');
+        await childResource.deny(parentSubject, 'view');
+
+        const access = await childResource.isAllowed(childSubject, 'view');
+
+        expect(access, 'should not have access').to.equal(false);
+      });
+
+
       it('Permission explainations should be accurate', async () => {
         const parentResource = new nodeClasses.BlogResource(blogA1),
               childResource  = new nodeClasses.PostResource(postA1a),
