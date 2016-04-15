@@ -5,8 +5,7 @@ import { Repository } from '../interfaces';
 import { topologicalSort } from '../util';
 
 
-export type SchemaNode = {
-  [key: string]: any,
+export interface SchemaNode {
   name: string;
   repository: Repository;
   id?: string;
