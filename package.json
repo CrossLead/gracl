@@ -1,6 +1,6 @@
 {
   "name": "gracl",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "graph acl in typescript",
   "main": "./dist/node4/lib/gracl.js",
   "typings": "./dist/es6/lib/gracl.d.ts",
