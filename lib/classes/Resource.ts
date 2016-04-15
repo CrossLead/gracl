@@ -64,7 +64,7 @@ export class Resource extends Node {
    *  Retrieve a permission for a given subject via binary search.
       Returns an empty permission object if none is found.
    */
-  getPermission(subject: Subject): Permission {
+  async getPermission(subject: Subject): Promise<Permission> {
     const key = this.getClass().permissionPropertyKey,
           subjectId = subject.getId(),
           permissions = this.doc[key];
@@ -153,7 +153,7 @@ export class Resource extends Node {
 
       for (const res of currentResources) {
         for (const sub of subjects) {
-          const access = res.getPermission(sub).access[permissionType];
+          const access = (await res.getPermission(sub)).access[permissionType];
           if (access === true || access === false) {
             result.access = access;
             result.reason = `Permission set on ${res.toString()} for ${sub.toString()} = ${access}`;

@@ -12,8 +12,9 @@ export type SchemaNode = {
   id?: string;
   parent?: string;
   parentId?: string;
-  permissionProperty?: string,
-  getParents?: () => Promise<Node[]>
+  permissionProperty?: string;
+  getParents?: typeof Node.prototype.getParents;
+  getPermission?: typeof Resource.prototype.getPermission;
 };
 
 
@@ -47,6 +48,8 @@ export class Graph {
 
     const createClass = (node: SchemaNode) => {
       const getParentsMethod = node.getParents || Node.prototype.getParents;
+      const getPermissionMethod = node.getPermission || Resource.prototype.getPermission;
+
 
       if (node.parent) {
         const ParentClass = classGraph.get(node.parent);
@@ -56,7 +59,8 @@ export class Graph {
           static displayName = node.name;
           static repository  = node.repository;
           static permissionPropertyKey = node.permissionProperty || 'permissions';
-          getParents() { return getParentsMethod.call(this); }
+          getParents() { return getParentsMethod.call(this); };
+          getPermission(subject: Subject) { return getPermissionMethod.call(this, subject); };
         });
       } else {
         classGraph.set(node.name, class extends Resource {
@@ -64,6 +68,7 @@ export class Graph {
           static displayName = node.name;
           static repository  = node.repository;
           static permissionPropertyKey = node.permissionProperty || 'permissions';
+          getPermission(subject: Subject) { return getPermissionMethod.call(this, subject); };
         });
       }
     };
