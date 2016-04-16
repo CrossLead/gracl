@@ -32,7 +32,7 @@ export class Resource extends Node {
   constructor(doc: Document) {
     super(doc);
     const key = this.getClass().permissionPropertyKey;
-    if (!this.doc[key]) {
+    if (key && !this.doc[key]) {
       this.doc[key] = [];
     }
     this.sortPermissions();
@@ -44,7 +44,10 @@ export class Resource extends Node {
    */
   sortPermissions() {
     const key = this.getClass().permissionPropertyKey;
-    this.doc[key].sort(permissionCompare);
+    if (key && this.doc[key]) {
+      const key = this.getClass().permissionPropertyKey;
+      this.doc[key].sort(permissionCompare);
+    }
     return this;
   }
 
@@ -52,10 +55,10 @@ export class Resource extends Node {
   setDoc(doc: Document) {
     this.doc = doc;
     const key = this.getClass().permissionPropertyKey;
-    if (!this.doc[key]) {
+    if (key && !this.doc[key]) {
       this.doc[key] = [];
+      this.sortPermissions();
     }
-    this.sortPermissions();
     return this;
   }
 
@@ -67,11 +70,22 @@ export class Resource extends Node {
   async getPermission(subject: Subject): Promise<Permission> {
     const key = this.getClass().permissionPropertyKey,
           subjectId = subject.getId(),
-          permissions = this.doc[key];
+          permissions = await this.getPermissionList();
 
-    return permissions[permissionIndexOf(permissions, subjectId)] || { subjectId, access: { } };
+    return permissions[permissionIndexOf(permissions, subjectId)] || <Permission> {
+      subjectId,
+      resourceId: '',
+      resourceType: '',
+      subjectType: this.getName(),
+      access: {}
+    };
   }
 
+
+  async getPermissionList(): Promise<Permission[]> {
+    const key = this.getClass().permissionPropertyKey;
+    return <Permission[]> this.doc[key];
+  }
 
 
   /**
@@ -203,13 +217,15 @@ export class Resource extends Node {
       to modify the permissions object. If no permission exists, a new permission is created.
    */
   async updatePermission(subject: Subject, action: (p: Permission) => Permission): Promise<Resource> {
-    const { doc } = this,
-          key = this.getClass().permissionPropertyKey,
-          permissions = doc[key],
+    const permissions = await this.getPermissionList(),
           subjectId = subject.getId(),
           subjectType = subject.getName(),
           resourceId = this.getId(),
           resourceType = this.getName();
+
+    if (!permissions) {
+      throw new Error(`No permissions available to update in updatePermission!`);
+    }
 
     const existingPermissionIndex = permissionIndexOf(permissions, subjectId),
           CurrentResourceClass = <typeof Resource> this.getClass();
@@ -223,7 +239,7 @@ export class Resource extends Node {
 
     // save updated document
     const id = this.getId(),
-          updated = await CurrentResourceClass.repository.saveEntity(id, doc, this);
+          updated = await CurrentResourceClass.repository.saveEntity(id, this.doc, this);
 
     return this.setDoc(updated);
   }
@@ -260,14 +276,12 @@ export class Resource extends Node {
    *  Retrieve permissions hierarchy for this node.
    */
   async getPermissionsHierarchy(): Promise<PermissionsHierarchy> {
-    const key = this.getClass().permissionPropertyKey;
-
-    const permissions = <{ [key: string]: any }> this.doc[key];
+    const permissions = await this.getPermissionList();
 
     const graph: PermissionsHierarchy = {
       node: this.toString(),
       nodeId: this.getId(),
-      permissions: <Permission[]> permissions,
+      permissions: permissions,
       parents: []
     };
 
