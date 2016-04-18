@@ -126,29 +126,21 @@ export class Resource extends Node {
     /**
      *  Recurse up subject chain to get all subjects
      */
-    const subjects: Subject[] = [];
-    const subjectsAdded = new Set([this.getId()]);
-    let currentSubjects: Subject[] = [ subject ];
-    while (currentSubjects.length) {
+    const subjects: Subject[] = [],
+          subjectsAdded = new Set(),
+          currentSubjects: Subject[] = [ subject ];
 
-      subjects.push(...currentSubjects);
-
-      const parentSubjects: Subject[] = [];
-      for (const sub of currentSubjects) {
+    let sub: Subject;
+    while (sub = currentSubjects.pop()) {
+      if (!subjectsAdded.has(sub.getId())) {
+        subjects.push(sub);
+        subjectsAdded.add(sub.getId());
         if (!sub.hierarchyRoot()) {
           const thisParents = <Subject[]> (await sub.getParents());
-          for (const parent of thisParents) {
-            if (!subjectsAdded.has(parent.getId())) {
-              parentSubjects.push(parent);
-              subjectsAdded.add(parent.getId());
-            }
-          }
+          currentSubjects.push(...thisParents);
         }
       }
-
-      currentSubjects = parentSubjects;
     }
-
 
     // sort nodes by depth
     subjects.sort((a, b) => {

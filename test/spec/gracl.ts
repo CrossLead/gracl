@@ -60,9 +60,9 @@ describe('gracl', () => {
     orgA = helpers.org();
     orgB = helpers.org();
 
-    teamA1 = helpers.team(orgB);
-    teamA2 = helpers.team(orgB);
-    teamA3 = helpers.team(orgB);
+    teamA1 = helpers.team(orgA);
+    teamA2 = helpers.team(orgA);
+    teamA3 = helpers.team(orgA);
     teamB1 = helpers.team(orgB);
 
     userA1 = helpers.user([ teamA1, teamA2 ]);
@@ -526,6 +526,19 @@ describe('gracl', () => {
           );
 
       });
+
+      it('Should get access through parent having access to itself', async () => {
+        const parentResource: Resource = new nodeClasses.OrganizationResource(orgA),
+              parentSubject: Subject  = new nodeClasses.OrganizationSubject(orgA),
+              childSubject: Subject   = new nodeClasses.UserSubject(userA1);
+
+        // allow team -> blog access
+        await parentResource.allow(parentSubject, 'view');
+        const perm = await parentResource.determineAccess(childSubject, 'view');
+        expect(perm.access, 'child should have access through parent -> parent').to.equal(true);
+      });
+
+
     }
 
   });
