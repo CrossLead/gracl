@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>PermissionsHierarchy | gracl</title>
+	<title>SchemaNode | gracl</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -57,10 +57,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="permissionshierarchy.html">PermissionsHierarchy</a>
+					<a href="schemanode.html">SchemaNode</a>
 				</li>
 			</ul>
-			<h1>Interface PermissionsHierarchy</h1>
+			<h1>Interface SchemaNode</h1>
 		</div>
 	</div>
 </header>
@@ -71,7 +71,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">PermissionsHierarchy</span>
+						<span class="target">SchemaNode</span>
 					</li>
 				</ul>
 			</section>
@@ -82,9 +82,14 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="permissionshierarchy.html#node" class="tsd-kind-icon">node</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="permissionshierarchy.html#parents" class="tsd-kind-icon">parents</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="permissionshierarchy.html#permissions" class="tsd-kind-icon">permissions</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="schemanode.html#getparents" class="tsd-kind-icon">get<wbr>Parents</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="schemanode.html#getpermission" class="tsd-kind-icon">get<wbr>Permission</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="schemanode.html#id" class="tsd-kind-icon">id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="schemanode.html#name" class="tsd-kind-icon">name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="schemanode.html#parent" class="tsd-kind-icon">parent</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="schemanode.html#parentid" class="tsd-kind-icon">parent<wbr>Id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="schemanode.html#permissionproperty" class="tsd-kind-icon">permission<wbr>Property</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="schemanode.html#repository" class="tsd-kind-icon">repository</a></li>
 							</ul>
 						</section>
 					</div>
@@ -93,32 +98,82 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="node" class="tsd-anchor"></a>
-					<h3>node</h3>
-					<div class="tsd-signature tsd-kind-icon">node<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="getparents" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> get<wbr>Parents</h3>
+					<div class="tsd-signature tsd-kind-icon">get<wbr>Parents<span class="tsd-signature-symbol">:</span> <a href="../classes/node.html#getparents" class="tsd-signature-type">getParents</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L15">classes/Node.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Graph.ts#L15">classes/Graph.ts:15</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="parents" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> parents</h3>
-					<div class="tsd-signature tsd-kind-icon">parents<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="permissionshierarchy.html" class="tsd-signature-type">PermissionsHierarchy</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<a name="getpermission" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> get<wbr>Permission</h3>
+					<div class="tsd-signature tsd-kind-icon">get<wbr>Permission<span class="tsd-signature-symbol">:</span> <a href="../classes/resource.html#getpermission" class="tsd-signature-type">getPermission</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L17">classes/Node.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Graph.ts#L16">classes/Graph.ts:16</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="permissions" class="tsd-anchor"></a>
-					<h3>permissions</h3>
-					<div class="tsd-signature tsd-kind-icon">permissions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="permission.html" class="tsd-signature-type">Permission</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<a name="id" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> id</h3>
+					<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Node.ts#L16">classes/Node.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Graph.ts#L11">classes/Graph.ts:11</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="name" class="tsd-anchor"></a>
+					<h3>name</h3>
+					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Graph.ts#L9">classes/Graph.ts:9</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="parent" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> parent</h3>
+					<div class="tsd-signature tsd-kind-icon">parent<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Graph.ts#L12">classes/Graph.ts:12</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="parentid" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> parent<wbr>Id</h3>
+					<div class="tsd-signature tsd-kind-icon">parent<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Graph.ts#L13">classes/Graph.ts:13</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="permissionproperty" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> permission<wbr>Property</h3>
+					<div class="tsd-signature tsd-kind-icon">permission<wbr>Property<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Graph.ts#L14">classes/Graph.ts:14</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="repository" class="tsd-anchor"></a>
+					<h3>repository</h3>
+					<div class="tsd-signature tsd-kind-icon">repository<span class="tsd-signature-symbol">:</span> <a href="repository.html" class="tsd-signature-type">Repository</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/CrossLead/gracl/blob/master/lib/classes/Graph.ts#L10">classes/Graph.ts:10</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -135,6 +190,9 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class">
+						<a href="../classes/graph.html" class="tsd-kind-icon">Graph</a>
+					</li>
+					<li class=" tsd-kind-class">
 						<a href="../classes/memoryrepository.html" class="tsd-kind-icon">Memory<wbr>Repository</a>
 					</li>
 					<li class=" tsd-kind-class">
@@ -147,34 +205,43 @@
 						<a href="../classes/subject.html" class="tsd-kind-icon">Subject</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="nodeclass.html" class="tsd-kind-icon">Node<wbr>Class</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="permission.html" class="tsd-kind-icon">Permission</a>
+						<a href="repository.html" class="tsd-kind-icon">Repository</a>
 					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="permissionshierarchy.html" class="tsd-kind-icon">Permissions<wbr>Hierarchy</a>
+						<a href="schemanode.html" class="tsd-kind-icon">Schema<wbr>Node</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="permissionshierarchy.html#node" class="tsd-kind-icon">node</a>
+								<a href="schemanode.html#getparents" class="tsd-kind-icon">get<wbr>Parents</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="permissionshierarchy.html#parents" class="tsd-kind-icon">parents</a>
+								<a href="schemanode.html#getpermission" class="tsd-kind-icon">get<wbr>Permission</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="permissionshierarchy.html#permissions" class="tsd-kind-icon">permissions</a>
+								<a href="schemanode.html#id" class="tsd-kind-icon">id</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="schemanode.html#name" class="tsd-kind-icon">name</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="schemanode.html#parent" class="tsd-kind-icon">parent</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="schemanode.html#parentid" class="tsd-kind-icon">parent<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="schemanode.html#permissionproperty" class="tsd-kind-icon">permission<wbr>Property</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="schemanode.html#repository" class="tsd-kind-icon">repository</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-interface">
-						<a href="repository.html" class="tsd-kind-icon">Repository</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-is-not-exported">
-						<a href="resourcecass.html" class="tsd-kind-icon">Resource<wbr>Cass</a>
+					<li class=" tsd-kind-type-alias">
+						<a href="../globals.html#accessresult" class="tsd-kind-icon">Access<wbr>Result</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="../globals.html#document" class="tsd-kind-icon">Document</a>
@@ -183,13 +250,31 @@
 						<a href="../globals.html#documentdata" class="tsd-kind-icon">Document<wbr>Data</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
+						<a href="../globals.html#hash" class="tsd-kind-icon">Hash</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
 						<a href="../globals.html#hierarchynode" class="tsd-kind-icon">Hierarchy<wbr>Node</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../globals.html#permopts" class="tsd-kind-icon">Perm<wbr>Opts</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../globals.html#permission" class="tsd-kind-icon">Permission</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../globals.html#permissionshierarchy" class="tsd-kind-icon">Permissions<wbr>Hierarchy</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../globals.html#schema" class="tsd-kind-icon">Schema</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="../globals.html#basecompare" class="tsd-kind-icon">base<wbr>Compare</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="../globals.html#binaryindexof" class="tsd-kind-icon">binary<wbr>Index<wbr>Of</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#getclassof" class="tsd-kind-icon">get<wbr>Class<wbr>Of</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="../globals.html#noop" class="tsd-kind-icon">noop</a>
@@ -199,6 +284,9 @@
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="../globals.html#permissionindexof" class="tsd-kind-icon">permission<wbr>Index<wbr>Of</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#topologicalsort" class="tsd-kind-icon">topological<wbr>Sort</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="../globals.html#yes" class="tsd-kind-icon">yes</a>

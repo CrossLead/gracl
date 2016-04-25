@@ -169,7 +169,7 @@
 					<a name="getentity" class="tsd-anchor"></a>
 					<h3>get<wbr>Entity</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Entity<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../globals.html#document" class="tsd-signature-type">Document</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Entity<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, node<span class="tsd-signature-symbol">?: </span><a href="node.html" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../globals.html#document" class="tsd-signature-type">Document</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -184,6 +184,9 @@
 								<li>
 									<h5>id: <span class="tsd-signature-type">string</span></h5>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> node: <a href="node.html" class="tsd-signature-type">Node</a></h5>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../globals.html#document" class="tsd-signature-type">Document</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
@@ -193,7 +196,7 @@
 					<a name="saveentity" class="tsd-anchor"></a>
 					<h3>save<wbr>Entity</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">save<wbr>Entity<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, doc<span class="tsd-signature-symbol">: </span><a href="../globals.html#document" class="tsd-signature-type">Document</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../globals.html#document" class="tsd-signature-type">Document</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">save<wbr>Entity<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, doc<span class="tsd-signature-symbol">: </span><a href="../globals.html#document" class="tsd-signature-type">Document</a>, node<span class="tsd-signature-symbol">?: </span><a href="node.html" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../globals.html#document" class="tsd-signature-type">Document</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -210,6 +213,9 @@
 								</li>
 								<li>
 									<h5>doc: <a href="../globals.html#document" class="tsd-signature-type">Document</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> node: <a href="node.html" class="tsd-signature-type">Node</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../globals.html#document" class="tsd-signature-type">Document</a><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -228,6 +234,9 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-class">
+						<a href="graph.html" class="tsd-kind-icon">Graph</a>
+					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class">
@@ -259,19 +268,13 @@
 						<a href="subject.html" class="tsd-kind-icon">Subject</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="../interfaces/nodeclass.html" class="tsd-kind-icon">Node<wbr>Class</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="../interfaces/permission.html" class="tsd-kind-icon">Permission</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="../interfaces/permissionshierarchy.html" class="tsd-kind-icon">Permissions<wbr>Hierarchy</a>
-					</li>
-					<li class=" tsd-kind-interface">
 						<a href="../interfaces/repository.html" class="tsd-kind-icon">Repository</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-not-exported">
-						<a href="../interfaces/resourcecass.html" class="tsd-kind-icon">Resource<wbr>Cass</a>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/schemanode.html" class="tsd-kind-icon">Schema<wbr>Node</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../globals.html#accessresult" class="tsd-kind-icon">Access<wbr>Result</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="../globals.html#document" class="tsd-kind-icon">Document</a>
@@ -280,13 +283,31 @@
 						<a href="../globals.html#documentdata" class="tsd-kind-icon">Document<wbr>Data</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
+						<a href="../globals.html#hash" class="tsd-kind-icon">Hash</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
 						<a href="../globals.html#hierarchynode" class="tsd-kind-icon">Hierarchy<wbr>Node</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../globals.html#permopts" class="tsd-kind-icon">Perm<wbr>Opts</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../globals.html#permission" class="tsd-kind-icon">Permission</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../globals.html#permissionshierarchy" class="tsd-kind-icon">Permissions<wbr>Hierarchy</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../globals.html#schema" class="tsd-kind-icon">Schema</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="../globals.html#basecompare" class="tsd-kind-icon">base<wbr>Compare</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="../globals.html#binaryindexof" class="tsd-kind-icon">binary<wbr>Index<wbr>Of</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#getclassof" class="tsd-kind-icon">get<wbr>Class<wbr>Of</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="../globals.html#noop" class="tsd-kind-icon">noop</a>
@@ -296,6 +317,9 @@
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="../globals.html#permissionindexof" class="tsd-kind-icon">permission<wbr>Index<wbr>Of</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#topologicalsort" class="tsd-kind-icon">topological<wbr>Sort</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="../globals.html#yes" class="tsd-kind-icon">yes</a>

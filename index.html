@@ -65,7 +65,9 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<h1 id="-gracl-https-github-com-crosslead-gracl-graph-acl-build-status-https-travis-ci-org-crosslead-gracl-svg-branch-master-https-travis-ci-org-crosslead-gracl-"><a href="https://github.com/CrossLead/gracl"><code>gracl</code></a> - Graph ACL <a href="https://travis-ci.org/CrossLead/gracl"><img src="https://travis-ci.org/CrossLead/gracl.svg?branch=master" alt="Build Status"></a></h1>
+				<h1 id="-gracl-https-github-com-crosslead-gracl-graph-acl"><a href="https://github.com/CrossLead/gracl"><code>gracl</code></a> - Graph ACL</h1>
+				<p><a href="https://travis-ci.org/CrossLead/gracl"><img src="https://travis-ci.org/CrossLead/gracl.svg?branch=master" alt="Build Status"></a>
+				<a href="https://badge.fury.io/js/gracl"><img src="https://badge.fury.io/js/gracl.svg" alt="npm version"></a></p>
 				<p>  <code>gracl</code> is an Access Control List library for managing permission models utilizing a hierarchy. In <code>gracl</code>, the permissions
 				hierarchy is implemented using the prototype chain, and (Java/Type)script&#39;s great reflection capabilities.</p>
 				<h2 id="usage-example">Usage Example</h2>
@@ -101,6 +103,15 @@
 					to check if the subject has access to the whole blog itself, and then finally if the subject has access to <strong>all</strong> blogs
 				for a given organization.</p>
 				<p>Note, in this example, organizations are <strong>both</strong> subjects and resources.</p>
+				<h3 id="conflict-resolution">Conflict Resolution</h3>
+				<p>Inevitably, conflicts between allows and denies of specific permissions will arise. For example (using the hierarchies above), consider a user being given acces to a specific post within a blog, but being denied the blog as a whole...</p>
+				<pre><code class="lang-javascript"><span class="hljs-keyword">await</span> post.allow(user, <span class="hljs-string">'view'</span>);
+<span class="hljs-keyword">await</span> blog.deny(user, <span class="hljs-string">'view'</span>);
+</code></pre>
+				<p>That is, the user is denied access to the blog itself, but allowed to look at a
+					specific post. <code>gracl</code> reconciles this by making the lowest node in the hierarchy win.
+					That means that if a user tries to access the post, it will be granted access, but
+				if the user tries to access the blog, it will be denied.</p>
 				<h3 id="example-code">Example code</h3>
 				<p>To implement this example model using <code>gracl</code>, we would implement the requisite resource and subject classes.</p>
 				<pre><code class="lang-javascript"><span class="hljs-comment">// =&gt;&gt; graclClasses.js</span>
@@ -113,37 +124,37 @@
 <span class="hljs-keyword">import</span> { Subject, Resource } <span class="hljs-keyword">from</span> <span class="hljs-string">'gracl'</span>;
 
 <span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">OrganizationResource</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Resource</span> </span>{
-  static id = <span class="hljs-string">'_id'</span>;
-  static repository = OrganizationModel;
+  <span class="hljs-keyword">static</span> id = <span class="hljs-string">'_id'</span>;
+  <span class="hljs-keyword">static</span> repository = OrganizationModel;
 }
 
 <span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">OrganizationSubject</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Subject</span> </span>{
-  static id = <span class="hljs-string">'_id'</span>;
-  static repository = OrganizationModel;
+  <span class="hljs-keyword">static</span> id = <span class="hljs-string">'_id'</span>;
+  <span class="hljs-keyword">static</span> repository = OrganizationModel;
 }
 
 <span class="hljs-comment">// Moving down the subject hierarchy chain, we simply extend the upper class</span>
 <span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TeamSubject</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">OrganizationSubject</span> </span>{
-  static repository = TeamModel;
+  <span class="hljs-keyword">static</span> repository = TeamModel;
   <span class="hljs-comment">// we need to define the property on Team documents which contains the parent id(s)</span>
   <span class="hljs-comment">// -- alternatively, a method of signature getParents() =&gt; Promise&lt;Resource|Subject&gt; can be</span>
   <span class="hljs-comment">//    directly defined.</span>
-  static parentId = <span class="hljs-string">'organizationId'</span>;
+  <span class="hljs-keyword">static</span> parentId = <span class="hljs-string">'organizationId'</span>;
 }
 
 <span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserSubject</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">TeamSubject</span> </span>{
-  static repository = UserModel;
-  static parentId = <span class="hljs-string">'teamIds'</span>;
+  <span class="hljs-keyword">static</span> repository = UserModel;
+  <span class="hljs-keyword">static</span> parentId = <span class="hljs-string">'teamIds'</span>;
 }
 
 <span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BlogResource</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">OrganizationResource</span> </span>{
-  static repository = BlogModel;
-  static parentId = <span class="hljs-string">'organizationId'</span>;
+  <span class="hljs-keyword">static</span> repository = BlogModel;
+  <span class="hljs-keyword">static</span> parentId = <span class="hljs-string">'organizationId'</span>;
 }
 
 <span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PostResource</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BlogResource</span> </span>{
-  static repository = PostModel;
-  static parentId = <span class="hljs-string">'blogId'</span>;
+  <span class="hljs-keyword">static</span> repository = PostModel;
+  <span class="hljs-keyword">static</span> parentId = <span class="hljs-string">'blogId'</span>;
 }
 </code></pre>
 				<p>Once we&#39;ve implemented the classes, we can use them to add / deny permission and check for access.</p>
@@ -187,6 +198,37 @@
   <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> subject.isAllowed(resource, <span class="hljs-string">'view'</span>);
 }
 </code></pre>
+				<h3 id="alternative-setup-compact-version-">Alternative setup (compact version)</h3>
+				<p>The subject + resource hierarchies can also be created automatically by providing a <strong>schema</strong>...</p>
+				<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { Graph } <span class="hljs-keyword">from</span> <span class="hljs-string">'gracl'</span>;
+
+<span class="hljs-keyword">const</span> schema = {
+  resources: [
+    { name: <span class="hljs-string">'Post'</span>, parent: <span class="hljs-string">'Blog'</span>, parentId: <span class="hljs-string">'blogId'</span>, repository: classes.postModel },
+    { name: <span class="hljs-string">'Blog'</span>, parent: <span class="hljs-string">'Organization'</span>, parentId: <span class="hljs-string">'organizationId'</span>, repository: classes.blogModel },
+    { name: <span class="hljs-string">'Organization'</span>, repository: classes.orgModel }
+  ],
+  subjects: [
+    { name: <span class="hljs-string">'User'</span>, parent: <span class="hljs-string">'Team'</span>, parentId: <span class="hljs-string">'teamIds'</span>, repository: classes.userModel },
+    { name: <span class="hljs-string">'Team'</span>, parent: <span class="hljs-string">'Organization'</span>, parentId: <span class="hljs-string">'organizationId'</span>, repository: classes.teamModel },
+    { name: <span class="hljs-string">'Organization'</span>, repository: classes.orgModel }
+  ]
+};
+
+<span class="hljs-keyword">const</span> graph = <span class="hljs-keyword">new</span> Graph(schema);
+
+<span class="hljs-comment">// Now, the classes can be extracted from the graph to define the functions above...</span>
+<span class="hljs-keyword">const</span> UserSubject = graph.getSubject(<span class="hljs-string">'User'</span>),
+      PostResource = graph.getResource(<span class="hljs-string">'Post'</span>);
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkUserViewPermissionForPost</span>(<span class="hljs-params">user, post</span>) </span>{
+  <span class="hljs-keyword">const</span> subject = <span class="hljs-keyword">new</span> UserSubject(user),
+        resource = <span class="hljs-keyword">new</span> PostResource(post);
+
+  <span class="hljs-comment">// recursively check entire hierarchy</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> subject.isAllowed(resource, <span class="hljs-string">'view'</span>);
+}
+</code></pre>
 				<h2 id="dev-setup">Dev setup</h2>
 				<ol>
 					<li>run <code>npm install</code></li>
@@ -218,6 +260,9 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class">
+						<a href="classes/graph.html" class="tsd-kind-icon">Graph</a>
+					</li>
+					<li class=" tsd-kind-class">
 						<a href="classes/memoryrepository.html" class="tsd-kind-icon">Memory<wbr>Repository</a>
 					</li>
 					<li class=" tsd-kind-class">
@@ -230,19 +275,13 @@
 						<a href="classes/subject.html" class="tsd-kind-icon">Subject</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="interfaces/nodeclass.html" class="tsd-kind-icon">Node<wbr>Class</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/permission.html" class="tsd-kind-icon">Permission</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/permissionshierarchy.html" class="tsd-kind-icon">Permissions<wbr>Hierarchy</a>
-					</li>
-					<li class=" tsd-kind-interface">
 						<a href="interfaces/repository.html" class="tsd-kind-icon">Repository</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-not-exported">
-						<a href="interfaces/resourcecass.html" class="tsd-kind-icon">Resource<wbr>Cass</a>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/schemanode.html" class="tsd-kind-icon">Schema<wbr>Node</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#accessresult" class="tsd-kind-icon">Access<wbr>Result</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#document" class="tsd-kind-icon">Document</a>
@@ -251,13 +290,31 @@
 						<a href="globals.html#documentdata" class="tsd-kind-icon">Document<wbr>Data</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#hash" class="tsd-kind-icon">Hash</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#hierarchynode" class="tsd-kind-icon">Hierarchy<wbr>Node</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#permopts" class="tsd-kind-icon">Perm<wbr>Opts</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#permission" class="tsd-kind-icon">Permission</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#permissionshierarchy" class="tsd-kind-icon">Permissions<wbr>Hierarchy</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#schema" class="tsd-kind-icon">Schema</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#basecompare" class="tsd-kind-icon">base<wbr>Compare</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#binaryindexof" class="tsd-kind-icon">binary<wbr>Index<wbr>Of</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getclassof" class="tsd-kind-icon">get<wbr>Class<wbr>Of</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#noop" class="tsd-kind-icon">noop</a>
@@ -267,6 +324,9 @@
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#permissionindexof" class="tsd-kind-icon">permission<wbr>Index<wbr>Of</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#topologicalsort" class="tsd-kind-icon">topological<wbr>Sort</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#yes" class="tsd-kind-icon">yes</a>
