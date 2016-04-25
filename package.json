@@ -11,7 +11,7 @@
     "test": "./node_modules/.bin/ava",
     "tsc": "./node_modules/typescript/bin/tsc",
     "typings": "./node_modules/typings/dist/bin/typings.js install",
-    "docs": "rm -rf ./docs/ && ./node_modules/typedoc/bin/typedoc --mode file --theme default --experimentalAsyncFunctions --target es6 --out ./docs/ ./lib/ && touch ./docs/.nojekyll",
+    "docs": "bash -c \"rm -rf ./docs/ && ./node_modules/typedoc/bin/typedoc --mode file --theme default --target es6 --out ./docs/ ./lib/ && touch ./docs/.nojekyll\"",
     "gh-pages": "npm run docs && ./node_modules/gh-pages/bin/gh-pages --dotfiles true -d ./docs/",
     "lint": "./node_modules/tslint/bin/tslint -c ./tslint.json ./{test,lib}/**/*.ts",
     "prepublish": "npm test"
