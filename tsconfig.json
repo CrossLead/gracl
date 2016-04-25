@@ -1,13 +1,16 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "es6",
+    "target": "es2015",
+    "module": "commonjs",
+    "moduleResolution" : "node",
     "noImplicitAny": true,
     "noImplicitReturns": true,
-    "removeComments": true,
+    "noFallthroughCasesInSwitch": true,
+    "removeComments": false,
     "noLib": false,
-    "outDir": "./dist/es6/",
-    "inlineSourceMap": true
+    "outDir": "./dist/es2015/",
+    "inlineSourceMap": true,
+    "forceConsistentCasingInFileNames": true
   },
   "exclude": [
     "node_modules",

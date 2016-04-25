@@ -280,9 +280,9 @@ export class Resource extends Node {
     if (!this.hierarchyRoot()) {
       const parents = await (<Promise<Resource[]>> this.getParents());
       if (parents.length) {
-        const parentHierarchies = await Promise.all(
+        const parentHierarchies = <PermissionsHierarchy[]> (<any> (await Promise.all(
           parents.map(p => p.getPermissionsHierarchy())
-        );
+        )));
         graph.parents.push(...parentHierarchies);
       }
     }

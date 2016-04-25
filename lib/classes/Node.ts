@@ -176,7 +176,8 @@ export class Node {
         const promises = <Promise<Node>[]> parentIds.map((id: DocumentData) => {
           return this.getParentNode(id);
         });
-        return <Node[]> (await Promise.all(promises));
+        const nodes = <any> (await Promise.all(promises));
+        return Promise.resolve(<Node[]> nodes);
       } else {
         return [ <Node> (await this.getParentNode(parentIds)) ];
       }
@@ -249,9 +250,9 @@ export class Node {
     if (!this.hierarchyRoot()) {
       const parents = await this.getParents();
       if (parents.length) {
-        const parentIds = await Promise.all(
+        const parentIds = <string[]> (<any> (await Promise.all(
           parents.map(p => p.getHierarchyIds())
-        );
+        )));
         ids = parentIds.reduce((out, idList) => {
           return out.concat(idList);
         }, ids);
