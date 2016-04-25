@@ -47,9 +47,10 @@
     "gh-pages": "0.10.0",
     "gulp": "3.9.1",
     "jasmine-core": "2.4.1",
+    "lodash": "^3.10.1",
     "ts-node": "0.5.5",
     "tslint": "3.5.0",
-    "typedoc": "git://github.com/bsouthga/typedoc.git#tsv1.8",
+    "typedoc": "sierrasoftworks/typedoc#v1.8.10",
     "typescript": "1.8.10",
     "typings": "0.6.8",
     "uglifyjs": "2.4.10"

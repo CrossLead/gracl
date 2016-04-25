@@ -4,3 +4,4 @@ docs/*
 .publish/*
 npm-debug.log
 dist/*
+test/**/*.js
