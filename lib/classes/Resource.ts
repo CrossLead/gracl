@@ -112,7 +112,6 @@ export class Resource extends Node {
       reason: 'No permissions were set specifically for this subject/resource combination.'
     };
 
-
     /**
      * Check if assertion function has returned true
      */
@@ -122,65 +121,30 @@ export class Resource extends Node {
       return result;
     }
 
+    const subjectParentIteratorFactory = subject.parentNodeIteratorFactoryGenerator(),
+          resourceParentIteratorFactory = this.parentNodeIteratorFactoryGenerator();
 
-    /**
-     *  Recurse up subject chain to get all subjects
-     */
-    const subjects: Subject[] = [],
-          subjectsAdded = new Set(),
-          currentSubjects: Subject[] = [ subject ];
+    const resourceParentIterator = resourceParentIteratorFactory();
 
-    let sub: Subject;
-    while (sub = currentSubjects.pop()) {
-      if (!subjectsAdded.has(sub.getId())) {
-        subjects.push(sub);
-        subjectsAdded.add(sub.getId());
-        if (!sub.hierarchyRoot()) {
-          const thisParents = <Subject[]> (await sub.getParents());
-          currentSubjects.push(...thisParents);
-        }
+    let currentResourceParents: Resource[] = [ this ];
+
+    while (!resourceParentIterator.done) {
+      currentResourceParents = <Resource[]> (await resourceParentIterator.next());
+
+      const subjectParentIterator = subjectParentIteratorFactory();
+      let currentSubjectParents: Subject[] = [ subject ];
+
+      while (!subjectParentIterator.done) {
+        currentResourceParents = <Resource[]> (await resourceParentIterator.next());
       }
     }
 
-    // sort nodes by depth
-    subjects.sort((a, b) => {
-      const aDepth = a.getNodeDepth(),
-            bDepth = b.getNodeDepth();
-      // invert, so deeper nodes come first
-      return 0 - baseCompare(aDepth, bDepth);
-    });
-
-
-    /**
-     *  Recurse up resource chain
-     */
-    let currentResources: Resource[]  = [ this ];
-    while (currentResources.length) {
-
-      for (const res of currentResources) {
-        for (const sub of subjects) {
-          const access = (await res.getPermission(sub)).access[permissionType];
-          if (access === true || access === false) {
-            result.access = access;
-            result.reason = `Permission set on ${res.toString()} for ${sub.toString()} = ${access}`;
-            return result;
-          }
-        }
-      }
-
-      const parentResources: Resource[] = [];
-
-      for (const res of currentResources) {
-        if (!res.hierarchyRoot()) {
-          const thisParents = <Resource[]> (await res.getParents());
-          parentResources.push(...thisParents);
-        }
-      }
-
-      currentResources = parentResources;
-    }
-
-
+    // const access = (await res.getPermission(sub)).access[permissionType];
+    // if (access === true || access === false) {
+    //   result.access = access;
+    //   result.reason = `Permission set on ${res.toString()} for ${sub.toString()} = ${access}`;
+    //   return result;
+    // }
 
     return result;
   }
