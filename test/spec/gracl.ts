@@ -567,28 +567,7 @@ function runNodeTestsWithClasses(description: string, nodeClasses: TestNodeClass
     await resource.deny(<Subject> parentSubject2, 'view');
     await resource.allow(<Subject> parentSubject1, 'view');
 
-    console.log(await resource.isAllowed(subject, 'view'));
+    expect(await resource.isAllowed(subject, 'view')).to.equal(false);
   });
-
-
-  test.serial(description + ' Node.parentNodeIteratorFactoryGenerator() should produce memoized lazy list of parents', async () => {
-    const subject: Subject = new nodeClasses.UserSubject(userA1);
-
-    const parentNodeIteratorFactory = subject.parentNodeIteratorFactoryGenerator();
-
-    let iterator = parentNodeIteratorFactory();
-    while (!iterator.done) {
-      const parents = await iterator.next();
-      console.log(parents);
-    }
-
-    iterator = parentNodeIteratorFactory();
-    while (!iterator.done) {
-      const parents = await iterator.next();
-      console.log(parents);
-    }
-
-  });
-
 
 }

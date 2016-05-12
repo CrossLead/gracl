@@ -102,9 +102,7 @@ export class Resource extends Node {
    */
   async determineAccess(subject: Subject, permissionType: string, options?: PermOpts): Promise<AccessResult> {
     // permission check options
-    const {
-      assertionFn = yes
-    } = options || {};
+    const { assertionFn = yes } = options || {};
 
     const result = {
       type: permissionType,
@@ -121,30 +119,48 @@ export class Resource extends Node {
       return result;
     }
 
-    const subjectParentIteratorFactory = subject.parentNodeIteratorFactoryGenerator(),
-          resourceParentIteratorFactory = this.parentNodeIteratorFactoryGenerator();
+    const subjectIteratorFactory = subject.nodeIteratorMetaFactory(),
+          resourceIteratorFactory = this.nodeIteratorMetaFactory(),
+          resourceIterator = resourceIteratorFactory();
 
-    const resourceParentIterator = resourceParentIteratorFactory();
+    // loop through the levels of the resource hierarchy
+    while (!resourceIterator.done) {
+      const currentResources = <Resource[]> (await resourceIterator.next()),
+            subjectIterator = subjectIteratorFactory();
 
-    let currentResourceParents: Resource[] = [ this ];
+      // loop through all levels of the subject hierarchy,
+      // checking access to the current resource
+      while (!subjectIterator.done) {
+        const currentSubjects = <Subject[]> (await subjectIterator.next());
+        let accessSetAtCurrentLevel = false;
 
-    while (!resourceParentIterator.done) {
-      currentResourceParents = <Resource[]> (await resourceParentIterator.next());
+        for (const sub of currentSubjects) {
+          for (const res of currentResources) {
+            // get the specific permission for this
+            // subject and resource combination and
+            // determine access for the given resource type
+            const access = (await res.getPermission(sub)).access[permissionType];
 
-      const subjectParentIterator = subjectParentIteratorFactory();
-      let currentSubjectParents: Subject[] = [ subject ];
+            // if we have a defined access value,
+            // set the reason and the access for the permission
+            if (access === true || access === false) {
+              accessSetAtCurrentLevel = true;
+              result.access = access;
+              result.reason = `Permission set on ${res.toString()} for ${sub.toString()} = ${access}`;
+            }
 
-      while (!subjectParentIterator.done) {
-        currentResourceParents = <Resource[]> (await resourceParentIterator.next());
+            // short circuit on false at this
+            // level of subjects and this level of resources
+            if (access === false) return result;
+          }
+        }
+
+        // if access was set to true for a given combination of
+        // subjects and resources, and no other combinations had false
+        // short circuit on true
+        if (accessSetAtCurrentLevel) return result;
       }
     }
-
-    // const access = (await res.getPermission(sub)).access[permissionType];
-    // if (access === true || access === false) {
-    //   result.access = access;
-    //   result.reason = `Permission set on ${res.toString()} for ${sub.toString()} = ${access}`;
-    //   return result;
-    // }
 
     return result;
   }

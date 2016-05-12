@@ -273,16 +273,14 @@ export class Node {
 
   /*
     create factory of memoized lazy list of parents to reduce db calls
-
-    @webscalename
-    @enterprisename
    */
-  parentNodeIteratorFactoryGenerator() {
+  nodeIteratorMetaFactory() {
     const node = this,
           added = new Set(),
           _cache: Node[][] = [];
 
-    let _filled = false;
+    let _filled = false,
+        _first = true;
 
     function iterator() {
       const filled = _filled,
@@ -290,13 +288,12 @@ export class Node {
 
       let currentNodes: Node[] = [ node ];
 
-
       return {
-        done: !node.hierarchyRoot(), // if the current node is root, start done
+        done: false, // if the current node is root, start done
         async next(): Promise<Node[]> {
-           if (this.done) {
-             throw new TypeError(`Tried to call iterator after it had finished!`);
-           }
+          if (this.done) {
+            throw new TypeError(`Tried to call iterator after it had finished!`);
+          }
 
           // we've already filled the cache, now just use it
           if (filled) {
@@ -305,13 +302,20 @@ export class Node {
             return nextParentList;
           }
 
+          // first item should be the node itself
+          if (_first) {
+            _first = false;
+            _cache.push(currentNodes);
+            return currentNodes;
+          }
+
           // concurrently get all parents in the next
           // level of the hierarchy
           const parentPromises = currentNodes.map(n => n.getParents());
 
           // hack to get around typescript issue
           // with Promise.all
-          const unFlattened = <any> (await Promise.all(parentPromises));
+          const unFlattened = <Node[][]> (<any> (await Promise.all(parentPromises)));
 
           currentNodes = [];
 
