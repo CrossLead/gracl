@@ -306,6 +306,9 @@ export class Node {
           if (_first) {
             _first = false;
             _cache.push(currentNodes);
+            if (currentNodes.some(n => n.hierarchyRoot())) {
+              _filled = this.done = true;
+            }
             return currentNodes;
           }
 
