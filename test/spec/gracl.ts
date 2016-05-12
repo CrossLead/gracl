@@ -553,4 +553,21 @@ function runNodeTestsWithClasses(description: string, nodeClasses: TestNodeClass
   });
 
 
+  /**
+   * say a user has two teams, and one of those teams is denied access
+     to a given component, while the other team is allowed access to the same
+     component -- gracl should return deny. Additionally, the same
+     logic should apply if there are multiple resources with conflicting access
+   */
+  test.serial(description + ' multiple resources or subjects with conflicting access at the same hierarchy depth should default to deny', async () => {
+    const subject: Subject = new nodeClasses.UserSubject(userA1);
+    const resource: Resource = new nodeClasses.PostResource(postA1a);
+    const [ parentSubject1, parentSubject2 ] = await subject.getParents();
+
+    await resource.deny(<Subject> parentSubject2, 'view');
+    await resource.allow(<Subject> parentSubject1, 'view');
+
+    expect(await resource.isAllowed(subject, 'view')).to.equal(false);
+  });
+
 }
