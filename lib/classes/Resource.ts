@@ -1,7 +1,13 @@
 import { Subject } from './Subject';
 import { Node, PermOpts } from './Node';
-import { permissionCompare, permissionIndexOf, yes, baseCompare } from '../util';
-import { Document, Permission } from '../interfaces';
+import {
+  permissionCompare,
+  permissionIndexOf,
+  yes,
+  baseCompare,
+  flattenPromises
+} from '../util';
+import { Document, Permission, Hash } from '../interfaces';
 
 
 export type AccessResult = {
@@ -119,23 +125,32 @@ export class Resource extends Node {
       return result;
     }
 
-    const subjectIteratorFactory = subject.nodeIteratorMetaFactory(),
-          resourceIteratorFactory = this.nodeIteratorMetaFactory(),
-          resourceIterator = resourceIteratorFactory();
+    const subjectCache: Hash<Subject[]> = {};
+    const getSubject = async (sub: Subject) => {
+      const id = sub.getId();
+      if (subjectCache[id]) return subjectCache[id];
+      return subjectCache[id] = <Subject[]> (await sub.getParents());
+    };
+
+    const resource = this;
+    let currentResources: Resource[] = [ resource ];
 
     // loop through the levels of the resource hierarchy
-    while (!resourceIterator.done) {
-      const currentResources = <Resource[]> (await resourceIterator.next()),
-            subjectIterator = subjectIteratorFactory();
+    while (true) {
 
       // loop through all levels of the subject hierarchy,
       // checking access to the current resource
-      while (!subjectIterator.done) {
-        const currentSubjects = <Subject[]> (await subjectIterator.next());
+      let currentSubjects = [ subject ];
+
+      while (true) {
         let accessSetAtCurrentLevel = false;
 
-        for (const sub of currentSubjects) {
-          for (const res of currentResources) {
+        for (let i_s = 0, l_s = currentSubjects.length; i_s < l_s; i_s++) {
+          const sub = currentSubjects[i_s];
+
+          for (let i_r = 0, l_r = currentResources.length; i_r < l_r; i_r++) {
+            const res = currentResources[i_r];
+
             // get the specific permission for this
             // subject and resource combination and
             // determine access for the given resource type
@@ -146,7 +161,9 @@ export class Resource extends Node {
             if (access === true || access === false) {
               accessSetAtCurrentLevel = true;
               result.access = access;
-              result.reason = `Permission set on ${res.toString()} for ${sub.toString()} = ${access}`;
+              result.reason = (
+                `Permission set on ${res.toString()} for ${sub.toString()} = ${access}`
+              );
             }
 
             // short circuit on false at this
@@ -159,7 +176,21 @@ export class Resource extends Node {
         // subjects and resources, and no other combinations had false
         // short circuit on true
         if (accessSetAtCurrentLevel) return result;
+
+        // if we've reached the root, return
+        if (!currentSubjects.length || currentSubjects.some(s => s.hierarchyRoot())) break;
+
+        currentSubjects = <Subject[]> (await flattenPromises(
+          currentSubjects.map(getSubject)
+        ));
       }
+
+      if (!currentResources.length || currentResources.some(r => r.hierarchyRoot())) break;
+
+      // advance to the next level of resources
+      currentResources = <Resource[]> (await flattenPromises(
+        currentResources.map(r => r.getParents())
+      ));
     }
 
     return result;

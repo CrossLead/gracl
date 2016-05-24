@@ -1,6 +1,6 @@
 {
   "ambientDependencies": {
-    "chai": "github:DefinitelyTyped/DefinitelyTyped/chai/chai.d.ts#9c25433c84251bfe72bf0030a95edbbb2c81c9d5",
-    "lodash": "github:DefinitelyTyped/DefinitelyTyped/lodash/lodash.d.ts#7b7aa2027a8fb6219a8bcf1b6bb12bcd0ff9539d"
+    "chai": "registry:dt/chai#3.4.0+20160317120654",
+    "lodash": "registry:dt/lodash#3.10.0+20160330154726"
   }
 }

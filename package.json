@@ -10,7 +10,7 @@
     "pretest": "npm run build && npm run lint",
     "test": "./node_modules/.bin/ava",
     "tsc": "./node_modules/typescript/bin/tsc",
-    "typings": "./node_modules/typings/dist/bin/typings.js install",
+    "typings": "./node_modules/.bin/typings install",
     "docs": "bash -c \"rm -rf ./docs/ && ./node_modules/typedoc/bin/typedoc --mode file --theme default --target es6 --out ./docs/ ./lib/ && touch ./docs/.nojekyll\"",
     "gh-pages": "npm run docs && ./node_modules/gh-pages/bin/gh-pages --dotfiles true -d ./docs/",
     "lint": "./node_modules/tslint/bin/tslint -c ./tslint.json ./{test,lib}/**/*.ts",
@@ -52,7 +52,7 @@
     "tslint": "3.5.0",
     "typedoc": "sierrasoftworks/typedoc#v1.8.10",
     "typescript": "1.8.10",
-    "typings": "0.6.8",
+    "typings": "0.7.12",
     "uglifyjs": "2.4.10"
   },
   "ava": {

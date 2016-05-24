@@ -261,91 +261,11 @@ export class Node {
   }
 
 
-
   /**
    *  Instance version of static method
    */
   getHierarchyClassNames(): string[] {
     return this.getClass().getHierarchyClassNames();
   }
-
-
-
-  /*
-    create factory of memoized lazy list of parents to reduce db calls
-   */
-  nodeIteratorMetaFactory() {
-    const node = this,
-          added = new Set(),
-          _cache: Node[][] = [];
-
-    let _filled = false,
-        _first = true;
-
-    function iterator() {
-      const filled = _filled,
-            cache: Node[][] = _cache.slice();
-
-      let currentNodes: Node[] = [ node ];
-
-      return {
-        done: false, // if the current node is root, start done
-        async next(): Promise<Node[]> {
-          if (this.done) {
-            throw new TypeError(`Tried to call iterator after it had finished!`);
-          }
-
-          // we've already filled the cache, now just use it
-          if (filled) {
-            const nextParentList = cache.shift();
-            if (cache.length === 0) this.done = true;
-            return nextParentList;
-          }
-
-          // first item should be the node itself
-          if (_first) {
-            _first = false;
-            _cache.push(currentNodes);
-            if (currentNodes.some(n => n.hierarchyRoot())) {
-              _filled = this.done = true;
-            }
-            return currentNodes;
-          }
-
-          // concurrently get all parents in the next
-          // level of the hierarchy
-          const parentPromises = currentNodes.map(n => n.getParents());
-
-          // hack to get around typescript issue
-          // with Promise.all
-          const unFlattened = <Node[][]> (<any> (await Promise.all(parentPromises)));
-
-          currentNodes = [];
-
-          for (const parentList of unFlattened) {
-            for (const parent of parentList) {
-              // don't add duplicate parents
-              if (!added.has(parent.getId())) {
-                currentNodes.push(parent);
-                added.add(parent.getId());
-              }
-            }
-          }
-
-          _cache.push(currentNodes);
-
-          if (currentNodes.some(n => n.hierarchyRoot())) {
-            _filled = this.done = true;
-          }
-
-          return currentNodes;
-        }
-      };
-    }
-
-    return iterator;
-  }
-
-
 
 }

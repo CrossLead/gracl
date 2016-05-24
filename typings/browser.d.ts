@@ -1,3 +1,2 @@
-/// <reference path="browser/ambient/chai/chai.d.ts" />
-/// <reference path="browser/ambient/lodash/lodash.d.ts" />
-/// <reference path="browser/ambient/mocha/mocha.d.ts" />
+/// <reference path="browser/ambient/chai/index.d.ts" />
+/// <reference path="browser/ambient/lodash/index.d.ts" />

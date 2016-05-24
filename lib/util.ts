@@ -105,3 +105,12 @@ export function topologicalSort(nodes: Hash<any>[], nameKey = 'name', parentKey 
 
   return nodeList;
 }
+
+export async function flattenPromises<T>(promises: Promise<T[]>[]): Promise<T[]> {
+  const unFlattened = <any> (await Promise.all(promises));
+  const flattened: T[] = [];
+  for (let i = 0, l = unFlattened.length; i < l; i++) {
+    flattened.push(...unFlattened[i]);
+  }
+  return flattened;
+}
