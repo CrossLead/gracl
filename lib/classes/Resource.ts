@@ -106,23 +106,41 @@ export class Resource extends Node {
             - if a parent subject specifically has true / false access -- return that boolean
         4. Recurse up subject hierarchy
    */
-  async determineAccess(subject: Subject, permissionType: string, options?: PermOpts): Promise<AccessResult> {
+  async determineAccess(
+    subject: Subject,
+    permissionType: string | string[],
+    options?: PermOpts
+  ): Promise<Hash<AccessResult>> {
     // permission check options
     const { assertionFn = yes } = options || {};
 
-    const result = {
-      type: permissionType,
-      access: false,
-      reason: 'No permissions were set specifically for this subject/resource combination.'
-    };
+    const accessResults: Hash<AccessResult> = {};
+
+    const negativeResults: Set<string> = new Set();
+    const foundResults: Set<string> = new Set();
+
+    const permissionsToCheck: string[] = typeof permissionType === 'string'
+      ? [ permissionType ]
+      : permissionType;
+
+    const uniquePerms = new Set(permissionsToCheck);
+
+    permissionsToCheck.forEach(perm => {
+      accessResults[perm] = {
+        type: perm,
+        access: false,
+        reason: 'No permissions were set specifically for this subject/resource combination.'
+      };
+    });
 
     /**
      * Check if assertion function has returned true
      */
     if (!(await assertionFn())) {
-      result.access = false;
-      result.reason = 'Failed assertion function check.';
-      return result;
+      permissionsToCheck.forEach(perm => {
+        accessResults[perm].reason = 'Failed assertion function check.';
+      });
+      return accessResults;
     }
 
     const subjectCache: Hash<Subject[]> = {};
@@ -130,6 +148,20 @@ export class Resource extends Node {
       const id = sub.getId();
       if (subjectCache[id]) return subjectCache[id];
       return subjectCache[id] = <Subject[]> (await sub.getParents());
+    };
+
+    const permissionObjCache: Hash<Hash<Permission>> = {};
+    const getPermissionObj = async (res: Resource, sub: Subject): Promise<Permission> => {
+      const resId = res.getId();
+      const subId = sub.getId();
+
+      if (permissionObjCache[resId] && permissionObjCache[resId][subId]) {
+        return permissionObjCache[resId][subId];
+      }
+
+      if (!permissionObjCache[resId]) permissionObjCache[resId] = {};
+
+      return permissionObjCache[resId][subId] = await res.getPermission(sub);
     };
 
     const resource = this;
@@ -151,31 +183,40 @@ export class Resource extends Node {
           for (let i_r = 0, l_r = currentResources.length; i_r < l_r; i_r++) {
             const res = currentResources[i_r];
 
-            // get the specific permission for this
-            // subject and resource combination and
-            // determine access for the given resource type
-            const access = (await res.getPermission(sub)).access[permissionType];
+            for (let i_p = 0, l_p = permissionsToCheck.length; i_p < l_p; i_p++) {
+              const perm = permissionsToCheck[i_p];
 
-            // if we have a defined access value,
-            // set the reason and the access for the permission
-            if (access === true || access === false) {
-              accessSetAtCurrentLevel = true;
-              result.access = access;
-              result.reason = (
-                `Permission set on ${res.toString()} for ${sub.toString()} = ${access}`
-              );
+              // get the specific permission for this
+              // subject and resource combination and
+              // determine access for the given resource type
+              const access = (await getPermissionObj(res, sub)).access[perm];
+
+              // if we have a defined access value,
+              // set the reason and the access for the permission
+              if (access === true || access === false) {
+                if (access === false) {
+                  negativeResults.add(perm);
+                }
+                foundResults.add(perm);
+
+                const result = accessResults[perm];
+                result.access = access;
+                result.reason = (
+                  `Permission set on ${res.toString()} for ${sub.toString()} = ${access}`
+                );
+              }
+
+              // short circuit on false at this
+              // level of subjects and this level of resources
+              if (negativeResults.size === uniquePerms.size) return accessResults;
             }
-
-            // short circuit on false at this
-            // level of subjects and this level of resources
-            if (access === false) return result;
           }
         }
 
         // if access was set to true for a given combination of
         // subjects and resources, and no other combinations had false
         // short circuit on true
-        if (accessSetAtCurrentLevel) return result;
+        if (foundResults.size === uniquePerms.size) return accessResults;
 
         // if we've reached the root, return
         if (!currentSubjects.length || currentSubjects.some(s => s.hierarchyRoot())) break;
@@ -193,7 +234,7 @@ export class Resource extends Node {
       ));
     }
 
-    return result;
+    return accessResults;
   }
 
 
@@ -202,7 +243,7 @@ export class Resource extends Node {
    */
   async isAllowed(subject: Subject, permissionType: string, options?: PermOpts): Promise<boolean> {
     const result = await this.determineAccess(subject, permissionType, options);
-    return result.access;
+    return result[permissionType].access;
   }
 
 
@@ -211,7 +252,7 @@ export class Resource extends Node {
    */
   async explainPermission(subject: Subject, permissionType: string, options?: PermOpts): Promise<string> {
     const result = await this.determineAccess(subject, permissionType, options);
-    return result.reason;
+    return result[permissionType].reason;
   }
 
 

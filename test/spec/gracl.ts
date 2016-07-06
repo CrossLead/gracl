@@ -549,7 +549,7 @@ function runNodeTestsWithClasses(description: string, nodeClasses: TestNodeClass
     // allow team -> blog access
     await parentResource.allow(parentSubject, 'view');
     const perm = await parentResource.determineAccess(childSubject, 'view');
-    expect(perm.access, 'child should have access through parent -> parent').to.equal(true);
+    expect(perm['view'].access, 'child should have access through parent -> parent').to.equal(true);
   });
 
 
