@@ -116,7 +116,7 @@ export class Resource extends Node {
 
     const accessResults: Hash<AccessResult> = {};
 
-    const negativeResults: Set<string> = new Set();
+    const finishedPermissions: Set<string> = new Set();
     const foundResults: Set<string> = new Set();
 
     const permissionsToCheck: string[] = typeof permissionType === 'string'
@@ -180,14 +180,16 @@ export class Resource extends Node {
 
       while (true) {
 
-        for (let i_s = 0, l_s = currentSubjects.length; i_s < l_s; i_s++) {
-          const sub = currentSubjects[i_s];
+        for (let i_p = 0, l_p = permissionsToCheck.length; i_p < l_p; i_p++) {
+          const perm = permissionsToCheck[i_p];
 
-          for (let i_r = 0, l_r = currentResources.length; i_r < l_r; i_r++) {
-            const res = currentResources[i_r];
+          if (finishedPermissions.has(perm)) continue;
 
-            for (let i_p = 0, l_p = permissionsToCheck.length; i_p < l_p; i_p++) {
-              const perm = permissionsToCheck[i_p];
+          for (let i_s = 0, l_s = currentSubjects.length; i_s < l_s; i_s++) {
+            const sub = currentSubjects[i_s];
+
+            for (let i_r = 0, l_r = currentResources.length; i_r < l_r; i_r++) {
+              const res = currentResources[i_r];
 
               // get the specific permission for this
               // subject and resource combination and
@@ -197,10 +199,9 @@ export class Resource extends Node {
 
               // if we have a defined access value,
               // set the reason and the access for the permission
-              if ((access === true || access === false) && !negativeResults.has(perm)) {
+              if ((access === true && !finishedPermissions.has(perm)) || access === false) {
 
-                if (access === false) negativeResults.add(perm);
-                foundResults.add(perm);
+                if (access === false) finishedPermissions.add(perm);
 
                 const result = accessResults[perm];
                 result.access = access;
@@ -209,18 +210,16 @@ export class Resource extends Node {
                 );
 
               }
-
-              // short circuit on false at this
-              // level of subjects and this level of resources
-              if (negativeResults.size === uniquePerms.size) return accessResults;
             }
+
+            // if positive result found for this level of resources, add to positive results
+            if (accessResults[perm].access) finishedPermissions.add(perm);
           }
         }
 
-        // if access was set to true for a given combination of
-        // subjects and resources, and no other combinations had false
-        // short circuit on true
-        if (foundResults.size === uniquePerms.size) return accessResults;
+
+        // if we have found results for all permissions at this point, break
+        if (finishedPermissions.size === uniquePerms.size) return accessResults;
 
         // if we've reached the root, return
         if (!currentSubjects.length || currentSubjects.some(s => s.hierarchyRoot())) break;
