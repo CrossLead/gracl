@@ -63,8 +63,8 @@ export class Resource extends Node {
     const key = this.getClass().permissionPropertyKey;
     if (key && !this.doc[key]) {
       this.doc[key] = [];
-      this.sortPermissions();
     }
+    this.sortPermissions();
     return this;
   }
 
@@ -125,6 +125,7 @@ export class Resource extends Node {
 
     const uniquePerms = new Set(permissionsToCheck);
 
+
     permissionsToCheck.forEach(perm => {
       accessResults[perm] = {
         type: perm,
@@ -144,24 +145,27 @@ export class Resource extends Node {
     }
 
     const subjectCache: Hash<Subject[]> = {};
-    const getSubject = async (sub: Subject) => {
+    const getSubject = (sub: Subject) => {
       const id = sub.getId();
-      if (subjectCache[id]) return subjectCache[id];
-      return subjectCache[id] = <Subject[]> (await sub.getParents());
+      if (subjectCache[id]) return Promise.resolve(subjectCache[id]);
+      return sub.getParents()
+        .then(result => subjectCache[id] = <Subject[]> result);
     };
 
     const permissionObjCache: Hash<Hash<Permission>> = {};
-    const getPermissionObj = async (res: Resource, sub: Subject): Promise<Permission> => {
+    const getPermissionObj = (res: Resource, sub: Subject): Promise<Permission> => {
       const resId = res.getId();
       const subId = sub.getId();
 
-      if (permissionObjCache[resId] && permissionObjCache[resId][subId]) {
-        return permissionObjCache[resId][subId];
+      if (permissionObjCache[resId] &&
+          permissionObjCache[resId][subId]) {
+        return Promise.resolve(permissionObjCache[resId][subId]);
       }
 
       if (!permissionObjCache[resId]) permissionObjCache[resId] = {};
 
-      return permissionObjCache[resId][subId] = await res.getPermission(sub);
+      return res.getPermission(sub)
+        .then(result => permissionObjCache[resId][subId] = result);
     };
 
     const resource = this;
@@ -175,7 +179,6 @@ export class Resource extends Node {
       let currentSubjects = [ subject ];
 
       while (true) {
-        let accessSetAtCurrentLevel = false;
 
         for (let i_s = 0, l_s = currentSubjects.length; i_s < l_s; i_s++) {
           const sub = currentSubjects[i_s];
@@ -189,14 +192,14 @@ export class Resource extends Node {
               // get the specific permission for this
               // subject and resource combination and
               // determine access for the given resource type
-              const access = (await getPermissionObj(res, sub)).access[perm];
+              const permObj = await getPermissionObj(res, sub);
+              const access = permObj.access[perm];
 
               // if we have a defined access value,
               // set the reason and the access for the permission
-              if (access === true || access === false) {
-                if (access === false) {
-                  negativeResults.add(perm);
-                }
+              if ((access === true || access === false) && !negativeResults.has(perm)) {
+
+                if (access === false) negativeResults.add(perm);
                 foundResults.add(perm);
 
                 const result = accessResults[perm];
@@ -204,6 +207,7 @@ export class Resource extends Node {
                 result.reason = (
                   `Permission set on ${res.toString()} for ${sub.toString()} = ${access}`
                 );
+
               }
 
               // short circuit on false at this

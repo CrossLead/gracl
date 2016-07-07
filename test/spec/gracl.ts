@@ -570,4 +570,20 @@ function runNodeTestsWithClasses(description: string, nodeClasses: TestNodeClass
     expect(await resource.isAllowed(subject, 'view')).to.equal(false);
   });
 
+
+  test.serial(description + ' checking multiple perms should short circuit correctly', async () => {
+    const subject: Subject = new nodeClasses.UserSubject(userA1);
+    const resource: Resource = new nodeClasses.PostResource(postA1a);
+    const [ parentSubject1, parentSubject2 ] = await subject.getParents();
+
+    await resource.deny(<Subject> parentSubject2, 'deniedPerm');
+    await resource.allow(<Subject> parentSubject1, 'deniedPerm');
+    await resource.allow(subject, 'allowedPerm');
+
+    const accessResults = await resource.determineAccess(subject, ['deniedPerm', 'allowedPerm']);
+
+    expect(accessResults['deniedPerm'].access, 'conflicting parent perm should be false after short circuit').to.equal(false);
+    expect(accessResults['allowedPerm'].access, 'perm with no conflict should be true').to.equal(true);
+  });
+
 }
