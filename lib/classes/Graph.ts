@@ -29,13 +29,6 @@ export type Schema = {
 export class Graph {
 
   /**
-    Properties to contain generated classes
-   */
-  resources: Map<string, typeof Resource>;
-  subjects: Map<string, typeof Subject>;
-
-
-  /**
    *  Build map of nodeName -> ResourceClass for gracl hierarchy
       NOTE: unfortunately we need to duplicate this function for subjects
             due to limitations of the way type parameters are handled
@@ -111,20 +104,57 @@ export class Graph {
     };
 
     nodeList.forEach(createClass);
+
     return classGraph;
   }
+
+
+  static resolveNodeName(node: string | typeof Node): string {
+    return typeof node === 'string'
+      ? node
+      : node.displayName;
+  }
+
+
+  /**
+    Properties to contain generated classes
+   */
+  resources: Map<string, typeof Resource>;
+  subjects: Map<string, typeof Subject>;
+  subjectChildMap = new Map<string, Map<string, typeof Subject>>();
+  resourceChildMap = new Map<string, Map<string, typeof Resource>>();
 
 
   constructor(public schema: Schema) {
     this.resources = Graph.buildResourceHierachy(schema.resources);
     this.subjects = Graph.buildSubjectHierachy(schema.subjects);
+
+    // invert resource graph
+    this.resources.forEach((ChildResource, childName) => {
+      const parentResources = ChildResource.getHierarchyClassNames();
+      parentResources.forEach(parentName => {
+        if (!this.resourceChildMap.has(parentName)) this.resourceChildMap.set(parentName, new Map());
+        if (parentName !== childName) this.resourceChildMap.get(parentName).set(childName, ChildResource);
+      });
+    });
+
+    // invert subject graph
+    this.subjects.forEach((ChildSubject, childName) => {
+      const parentSubjects = ChildSubject.getHierarchyClassNames();
+      parentSubjects.forEach(parentName => {
+        if (!this.subjectChildMap.has(parentName)) this.subjectChildMap.set(parentName, new Map());
+        if (parentName !== childName) this.subjectChildMap.get(parentName).set(childName, ChildSubject);
+      });
+    });
   }
 
 
   /**
    *  Extract a node class from the graph if it exists
    */
-  getClass(name: string, type: 'subject' | 'resource'): typeof Resource | typeof Subject {
+  getClass(node: string | typeof Node, type: 'subject' | 'resource'): typeof Resource | typeof Subject {
+    const name = Graph.resolveNodeName(node);
+
     let map: Map<string, typeof Resource | typeof Subject>;
     switch (type) {
       case 'subject':  map = this.subjects;  break;
@@ -141,17 +171,47 @@ export class Graph {
   /**
    *  Extract a resource class from the graph if it exists
    */
-  getResource(name: string): typeof Resource {
+  getResource(node: string | typeof Node): typeof Resource {
+    const name = Graph.resolveNodeName(node);
     return <typeof Resource> this.getClass(name, 'resource');
   }
-
 
   /**
    *  Extract a subject class from the graph if it exists
    */
-  getSubject(name: string): typeof Subject {
+  getSubject(node: string | typeof Node): typeof Subject {
+    const name = Graph.resolveNodeName(node);
     return <typeof Subject> this.getClass(name, 'subject');
   }
 
+  getChildResources(node: string | typeof Node): Array<typeof Resource> {
+    const name = Graph.resolveNodeName(node);
+    if (!this.resources.has(name)) throw new Error(`No resource class found for ${name}!`);
+    return Array.from(this.resourceChildMap.get(name).values());
+  }
+
+  getChildSubjects(node: string | typeof Node): Array<typeof Subject> {
+    const name = Graph.resolveNodeName(node);
+    if (!this.subjects.has(name)) throw new Error(`No subject class found for ${name}!`);
+    return Array.from(this.subjectChildMap.get(name).values());
+  }
+
+  getParentResources(node: string | typeof Node): Array<typeof Resource> {
+    const name = Graph.resolveNodeName(node);
+    const ResourceClass = this.getResource(name);
+    return ResourceClass
+      .getHierarchyClassNames()
+      .filter(n => n !== name)
+      .map(n => this.getResource(n));
+  }
+
+  getParentSubjects(node: string | typeof Node): Array<typeof Subject> {
+    const name = Graph.resolveNodeName(node);
+    const SubjectClass = this.getSubject(name);
+    return SubjectClass
+      .getHierarchyClassNames()
+      .filter(n => n !== name)
+      .map(n => this.getSubject(n));
+  }
 
 }

@@ -236,6 +236,21 @@ test.serial('Graph should throw if there is a circular dependency', () => {
   expect(createGraph).to.throw();
 });
 
+
+test.serial('Retrieving parent and child nodes from graph should succeed', () => {
+  const UserSubject = graph.getSubject('User');
+  const OrganizationResource = graph.getResource('Organization');
+  const resourceChildrenOfOrganization = graph.getChildResources(OrganizationResource);
+  const subjectParentsOfUser = graph.getParentSubjects(UserSubject);
+
+  expect(_.map(resourceChildrenOfOrganization, 'displayName'))
+    .to.deep.equal([ 'Blog', 'Post' ]);
+
+  expect(_.map(subjectParentsOfUser, 'displayName'))
+    .to.deep.equal([ 'Team', 'Organization' ]);
+});
+
+
 _.forEach([
   {
     description: 'user instantiated classes',
