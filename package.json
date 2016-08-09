@@ -8,13 +8,14 @@
     "babel": "./node_modules/.bin/babel ./dist/es2015 --out-dir ./dist/node4",
     "build": "rm -rf ./dist/ && npm run typings && npm run lint && npm run tsc && npm run babel",
     "pretest": "npm run build && npm run lint",
-    "test": "./node_modules/.bin/ava",
+    "test": "./node_modules/.bin/nyc ./node_modules/.bin/ava",
     "tsc": "./node_modules/typescript/bin/tsc",
     "typings": "./node_modules/.bin/typings install",
     "docs": "bash -c \"rm -rf ./docs/ && ./node_modules/typedoc/bin/typedoc --mode file --theme default --target es6 --out ./docs/ ./lib/ && touch ./docs/.nojekyll\"",
     "gh-pages": "npm run docs && ./node_modules/gh-pages/bin/gh-pages --dotfiles true -d ./docs/",
     "lint": "./node_modules/tslint/bin/tslint -c ./tslint.json ./{test,lib}/**/*.ts",
-    "prepublish": "npm test"
+    "prepublish": "npm test",
+    "coverage": "./node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov && ./node_modules/.bin/codecov"
   },
   "repository": {
     "type": "git",
@@ -44,10 +45,12 @@
     "babelify": "7.2.0",
     "browserify": "13.0.0",
     "chai": "3.5.0",
+    "codecov": "^1.0.1",
     "gh-pages": "0.10.0",
     "gulp": "3.9.1",
     "jasmine-core": "2.4.1",
     "lodash": "^3.10.1",
+    "nyc": "^7.1.0",
     "ts-node": "0.5.5",
     "tslint": "3.5.0",
     "typedoc": "sierrasoftworks/typedoc#v1.8.10",
@@ -58,6 +61,11 @@
   "ava": {
     "files": [
       "dist/node4/test/spec/**/*.js"
+    ]
+  },
+  "nyc": {
+    "include": [
+      "dist/node4/lib"
     ]
   }
 }

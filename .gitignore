@@ -5,3 +5,5 @@ docs/*
 npm-debug.log
 dist/*
 test/**/*.js
+.nyc_output
+coverage
