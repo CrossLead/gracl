@@ -55,7 +55,7 @@ export function topologicalSort(nodes: Hash<any>[], nameKey = 'name', parentKey 
           parentProp = schemaNode[parentKey];
 
     if (!name) {
-      throw new Error(`No ${nameKey} field on node = ${schemaNode}`);
+      throw new Error(`No ${nameKey} field on node = ${JSON.stringify(schemaNode)}`);
     }
 
     if (!parentProp) {
@@ -70,11 +70,8 @@ export function topologicalSort(nodes: Hash<any>[], nameKey = 'name', parentKey 
       parentCounts[name] = parents.length;
 
       for (let parent of parents) {
-        if (!parentMapping.has(parent)) {
-          parentMapping.set(parent, [ schemaNode ]);
-        } else {
-          parentMapping.get(parent).push(schemaNode);
-        }
+        if (!parentMapping.has(parent)) parentMapping.set(parent, []);
+        parentMapping.get(parent).push(schemaNode);
       }
     }
   }

@@ -70,6 +70,17 @@ export class Node {
   }
 
 
+    /**
+   *  Ensure that a given class inherits from Node
+   */
+  public static assertNodeClass(nodeClass: typeof Node) {
+    if (!(nodeClass.prototype instanceof Node)) {
+      const name = (nodeClass && nodeClass.name) || Object.prototype.toString.call(nodeClass);
+      throw new Error(`Link in hierarchy chain (${name}) is not an instance of Node!`);
+    }
+  }
+
+
   /**
    *  Constructor, simply assigns the given document as a property
    */
@@ -158,8 +169,7 @@ export class Node {
    *  Check if a node is allowed access to this node. Must be overridden by subclasses.
    */
   async isAllowed(node: HierarchyNode, permissionType: string, options: PermOpts): Promise<Boolean> {
-    console.warn(`Calling Node.isAllowed(), must implement on subclass!`);
-    return false;
+    throw new Error(`Calling Node.isAllowed(), must implement on subclass!`);
   }
 
 
@@ -210,24 +220,14 @@ export class Node {
 
 
   /**
-   *  Ensure that a given class inherits from Node
-   */
-  assertNodeClass(nodeClass: typeof Node) {
-    if (!(nodeClass.prototype instanceof Node)) {
-      throw new Error(`Link in hierarchy chain (${nodeClass.name}) is not an instance of Node!`);
-    }
-  }
-
-
-  /**
    *  Determine what subclass of node this node is.
    */
   getNodeSubclass(): typeof Node {
     let nodeClass = this.getClass();
-    this.assertNodeClass(nodeClass);
+    Node.assertNodeClass(nodeClass);
     while (getClassOf(nodeClass.prototype) !== Node) {
       nodeClass = getClassOf(nodeClass.prototype);
-      this.assertNodeClass(nodeClass);
+      Node.assertNodeClass(nodeClass);
     }
     return nodeClass;
   }

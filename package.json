@@ -30,7 +30,7 @@
     "presets": [
       "es2015-node4"
     ],
-    "sourceMaps": true
+    "sourceMaps": "inline"
   },
   "homepage": "https://github.com/CrossLead/gracl",
   "devDependencies": {

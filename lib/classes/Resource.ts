@@ -264,15 +264,11 @@ export class Resource extends Node {
       to modify the permissions object. If no permission exists, a new permission is created.
    */
   async updatePermission(subject: Subject, action: (p: Permission) => Permission): Promise<Resource> {
-    const permissions = await this.getPermissionList(),
+    const permissions = (await this.getPermissionList()) || [],
           subjectId = subject.getId(),
           subjectType = subject.getName(),
           resourceId = this.getId(),
           resourceType = this.getName();
-
-    if (!permissions) {
-      throw new Error(`No permissions available to update in updatePermission!`);
-    }
 
     const existingPermissionIndex = permissionIndexOf(permissions, subjectId),
           CurrentResourceClass = <typeof Resource> this.getClass();
