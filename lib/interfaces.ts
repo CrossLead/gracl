@@ -3,8 +3,8 @@ import { Node } from './classes/Node';
  * External repository / database / storage engine
  */
 export interface Repository {
-  getEntity(id: string, node?: Node): Promise<Document>;
-  saveEntity(id: string, doc: Document, node?: Node): Promise<Document>;
+  getEntity(id: any, node?: Node): Promise<Document>;
+  saveEntity(id: any, doc: Document, node?: Node): Promise<Document>;
 };
 
 
