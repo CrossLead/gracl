@@ -11,11 +11,11 @@ export class MemoryRepository implements Repository {
     this.data = data;
   }
 
-  async getEntity(id: string, node?: Node): Promise<Document> {
+  async getEntity(id: any, node?: Node): Promise<Document> {
     return this.data[id];
   }
 
-  async saveEntity(id: string, doc: Document, node?: Node): Promise<Document> {
+  async saveEntity(id: any, doc: Document, node?: Node): Promise<Document> {
     return this.data[id] = doc;
   }
 
