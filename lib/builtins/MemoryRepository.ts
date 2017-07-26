@@ -4,7 +4,6 @@ import { Node } from '../classes/Node';
  * Trivial in memory repository for example / testing
  */
 export class MemoryRepository implements Repository {
-
   private data: { [key: string]: any };
 
   constructor(data = {}) {
@@ -16,7 +15,6 @@ export class MemoryRepository implements Repository {
   }
 
   async saveEntity(id: any, doc: Document, node?: Node): Promise<Document> {
-    return this.data[id] = doc;
+    return (this.data[id] = doc);
   }
-
 }

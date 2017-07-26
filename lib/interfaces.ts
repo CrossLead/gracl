@@ -7,21 +7,19 @@ export interface Repository {
   saveEntity(id: any, doc: Document, node?: Node): Promise<Document>;
 }
 
-
 /**
  * Permission object added by Resource nodes
  */
 export type Permission = {
-  [key: string]: any,
+  [key: string]: any;
   subjectId: string;
-  resourceId: string,
-  subjectType: string,
-  resourceType: string,
+  resourceId: string;
+  subjectType: string;
+  resourceType: string;
   access?: {
     [key: string]: boolean;
   };
 };
-
 
 export type Document = any;
 

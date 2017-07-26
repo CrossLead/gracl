@@ -1,6 +1,9 @@
 import * as nodeStream from 'stream';
 
-export function captureLogStream(stream: NodeJS.WritableStream, passThrough = false) {
+export function captureLogStream(
+  stream: NodeJS.WritableStream,
+  passThrough = false
+) {
   const oldWrite = stream.write;
   let buf = '';
 
@@ -15,10 +18,10 @@ export function captureLogStream(stream: NodeJS.WritableStream, passThrough = fa
   };
 
   return {
-    unhook: function unhook(){
-     stream.write = oldWrite;
+    unhook: function unhook() {
+      stream.write = oldWrite;
     },
-    captured: function(){
+    captured: function() {
       return buf;
     }
   };

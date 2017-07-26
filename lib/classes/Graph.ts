@@ -4,7 +4,6 @@ import { Resource } from './Resource';
 import { Repository } from '../interfaces';
 import { topologicalSort } from '../util';
 
-
 export interface SchemaNode {
   name: string;
   repository: Repository;
@@ -16,59 +15,71 @@ export interface SchemaNode {
   getPermission?: typeof Resource.prototype.getPermission;
 }
 
-
 export type Schema = {
   resources: SchemaNode[];
-  subjects:  SchemaNode[];
+  subjects: SchemaNode[];
 };
-
 
 /**
   Class for building Resource/Subject class hierarchy based on schema
  */
 export class Graph {
-
   /**
    *  Build map of nodeName -> ResourceClass for gracl hierarchy
       NOTE: unfortunately we need to duplicate this function for subjects
             due to limitations of the way type parameters are handled
         See: https://github.com/Microsoft/TypeScript/issues/4890
    */
-  static buildResourceHierachy(schemaNodes: SchemaNode[]): Map<string, typeof Resource> {
+  static buildResourceHierachy(
+    schemaNodes: SchemaNode[]
+  ): Map<string, typeof Resource> {
     const nodeList = topologicalSort(schemaNodes),
-          classGraph = new Map<string, typeof Resource>();
+      classGraph = new Map<string, typeof Resource>();
 
     const createClass = (node: SchemaNode) => {
       const getParentsMethod = node.getParents || Node.prototype.getParents;
-      const getPermissionMethod = node.getPermission || Resource.prototype.getPermission;
-
+      const getPermissionMethod =
+        node.getPermission || Resource.prototype.getPermission;
 
       if (node.parent) {
         const ParentClass = classGraph.get(node.parent)!;
-        classGraph.set(node.name, class extends ParentClass {
-          static id          = node.id || 'id';
-          static parentId    = node.parentId!;
-          static displayName = node.name;
-          static repository  = node.repository;
-          static permissionPropertyKey = node.permissionProperty || 'permissions';
-          getParents() { return getParentsMethod.call(this); }
-          getPermission(subject: Subject) { return getPermissionMethod.call(this, subject); }
-        });
+        classGraph.set(
+          node.name,
+          class extends ParentClass {
+            static id = node.id || 'id';
+            static parentId = node.parentId!;
+            static displayName = node.name;
+            static repository = node.repository;
+            static permissionPropertyKey = node.permissionProperty ||
+              'permissions';
+            getParents() {
+              return getParentsMethod.call(this);
+            }
+            getPermission(subject: Subject) {
+              return getPermissionMethod.call(this, subject);
+            }
+          }
+        );
       } else {
-        classGraph.set(node.name, class extends Resource {
-          static id          = node.id || 'id';
-          static displayName = node.name;
-          static repository  = node.repository;
-          static permissionPropertyKey = node.permissionProperty || 'permissions';
-          getPermission(subject: Subject) { return getPermissionMethod.call(this, subject); }
-        });
+        classGraph.set(
+          node.name,
+          class extends Resource {
+            static id = node.id || 'id';
+            static displayName = node.name;
+            static repository = node.repository;
+            static permissionPropertyKey = node.permissionProperty ||
+              'permissions';
+            getPermission(subject: Subject) {
+              return getPermissionMethod.call(this, subject);
+            }
+          }
+        );
       }
     };
 
     nodeList.forEach(createClass);
     return classGraph;
   }
-
 
   /**
    *  Build map of nodeName -> SubjectClass for gracl hierarchy
@@ -76,30 +87,42 @@ export class Graph {
             is necessary for reasons explained above due to limitations
             in the type system.
    */
-  static buildSubjectHierachy(schemaNodes: SchemaNode[]): Map<string, typeof Subject> {
+  static buildSubjectHierachy(
+    schemaNodes: SchemaNode[]
+  ): Map<string, typeof Subject> {
     const nodeList = topologicalSort(schemaNodes),
-          classGraph = new Map<string, typeof Subject>();
+      classGraph = new Map<string, typeof Subject>();
 
     const createClass = (node: SchemaNode) => {
       const getParentsMethod = node.getParents || Node.prototype.getParents;
 
       if (node.parent) {
         const ParentClass = classGraph.get(node.parent)!;
-        classGraph.set(node.name, class extends ParentClass {
-          static id          = node.id || 'id';
-          static parentId    = node.parentId!;
-          static displayName = node.name;
-          static repository  = node.repository;
-          static permissionPropertyKey = node.permissionProperty || 'permissions';
-          getParents() { return getParentsMethod.call(this); }
-        });
+        classGraph.set(
+          node.name,
+          class extends ParentClass {
+            static id = node.id || 'id';
+            static parentId = node.parentId!;
+            static displayName = node.name;
+            static repository = node.repository;
+            static permissionPropertyKey = node.permissionProperty ||
+              'permissions';
+            getParents() {
+              return getParentsMethod.call(this);
+            }
+          }
+        );
       } else {
-        classGraph.set(node.name, class extends Subject {
-          static id          = node.id || 'id';
-          static displayName = node.name;
-          static repository  = node.repository;
-          static permissionPropertyKey = node.permissionProperty || 'permissions';
-        });
+        classGraph.set(
+          node.name,
+          class extends Subject {
+            static id = node.id || 'id';
+            static displayName = node.name;
+            static repository = node.repository;
+            static permissionPropertyKey = node.permissionProperty ||
+              'permissions';
+          }
+        );
       }
     };
 
@@ -108,13 +131,9 @@ export class Graph {
     return classGraph;
   }
 
-
   static resolveNodeName(node: string | typeof Node): string {
-    return typeof node === 'string'
-      ? node
-      : node.displayName;
+    return typeof node === 'string' ? node : node.displayName;
   }
-
 
   /**
     Properties to contain generated classes
@@ -124,7 +143,6 @@ export class Graph {
   subjectChildMap = new Map<string, Map<string, typeof Subject>>();
   resourceChildMap = new Map<string, Map<string, typeof Resource>>();
 
-
   constructor(public schema: Schema) {
     this.resources = Graph.buildResourceHierachy(schema.resources);
     this.subjects = Graph.buildSubjectHierachy(schema.subjects);
@@ -133,8 +151,10 @@ export class Graph {
     this.resources.forEach((ChildResource, childName) => {
       const parentResources = ChildResource.getHierarchyClassNames();
       parentResources.forEach(parentName => {
-        if (!this.resourceChildMap.has(parentName)) this.resourceChildMap.set(parentName, new Map());
-        if (parentName !== childName) this.resourceChildMap.get(parentName)!.set(childName, ChildResource);
+        if (!this.resourceChildMap.has(parentName))
+          this.resourceChildMap.set(parentName, new Map());
+        if (parentName !== childName)
+          this.resourceChildMap.get(parentName)!.set(childName, ChildResource);
       });
     });
 
@@ -142,24 +162,35 @@ export class Graph {
     this.subjects.forEach((ChildSubject, childName) => {
       const parentSubjects = ChildSubject.getHierarchyClassNames();
       parentSubjects.forEach(parentName => {
-        if (!this.subjectChildMap.has(parentName)) this.subjectChildMap.set(parentName, new Map());
-        if (parentName !== childName) this.subjectChildMap.get(parentName)!.set(childName, ChildSubject);
+        if (!this.subjectChildMap.has(parentName))
+          this.subjectChildMap.set(parentName, new Map());
+        if (parentName !== childName)
+          this.subjectChildMap.get(parentName)!.set(childName, ChildSubject);
       });
     });
   }
 
-
   /**
    *  Extract a node class from the graph if it exists
    */
-  getClass(node: string | typeof Node, type: 'subject' | 'resource'): typeof Resource | typeof Subject {
+  getClass(
+    node: string | typeof Node,
+    type: 'subject' | 'resource'
+  ): typeof Resource | typeof Subject {
     const name = Graph.resolveNodeName(node);
 
     let map: Map<string, typeof Resource | typeof Subject>;
     switch (type) {
-      case 'subject':  map = this.subjects;  break;
-      case 'resource': map = this.resources; break;
-      default: throw new Error(`Invalid class type ${type}, must be subject or resource!`);
+      case 'subject':
+        map = this.subjects;
+        break;
+      case 'resource':
+        map = this.resources;
+        break;
+      default:
+        throw new Error(
+          `Invalid class type ${type}, must be subject or resource!`
+        );
     }
 
     if (map.has(name)) return map.get(name)!;
@@ -167,13 +198,12 @@ export class Graph {
     throw new Error(`No ${type} class found for ${name}!`);
   }
 
-
   /**
    *  Extract a resource class from the graph if it exists
    */
   getResource(node: string | typeof Node): typeof Resource {
     const name = Graph.resolveNodeName(node);
-    return <typeof Resource> this.getClass(name, 'resource');
+    return <typeof Resource>this.getClass(name, 'resource');
   }
 
   /**
@@ -181,26 +211,27 @@ export class Graph {
    */
   getSubject(node: string | typeof Node): typeof Subject {
     const name = Graph.resolveNodeName(node);
-    return <typeof Subject> this.getClass(name, 'subject');
+    return <typeof Subject>this.getClass(name, 'subject');
   }
 
   getChildResources(node: string | typeof Node): Array<typeof Resource> {
     const name = Graph.resolveNodeName(node);
-    if (!this.resources.has(name)) throw new Error(`No resource class found for ${name}!`);
+    if (!this.resources.has(name))
+      throw new Error(`No resource class found for ${name}!`);
     return Array.from(this.resourceChildMap.get(name)!.values());
   }
 
   getChildSubjects(node: string | typeof Node): Array<typeof Subject> {
     const name = Graph.resolveNodeName(node);
-    if (!this.subjects.has(name)) throw new Error(`No subject class found for ${name}!`);
+    if (!this.subjects.has(name))
+      throw new Error(`No subject class found for ${name}!`);
     return Array.from(this.subjectChildMap.get(name)!.values());
   }
 
   getParentResources(node: string | typeof Node): Array<typeof Resource> {
     const name = Graph.resolveNodeName(node);
     const ResourceClass = this.getResource(name);
-    return ResourceClass
-      .getHierarchyClassNames()
+    return ResourceClass.getHierarchyClassNames()
       .filter(n => n !== name)
       .map(n => this.getResource(n));
   }
@@ -208,10 +239,8 @@ export class Graph {
   getParentSubjects(node: string | typeof Node): Array<typeof Subject> {
     const name = Graph.resolveNodeName(node);
     const SubjectClass = this.getSubject(name);
-    return SubjectClass
-      .getHierarchyClassNames()
+    return SubjectClass.getHierarchyClassNames()
       .filter(n => n !== name)
       .map(n => this.getSubject(n));
   }
-
 }
