@@ -195,20 +195,3 @@ export async function checkUserViewPermissionForPost(user, post) {
   return await subject.isAllowed(resource, 'view');
 }
 ```
-
-## Dev setup
-
-  1. run `npm install`
-  2. run `npm run build`
-
-## Development tasks (`npm run <task>`)
-  - `build` : install type definintions and compile the project
-  - `pretest` : recompile for testing
-  - `test` : run mocha tests
-  - `tscompile` : compile typescript -> es6
-  - `typings` : install type definitions
-  - `browserify` : compile es6 -> es5
-  - `minify` : minify es5 output
-  - `docs` : build documentation locally
-  - `gh-pages` : build documentation and publish to github pages
-  - `lint` : run tslint on project
