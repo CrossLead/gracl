@@ -225,11 +225,9 @@ export class Resource extends Node {
         );
       }
 
-      if (
-        !currentResources.length ||
-        currentResources.some(r => r.hierarchyRoot())
-      )
-        break;
+      currentResources = currentResources.filter(r => !r.hierarchyRoot());
+
+      if (!currentResources.length) break;
 
       // advance to the next level of resources
       currentResources = <Resource[]>await flattenPromises(
