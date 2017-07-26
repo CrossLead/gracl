@@ -1,5 +1,6 @@
-node_modules/*
-tmp/*
-docs/*
-.publish/*
+node_modules
+tmp
+docs
+.publish
 npm-debug.log
+lib
