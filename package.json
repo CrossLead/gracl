@@ -13,8 +13,8 @@
     "lint": "tslint -c ./tslint.json ./{test,lib}/**/*.ts",
     "prepublish": "npm test",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    "docs": "rm -rf ./docs && typedoc --mode modules --exclude '**/test/**' --out ./docs ./",
-    "deploy:docs": "npm run docs && gh-pages -d ./docs"
+    "docs": "rm -rf ./docs && typedoc --mode modules --exclude '**/test/**' --out ./docs ./ && touch ./docs/.nojekyll",
+    "deploy:docs": "npm run docs && gh-pages --dotfiles true -d ./docs"
   },
   "engines": {
     "node": ">=6.9.1"
