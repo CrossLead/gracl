@@ -7,7 +7,6 @@
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
-	<script src="assets/js/modernizr.js"></script>
 </head>
 <body>
 <header>
@@ -67,6 +66,7 @@
 			<div class="tsd-panel tsd-typography">
 				<h1 id="-gracl-https-github-com-crosslead-gracl-graph-acl"><a href="https://github.com/CrossLead/gracl"><code>gracl</code></a> - Graph ACL</h1>
 				<p><a href="https://travis-ci.org/CrossLead/gracl"><img src="https://travis-ci.org/CrossLead/gracl.svg?branch=master" alt="Build Status"></a>
+					<a href="https://codecov.io/gh/CrossLead/gracl"><img src="https://codecov.io/gh/CrossLead/gracl/branch/master/graph/badge.svg" alt="codecov"></a>
 				<a href="https://badge.fury.io/js/gracl"><img src="https://badge.fury.io/js/gracl.svg" alt="npm version"></a></p>
 				<p>  <code>gracl</code> is an Access Control List library for managing permission models utilizing a hierarchy. In <code>gracl</code>, the permissions
 				hierarchy is implemented using the prototype chain, and (Java/Type)script&#39;s great reflection capabilities.</p>
@@ -203,15 +203,15 @@
 				<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { Graph } <span class="hljs-keyword">from</span> <span class="hljs-string">'gracl'</span>;
 
 <span class="hljs-keyword">const</span> schema = {
-  resources: [
-    { name: <span class="hljs-string">'Post'</span>, parent: <span class="hljs-string">'Blog'</span>, parentId: <span class="hljs-string">'blogId'</span>, repository: classes.postModel },
-    { name: <span class="hljs-string">'Blog'</span>, parent: <span class="hljs-string">'Organization'</span>, parentId: <span class="hljs-string">'organizationId'</span>, repository: classes.blogModel },
-    { name: <span class="hljs-string">'Organization'</span>, repository: classes.orgModel }
+  <span class="hljs-attr">resources</span>: [
+    { <span class="hljs-attr">name</span>: <span class="hljs-string">'Post'</span>, <span class="hljs-attr">parent</span>: <span class="hljs-string">'Blog'</span>, <span class="hljs-attr">parentId</span>: <span class="hljs-string">'blogId'</span>, <span class="hljs-attr">repository</span>: classes.postModel },
+    { <span class="hljs-attr">name</span>: <span class="hljs-string">'Blog'</span>, <span class="hljs-attr">parent</span>: <span class="hljs-string">'Organization'</span>, <span class="hljs-attr">parentId</span>: <span class="hljs-string">'organizationId'</span>, <span class="hljs-attr">repository</span>: classes.blogModel },
+    { <span class="hljs-attr">name</span>: <span class="hljs-string">'Organization'</span>, <span class="hljs-attr">repository</span>: classes.orgModel }
   ],
-  subjects: [
-    { name: <span class="hljs-string">'User'</span>, parent: <span class="hljs-string">'Team'</span>, parentId: <span class="hljs-string">'teamIds'</span>, repository: classes.userModel },
-    { name: <span class="hljs-string">'Team'</span>, parent: <span class="hljs-string">'Organization'</span>, parentId: <span class="hljs-string">'organizationId'</span>, repository: classes.teamModel },
-    { name: <span class="hljs-string">'Organization'</span>, repository: classes.orgModel }
+  <span class="hljs-attr">subjects</span>: [
+    { <span class="hljs-attr">name</span>: <span class="hljs-string">'User'</span>, <span class="hljs-attr">parent</span>: <span class="hljs-string">'Team'</span>, <span class="hljs-attr">parentId</span>: <span class="hljs-string">'teamIds'</span>, <span class="hljs-attr">repository</span>: classes.userModel },
+    { <span class="hljs-attr">name</span>: <span class="hljs-string">'Team'</span>, <span class="hljs-attr">parent</span>: <span class="hljs-string">'Organization'</span>, <span class="hljs-attr">parentId</span>: <span class="hljs-string">'organizationId'</span>, <span class="hljs-attr">repository</span>: classes.teamModel },
+    { <span class="hljs-attr">name</span>: <span class="hljs-string">'Organization'</span>, <span class="hljs-attr">repository</span>: classes.orgModel }
   ]
 };
 
@@ -229,24 +229,6 @@
   <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> subject.isAllowed(resource, <span class="hljs-string">'view'</span>);
 }
 </code></pre>
-				<h2 id="dev-setup">Dev setup</h2>
-				<ol>
-					<li>run <code>npm install</code></li>
-					<li>run <code>npm run build</code></li>
-				</ol>
-				<h2 id="development-tasks-npm-run-task-">Development tasks (<code>npm run &lt;task&gt;</code>)</h2>
-				<ul>
-					<li><code>build</code> : install type definintions and compile the project</li>
-					<li><code>pretest</code> : recompile for testing</li>
-					<li><code>test</code> : run mocha tests</li>
-					<li><code>tscompile</code> : compile typescript -&gt; es6</li>
-					<li><code>typings</code> : install type definitions</li>
-					<li><code>browserify</code> : compile es6 -&gt; es5</li>
-					<li><code>minify</code> : minify es5 output</li>
-					<li><code>docs</code> : build documentation locally</li>
-					<li><code>gh-pages</code> : build documentation and publish to github pages</li>
-					<li><code>lint</code> : run tslint on project</li>
-				</ul>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -255,85 +237,34 @@
 					<li class="globals  ">
 						<a href="globals.html"><em>Globals</em></a>
 					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_builtins_memoryrepository_.html">"builtins/<wbr>Memory<wbr>Repository"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_classes_graph_.html">"classes/<wbr>Graph"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_classes_node_.html">"classes/<wbr>Node"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_classes_resource_.html">"classes/<wbr>Resource"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_classes_subject_.html">"classes/<wbr>Subject"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_gracl_.html">"gracl"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_interfaces_.html">"interfaces"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_.html">"util"</a>
+					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class">
-						<a href="classes/graph.html" class="tsd-kind-icon">Graph</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/memoryrepository.html" class="tsd-kind-icon">Memory<wbr>Repository</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/node.html" class="tsd-kind-icon">Node</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/resource.html" class="tsd-kind-icon">Resource</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/subject.html" class="tsd-kind-icon">Subject</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/repository.html" class="tsd-kind-icon">Repository</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/schemanode.html" class="tsd-kind-icon">Schema<wbr>Node</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#accessresult" class="tsd-kind-icon">Access<wbr>Result</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#document" class="tsd-kind-icon">Document</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#documentdata" class="tsd-kind-icon">Document<wbr>Data</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#hash" class="tsd-kind-icon">Hash</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#hierarchynode" class="tsd-kind-icon">Hierarchy<wbr>Node</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#permopts" class="tsd-kind-icon">Perm<wbr>Opts</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#permission" class="tsd-kind-icon">Permission</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#permissionshierarchy" class="tsd-kind-icon">Permissions<wbr>Hierarchy</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#schema" class="tsd-kind-icon">Schema</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#basecompare" class="tsd-kind-icon">base<wbr>Compare</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#binaryindexof" class="tsd-kind-icon">binary<wbr>Index<wbr>Of</a>
-					</li>
-					<li class=" tsd-kind-function tsd-has-type-parameter">
-						<a href="globals.html#flattenpromises" class="tsd-kind-icon">flatten<wbr>Promises</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#getclassof" class="tsd-kind-icon">get<wbr>Class<wbr>Of</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#noop" class="tsd-kind-icon">noop</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#permissioncompare" class="tsd-kind-icon">permission<wbr>Compare</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#permissionindexof" class="tsd-kind-icon">permission<wbr>Index<wbr>Of</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#topologicalsort" class="tsd-kind-icon">topological<wbr>Sort</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#yes" class="tsd-kind-icon">yes</a>
-					</li>
 				</ul>
 			</nav>
 		</div>
@@ -399,7 +330,7 @@
 	</div>
 </footer>
 <div class="container tsd-generator">
-	<p>Generated using <a href="http://typedoc.io" target="_blank">TypeDoc</a></p>
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
 </div>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>
