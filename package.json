@@ -14,6 +14,9 @@
     "prepublish": "npm test",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
   },
+  "engines": {
+    "node": ">=6.9.1"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/CrossLead/gracl.git"
