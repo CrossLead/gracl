@@ -1,5 +1,3 @@
-/// <reference path='../../typings/main.d.ts' />
-import { expect } from 'chai';
 import * as _ from 'lodash';
 import * as classes from '../classes/index';
 import * as helpers from '../helpers/index';
@@ -17,7 +15,7 @@ type TestNodeClasses = {
   TeamSubject: typeof Subject;
   OrganizationResource: typeof Resource;
   OrganizationSubject: typeof Subject;
-}
+};
 
 const permissionKey = 'graclPermissions';
 
@@ -104,38 +102,37 @@ test.beforeEach(async () => {
 
 });
 
-test('yes() should return true', () => {
-  expect(util.yes()).to.equal(true);
+test('yes() should return true', (t) => {
+  t.true(util.yes());
 });
 
-test('noop() should return void', () => {
-  expect(util.noop()).to.equal(void 0);
+test('noop() should return void', (t) => {
+  t.is(util.noop(), void 0);
 });
 
-test('baseCompare() should correctly order items', () => {
-  expect(util.baseCompare('x', 'y'), 'a < b  -> -1').to.equal(-1);
-  expect(util.baseCompare('y', 'x'), 'a > b  -> 1').to.equal(1);
-  expect(util.baseCompare('x', 'x'), 'a == b -> 0').to.equal(0);
+test('baseCompare() should correctly order items', (t) => {
+  t.is(util.baseCompare('x', 'y'), -1, 'a < b  -> -1');
+  t.is(util.baseCompare('y', 'x'), 1,  'a > b  -> 1');
+  t.is(util.baseCompare('x', 'x'), 0,  'a == b -> 0');
 });
 
-test('binaryIndexOf() should correctly find indexes on sorted arrays', () => {
+test('binaryIndexOf() should correctly find indexes on sorted arrays', (t) => {
   const A = [ 'a', 'b', 'c', 'd' ],
         B = [ 't', 'u', 'v', 'w', 'x', 'y', 'z' ];
 
-  expect(util.binaryIndexOf(A, 'c'), 'Correctly finds c in the array').to.equal(2);
-  expect(util.binaryIndexOf(B, 'y'), 'Correctly finds y in the array').to.equal(5);
-  expect(util.binaryIndexOf(B, 'q'), 'Returns -1 on not finding value').to.equal(-1);
+  t.is(util.binaryIndexOf(A, 'c'), 2, 'Correctly finds c in the array');
+  t.is(util.binaryIndexOf(B, 'y'), 5, 'Correctly finds y in the array');
+  t.is(util.binaryIndexOf(B, 'q'), -1, 'Returns -1 on not finding value');
 });
 
-test('topologicalSort should correctly sort nodes', () => {
+test('topologicalSort should correctly sort nodes', (t) => {
   const nodes = <Hash<string>[]> [
     { name: 'B', parent: 'A' },
     { name: 'A', parent: 'C' },
     { name: 'C' }
   ];
 
-  expect(util.topologicalSort(nodes))
-    .to.deep.equal([
+  t.deepEqual(util.topologicalSort(nodes), [
       { name: 'C' },
       { name: 'A', parent: 'C' },
       { name: 'B', parent: 'A' }
@@ -143,42 +140,48 @@ test('topologicalSort should correctly sort nodes', () => {
 });
 
 
-test('topologicalSort should throw when given a bad node', () => {
+test('topologicalSort should throw when given a bad node', (t) => {
   const nodes = <Hash<string>[]> [
     { name: 'B', parent: 'A' },
     { name: 'A', parent: 'C' },
     { BAD_NODE: 'C' }
   ];
 
-  expect(() => util.topologicalSort(nodes))
-    .to.throw(/No name field on node/);
+  t.throws(() => util.topologicalSort(nodes), /No name field on node/);
 });
 
-test('topologicalSort should detect circular dependencies', () => {
+test('topologicalSort should detect circular dependencies', (t) => {
   const nodes = <Hash<string>[]> [
     { name: 'A', parent: 'B' },
     { name: 'B', parent: 'A' }
   ];
 
-  expect(() => util.topologicalSort(nodes))
-    .to.throw(/Schema has a circular dependency or a missing parent/);
+  t.throws(() => util.topologicalSort(nodes), /Schema has a circular dependency or a missing parent/);
 });
 
-test.serial('Creating a node subclass without a repository should throw on instantiation', () => {
-  class TestResource extends Resource {};
-  class TestSubject extends Subject {};
-  expect(() => (new TestResource({})), 'Instantiate Resource').to.throw();
-  expect(() => (new TestSubject({})), 'Instantiate Subject').to.throw();
-});
+// test.serial('Creating a node subclass without a repository should throw on instantiation', (t) => {
 
-test.serial('Retrieving document from repository should work', async() => {
-  expect(
+
+//   t.throws(() => {
+//     class TestResource extends Resource {}
+//     const result = new TestResource({});
+//   }, 'Instantiate Resource');
+//   t.throws(() => {
+//     class TestSubject extends Subject {}
+//     const result = new TestSubject({});
+//   }, 'Instantiate Subject');
+
+// });
+
+test.serial('Retrieving document from repository should work', async(t) => {
+  t.is(
     await classes.orgModel.getEntity(orgA.id),
+    orgA,
     'Memory Repository should sucessfully set items'
-  ).to.equal(orgA);
+  );
 });
 
-test.serial('Graph classes should have proper inheritance chain', () => {
+test.serial('Graph classes should have proper inheritance chain', (t) => {
   const {
     PostResource,
     BlogResource,
@@ -196,25 +199,25 @@ test.serial('Graph classes should have proper inheritance chain', () => {
   const OrganizationSubjectInstance  = new OrganizationSubject({ id: 1 });
 
 
-  expect(PostResourceInstance, 'Post -> Blog').to.be.instanceof(BlogResource);
-  expect(PostResourceInstance, 'Post -> Org').to.be.instanceof(OrganizationResource);
-  expect(UserSubjectInstance, 'User -> Team').to.be.instanceof(TeamSubject);
-  expect(UserSubjectInstance, 'User -> Org').to.be.instanceof(OrganizationSubject);
+  t.true(PostResourceInstance instanceof BlogResource, 'Post -> Blog');
+  t.true(PostResourceInstance instanceof OrganizationResource, 'Post -> Org');
+  t.true(UserSubjectInstance instanceof TeamSubject, 'User -> Team');
+  t.true(UserSubjectInstance instanceof OrganizationSubject, 'User -> Org');
 });
 
 
-test.serial('Graph classes return correct node depth', () => {
+test.serial('Graph classes return correct node depth', (t) => {
   const {
     BlogResource,
     UserSubject
   } = graphClasses;
 
-  expect(BlogResource.getNodeDepth()).to.equal(2);
-  expect(UserSubject.getNodeDepth()).to.equal(3);
+  t.is(BlogResource.getNodeDepth(), 2);
+  t.is(UserSubject.getNodeDepth(), 3);
 });
 
 
-test.serial('Graph should throw if there is an undefined parent', () => {
+test.serial('Graph should throw if there is an undefined parent', (t) => {
   const createGraph = () => new Graph({
     resources: [
       { name: 'Post', parent: 'Blog', parentId: 'blogId', repository: classes.postModel },
@@ -229,11 +232,11 @@ test.serial('Graph should throw if there is an undefined parent', () => {
     ]
   });
 
-  expect(createGraph).to.throw();
+  t.throws(createGraph);
 });
 
 
-test.serial('Graph should throw if there is a circular dependency', () => {
+test.serial('Graph should throw if there is a circular dependency', (t) => {
   const createGraph = () => new Graph({
     resources: [
       { name: 'Post', parent: 'Blog', parentId: 'blogId', repository: classes.postModel },
@@ -247,11 +250,11 @@ test.serial('Graph should throw if there is a circular dependency', () => {
     ]
   });
 
-  expect(createGraph).to.throw();
+  t.throws(createGraph);
 });
 
 
-test.serial('Retrieving parent and child nodes from graph should succeed', () => {
+test.serial('Retrieving parent and child nodes from graph should succeed', (t) => {
   const UserSubject = graph.getSubject('User');
   const PostResource = graph.getResource('Post');
   const OrganizationResource = graph.getResource('Organization');
@@ -262,30 +265,23 @@ test.serial('Retrieving parent and child nodes from graph should succeed', () =>
   const subjectParentsOfUser = graph.getParentSubjects(UserSubject);
   const resourceParentsOfPost = graph.getParentResources(PostResource);
 
-  expect(_.map(resourceChildrenOfOrganization, 'displayName'))
-    .to.deep.equal([ 'Blog', 'Post' ]);
+  t.deepEqual(_.map(resourceChildrenOfOrganization, 'displayName'), [ 'Blog', 'Post' ]);
 
-  expect(_.map(subjectChildrenOfOrganization, 'displayName'))
-    .to.deep.equal([ 'Team', 'User' ]);
+  t.deepEqual(_.map(subjectChildrenOfOrganization, 'displayName'), [ 'Team', 'User' ]);
 
-  expect(_.map(subjectParentsOfUser, 'displayName'))
-    .to.deep.equal([ 'Team', 'Organization' ]);
+  t.deepEqual(_.map(subjectParentsOfUser, 'displayName'), [ 'Team', 'Organization' ]);
 
-  expect(_.map(resourceParentsOfPost, 'displayName'))
-    .to.deep.equal([ 'Blog', 'Organization' ]);
+  t.deepEqual(_.map(resourceParentsOfPost, 'displayName'), [ 'Blog', 'Organization' ]);
 });
 
 
-test.serial('Graph should throw when trying to retrieve classes that don\'t exist', () => {
-  expect(() => graph.getClass('DOESNT_EXIST', 'subject'))
-    .to.throw(/No subject class found for DOESNT_EXIST/);
-  expect(() => (<any> graph).getClass('User', 'INVALID'))
-    .to.throw(/Invalid class type/);
+test.serial('Graph should throw when trying to retrieve classes that don\'t exist', (t) => {
+  t.throws(() => graph.getClass('DOESNT_EXIST', 'subject'), /No subject class found for DOESNT_EXIST/);
+  t.throws(() => (<any> graph).getClass('User', 'INVALID'), /Invalid class type/);
 });
 
-test.serial('Failed assertion that nodeClass is instanceof Node should throw', () => {
-  expect(() => (<any> Node).assertNodeClass({}))
-    .to.throw(/is not an instance of Node/);
+test.serial('Failed assertion that nodeClass is instanceof Node should throw', (t) => {
+  t.throws(() => (<any> Node).assertNodeClass({}), /is not an instance of Node/);
 });
 
 
@@ -306,49 +302,49 @@ _.forEach([
 function runNodeTestsWithClasses(description: string, nodeClasses: TestNodeClasses) {
 
 
-  test.serial(description + ' getRepository should return correct repository', () => {
+  test.serial(description + ' getRepository should return correct repository', (t) => {
     const resource = new nodeClasses.PostResource(postA1a);
-    expect(resource.getRepository()).to.equal(nodeClasses.PostResource.repository);
+    t.is(resource.getRepository(), nodeClasses.PostResource.repository);
   });
 
 
-  test.serial(description + ' isNodeType assertion should be correct', () => {
+  test.serial(description + ' isNodeType assertion should be correct', (t) => {
     const resource = new nodeClasses.PostResource(postA1a);
-    expect(resource.isNodeType(nodeClasses.PostResource)).to.equal(true);
-    expect(resource.isNodeType(nodeClasses.BlogResource)).to.equal(false);
+    t.is(resource.isNodeType(nodeClasses.PostResource), true);
+    t.is(resource.isNodeType(nodeClasses.BlogResource), false);
   });
 
 
-  test.serial(description + ' Expect Resource.getNodeDepth to return correct depth', () => {
+  test.serial(description + ' Expect Resource.getNodeDepth to return correct depth', (t) => {
     const resource = new nodeClasses.PostResource(postA1a);
-    expect(resource.getNodeDepth()).to.equal(3);
+    t.is(resource.getNodeDepth(), 3);
   });
 
 
-  test.serial(description + ' Expect Resource.setDoc to populate permissions', async () => {
+  test.serial(description + ' Expect Resource.setDoc to populate permissions', async (t) => {
     const resource = new nodeClasses.PostResource(postA1a);
     delete postA1a['graclPermissions'];
-    expect(postA1a['graclPermissions']).to.not.exist;
+    t.falsy(postA1a['graclPermissions']);
     resource.setDoc(postA1a);
-    expect(postA1a['graclPermissions']).to.exist;
+    t.truthy(postA1a['graclPermissions']);
   });
 
 
-  test.serial(description + ' getParentNode should return correct parent class', async () => {
+  test.serial(description + ' getParentNode should return correct parent class', async (t) => {
     const resource = new nodeClasses.PostResource(postA1a);
     const parent = await resource.getParentNode(blogA1);
-    expect(parent).to.be.instanceOf(nodeClasses.BlogResource);
+    t.true(parent instanceof nodeClasses.BlogResource);
   });
 
-  test.serial(description + ' getParents should warn if calling on root', async () => {
+  test.serial(description + ' getParents should warn if calling on root', async (t) => {
     const resource = new nodeClasses.OrganizationResource(orgA);
     const hook = captureLogStream(process.stderr);
     const parents = await resource.getParents();
     hook.unhook();
-    expect(hook.captured()).to.match(/Calling Node.getParents()/);
+    t.regex(hook.captured(), /Calling Node.getParents()/);
   });
 
-  test.serial(description + ' calling isAllowed without overriding should throw', async () => {
+  test.serial(description + ' calling isAllowed without overriding should throw', async (t) => {
     const resource = new nodeClasses.OrganizationResource(orgA);
     const subject = new nodeClasses.OrganizationSubject(orgA);
     const isAllowed = nodeClasses.OrganizationResource.prototype.isAllowed;
@@ -359,16 +355,16 @@ function runNodeTestsWithClasses(description: string, nodeClasses: TestNodeClass
     try {
       await resource.isAllowed(subject, 'view');
     } catch (e) {
-      expect(e.message).to.match(/Calling Node.isAllowed()/);
+      t.regex(e.message, /Calling Node.isAllowed()/);
       threw = true;
     }
-    expect(threw).to.equal(true);
+    t.true(threw);
     Resource.prototype.isAllowed = resourceIsAllowed;
     nodeClasses.OrganizationResource.prototype.isAllowed = isAllowed;
   });
 
 
-  test.serial(description + ' getParentNode should throw if there is no available repository', async () => {
+  test.serial(description + ' getParentNode should throw if there is no available repository', async (t) => {
     const resource = new nodeClasses.PostResource(postA1a);
     const repository = nodeClasses.BlogResource.repository;
     (<any> nodeClasses.BlogResource).repository = false;
@@ -376,100 +372,96 @@ function runNodeTestsWithClasses(description: string, nodeClasses: TestNodeClass
     try {
       await resource.getParentNode('TEST');
     } catch (e) {
-      expect(e.message).to.match(/No static repository property present on/);
+      t.regex(e.message, /No static repository property present on/);
       threw = true;
     }
-    expect(threw).to.equal(true);
+    t.true(threw);
     nodeClasses.BlogResource.repository = repository;
   });
 
 
-  test.serial(description + ' Resource.getParents() should return Resource instances of parent objects', async() => {
+  test.serial(description + ' Resource.getParents() should return Resource instances of parent objects', async(t) => {
     const resource = new nodeClasses.PostResource(postA1a);
     const [ parent ] = await resource.getParents();
-    expect(parent, 'Returned parent should be gracl node instance.').to.be.instanceof(nodeClasses.BlogResource);
-    expect(parent.getId(), 'Correct parent should be returned.').to.equal(blogA1.id);
+    t.is(parent instanceof nodeClasses.BlogResource, true, 'Returned parent should be gracl node instance.');
+    t.is(parent.getId(), blogA1.id, 'Correct parent should be returned.');
   });
 
 
-  test.serial(description + ' Resource.allow(Subject, <perm>) -> subject can access resource.', async() => {
+  test.serial(description + ' Resource.allow(Subject, <perm>) -> subject can access resource.', async(t) => {
     const resource = new nodeClasses.PostResource(postA1a),
           subject = new nodeClasses.UserSubject(userA1);
 
     const initialAllowed = await resource.isAllowed(subject, 'view');
 
-    expect(
-      await resource.allow(subject, 'view'),
+    t.true(
+      await resource.allow(subject, 'view') instanceof nodeClasses.PostResource,
       'Setting permission should return same resource type.'
-    ).to.be.instanceof(nodeClasses.PostResource);
+    );
 
     const afterSetAllowed = await resource.isAllowed(subject, 'view');
 
-    expect(initialAllowed, 'the subject should not yet be allowed to view the resource.').to.equal(false);
-    expect(afterSetAllowed, 'After resource sets permission, they should have access').to.equal(true);
+    t.false(initialAllowed, 'the subject should not yet be allowed to view the resource.');
+    t.true(afterSetAllowed, 'After resource sets permission, they should have access');
   });
 
 
-  test.serial(description + ' Resource and Subject methods should return same result', async() => {
+  test.serial(description + ' Resource and Subject methods should return same result', async(t) => {
     const resource = new nodeClasses.PostResource(postA1a),
           subject = new nodeClasses.UserSubject(userA1);
 
     await resource.allow(subject, 'view');
 
-    expect(await resource.isAllowed(subject, 'view'), 'is allowed result should be the same')
-      .to.deep.equal(await subject.isAllowed(resource, 'view'));
+    t.deepEqual(await resource.isAllowed(subject, 'view'), await subject.isAllowed(resource, 'view'), 'is allowed result should be the same');
 
-    expect(await resource.determineAccess(subject, 'view'), 'determine access result should be the same')
-      .to.deep.equal(await subject.determineAccess(resource, 'view'));
+    t.deepEqual(await resource.determineAccess(subject, 'view'), await subject.determineAccess(resource, 'view'), 'determine access result should be the same');
 
-    expect(await resource.explainPermission(subject, 'view'), 'explain permission result should be the same')
-      .to.deep.equal(await subject.explainPermission(resource, 'view'));
+    t.deepEqual(await resource.explainPermission(subject, 'view'), await subject.explainPermission(resource, 'view'), 'explain permission result should be the same');
   });
 
 
-  test.serial(description + ' Resource.allow(Subject, <perm>) -> resource should have permission with subjectType and resourceType set.', async() => {
+  test.serial(description + ' Resource.allow(Subject, <perm>) -> resource should have permission with subjectType and resourceType set.', async(t) => {
     const resource = new nodeClasses.PostResource(postA1a),
           subject = new nodeClasses.UserSubject(userA1);
 
     await resource.allow(subject, 'view');
 
     const [ permission ] = resource.doc[permissionKey];
-    expect(permission.resourceType).to.equal(resource.getName());
-    expect(permission.subjectType).to.equal(subject.getName());
+    t.is(permission.resourceType, resource.getName());
+    t.is(permission.subjectType, subject.getName());
   });
 
 
-  test.serial(description + ' Resource.allow(Subject, <perm>) -> resource should not have permission with subjectType and resourceType set if failing assertionFn.', async() => {
+  test.serial(description + ' Resource.allow(Subject, <perm>) -> resource should not have permission with subjectType and resourceType set if failing assertionFn.', async(t) => {
     const resource = new nodeClasses.PostResource(postA1a),
           subject = new nodeClasses.UserSubject(userA1);
 
     await resource.allow(subject, 'view');
 
-    expect(await resource.isAllowed(subject, 'view', { assertionFn: () => false }))
-      .to.equal(false);
+    t.false(await resource.isAllowed(subject, 'view', { assertionFn: () => false }));
   });
 
 
-  test.serial(description + ' Resource.allow(parentSubject, <perm>) -> child subject can access resource.', async() => {
+  test.serial(description + ' Resource.allow(parentSubject, <perm>) -> child subject can access resource.', async(t) => {
     const parentResource = new nodeClasses.BlogResource(blogA1),
           childResource = new nodeClasses.PostResource(postA1a),
           subject = new nodeClasses.UserSubject(userA1);
 
     const initialAllowed = await childResource.isAllowed(subject, 'view');
 
-    expect(
-      await parentResource.allow(subject, 'view'),
+    t.true(
+      await parentResource.allow(subject, 'view') instanceof nodeClasses.BlogResource,
       'Setting permission for parentSubject should return same resource type.'
-    ).to.be.instanceof(nodeClasses.BlogResource);
+    );
 
     const afterSetAllowed = await childResource.isAllowed(subject, 'view');
 
-    expect(initialAllowed, 'the child subject should not yet be allowed to view the resource.').to.equal(false);
-    expect(afterSetAllowed, 'After resource sets permission, they should have access').to.equal(true);
+    t.false(initialAllowed, 'the child subject should not yet be allowed to view the resource.');
+    t.true(afterSetAllowed, 'After resource sets permission, they should have access');
   });
 
 
-  test.serial(description + ' parentResource.allow(parentSubject, <perm>) -> child subject can access child resource.', async() => {
+  test.serial(description + ' parentResource.allow(parentSubject, <perm>) -> child subject can access child resource.', async(t) => {
     const parentResource = new nodeClasses.BlogResource(blogA1),
           childResource  = new nodeClasses.PostResource(postA1a),
           parentSubject  = new nodeClasses.TeamSubject(teamA1),
@@ -477,24 +469,24 @@ function runNodeTestsWithClasses(description: string, nodeClasses: TestNodeClass
 
     const initialAllowed = await childResource.isAllowed(childSubject, 'view');
 
-    expect(
-      await parentResource.allow(parentSubject, 'view'),
+    t.true(
+      await parentResource.allow(parentSubject, 'view') instanceof nodeClasses.BlogResource,
       'Setting permission for parentSubject should return same resource type.'
-    ).to.be.instanceof(nodeClasses.BlogResource);
+    );
 
-    expect(
-      await parentResource.allow(parentSubject, 'view'),
+    t.true(
+      await parentResource.allow(parentSubject, 'view') instanceof nodeClasses.BlogResource,
       'Calling allow twice should succeed'
-    ).to.be.instanceof(nodeClasses.BlogResource);
+    );
 
     const afterSetAllowed = await childResource.isAllowed(childSubject, 'view');
 
-    expect(initialAllowed, 'the child subject should not yet be allowed to view the resource.').to.equal(false);
-    expect(afterSetAllowed, 'After resource sets permission, they should have access').to.equal(true);
+    t.false(initialAllowed, 'the child subject should not yet be allowed to view the resource.');
+    t.true(afterSetAllowed, 'After resource sets permission, they should have access');
   });
 
 
-  test.serial(description + ' Permissions should be visible through resource.getPermissionsHierarchy()', async() => {
+  test.serial(description + ' Permissions should be visible through resource.getPermissionsHierarchy()', async(t) => {
     const parentResource = new nodeClasses.BlogResource(blogA1),
           childResource = new nodeClasses.PostResource(postA1a),
           subject = new nodeClasses.UserSubject(userA1);
@@ -504,9 +496,9 @@ function runNodeTestsWithClasses(description: string, nodeClasses: TestNodeClass
     // get hierarchy with childResource as root.
     const hiearchy = await childResource.getPermissionsHierarchy();
 
-    expect(hiearchy.node, 'Node should be string representation.').to.equal(childResource.toString());
-    expect(hiearchy.parents[0].permissions, 'Parent resource should have one permission.').to.have.length(1);
-    expect(hiearchy.parents[0].permissions[0].access['view'], 'View access should be true').to.equal(true);
+    t.is(hiearchy.node, childResource.toString(), 'Node should be string representation.');
+    t.is(hiearchy.parents![0].permissions.length, 1, 'Parent resource should have one permission.');
+    t.true(hiearchy.parents![0].permissions[0].access!['view'], 'View access should be true');
   });
 
 
@@ -519,41 +511,41 @@ function runNodeTestsWithClasses(description: string, nodeClasses: TestNodeClass
       results:
         - user and team can access whole blog, except post
    */
-  test.serial(description + ' Lowest node on hierarchy wins conflicts (deny post for team)', async () => {
+  test.serial(description + ' Lowest node on hierarchy wins conflicts (deny post for team)', async (t) => {
     const parentResource = new nodeClasses.BlogResource(blogA1),
           childResource  = new nodeClasses.PostResource(postA1a),
           parentSubject  = new nodeClasses.TeamSubject(teamA1),
           childSubject   = new nodeClasses.UserSubject(userA1);
 
-    expect(
+    t.false(
       await childResource.isAllowed(childSubject, 'view'),
       'User should not have access to post before permission set.'
-    ).to.equal(false);
+    );
 
     // allow team -> blog access
     await parentResource.allow(parentSubject, 'view');
     // deny team specific access to post
     await childResource.deny(parentSubject, 'view');
 
-    expect(
+    t.true(
       await parentResource.isAllowed(parentSubject, 'view'),
       'Team should have access to blog after permission set'
-    ).to.equal(true);
+    );
 
-    expect(
+    t.false(
       await childResource.isAllowed(parentSubject, 'view'),
       'Team should not have access to post after permission set.'
-    ).to.equal(false);
+    );
 
-    expect(
+    t.true(
       await parentResource.isAllowed(childSubject, 'view'),
       'User should have access to blog after permission set'
-    ).to.equal(true);
+    );
 
-    expect(
+    t.false(
       await childResource.isAllowed(childSubject, 'view'),
       'User should not have access to post after permission set.'
-    ).to.equal(false);
+    );
   });
 
 
@@ -569,16 +561,16 @@ function runNodeTestsWithClasses(description: string, nodeClasses: TestNodeClass
         - user can access specific post, but not blog itself
         - team can access blog wholistically, but not specific post
    */
-  test.serial(description + ' Lowest node on hierarchy wins conflicts (deny post for team, but allow for user)', async () => {
+  test.serial(description + ' Lowest node on hierarchy wins conflicts (deny post for team, but allow for user)', async (t) => {
     const parentResource = new nodeClasses.BlogResource(blogA1),
           childResource  = new nodeClasses.PostResource(postA1a),
           parentSubject  = new nodeClasses.TeamSubject(teamA1),
           childSubject   = new nodeClasses.UserSubject(userA1);
 
-    expect(
+    t.false(
       await childResource.isAllowed(childSubject, 'view'),
       'User should not have access to post before permission set.'
-    ).to.equal(false);
+    );
 
     // allow team -> blog access
     await parentResource.allow(parentSubject, 'view');
@@ -589,30 +581,30 @@ function runNodeTestsWithClasses(description: string, nodeClasses: TestNodeClass
     // deny child specifically to access blog
     await parentResource.deny(childSubject, 'view');
 
-    expect(
+    t.true(
       await parentResource.isAllowed(parentSubject, 'view'),
       'Team should have access to blog after permission set'
-    ).to.equal(true);
+    );
 
-    expect(
+    t.false(
       await childResource.isAllowed(parentSubject, 'view'),
       'Team should not have access to post after permission set.'
-    ).to.equal(false);
+    );
 
-    expect(
+    t.false(
       await parentResource.isAllowed(childSubject, 'view'),
-      'User should have access to blog after permission set'
-    ).to.equal(false);
+      'User should not have access to blog after permission set'
+    );
 
-    expect(
+    t.true(
       await childResource.isAllowed(childSubject, 'view'),
       'User should have access to post after permission set.'
-    ).to.equal(true);
+    );
 
   });
 
 
-  test.serial(description + ' childResource.deny(parentSubject) should win over parentResource.allow(childSubject)', async () => {
+  test.serial(description + ' childResource.deny(parentSubject) should win over parentResource.allow(childSubject)', async (t) => {
     const parentResource = new nodeClasses.BlogResource(blogA1),
           childResource  = new nodeClasses.PostResource(postA1a),
           parentSubject  = new nodeClasses.TeamSubject(teamA1),
@@ -623,11 +615,11 @@ function runNodeTestsWithClasses(description: string, nodeClasses: TestNodeClass
 
     const access = await childResource.isAllowed(childSubject, 'view');
 
-    expect(access, 'should not have access').to.equal(false);
+    t.false(access, 'should not have access');
   });
 
 
-  test.serial(description + ' Permission explainations should be accurate', async () => {
+  test.serial(description + ' Permission explainations should be accurate', async (t) => {
     const parentResource = new nodeClasses.BlogResource(blogA1),
           childResource  = new nodeClasses.PostResource(postA1a),
           parentSubject  = new nodeClasses.TeamSubject(teamA1),
@@ -640,14 +632,15 @@ function runNodeTestsWithClasses(description: string, nodeClasses: TestNodeClass
 
     const reason = `Permission set on <Resource:${childResource.getName()} id=p0014> for <Subject:${parentSubject.getName()} id=t003> = false`;
 
-    expect(
+    t.is(
       await childResource.explainPermission(childSubject, 'view'),
+      reason,
       'Explaining why child subject cannot access child resource'
-    ).to.equal(reason);
+    );
   });
 
 
-  test.serial(description + ' Subject method results should equal resource method results', async () => {
+  test.serial(description + ' Subject method results should equal resource method results', async (t) => {
     const parentResource: Resource = new nodeClasses.BlogResource(blogA1),
           childResource: Resource  = new nodeClasses.PostResource(postA1a),
           parentSubject: Subject  = new nodeClasses.TeamSubject(teamA1),
@@ -658,54 +651,59 @@ function runNodeTestsWithClasses(description: string, nodeClasses: TestNodeClass
     // deny team specific access to post
     await childResource.deny(parentSubject, 'view');
 
-    expect(
+    t.is(
       await parentResource.isAllowed(parentSubject, 'view'),
+      await parentSubject.isAllowed(parentResource, 'view'),
       'Team should have access to blog after permission set'
-    ).to.equal(await parentSubject.isAllowed(parentResource, 'view'));
+    );
 
-    expect(
+    t.is(
       await childResource.isAllowed(parentSubject, 'view'),
+      await parentSubject.isAllowed(childResource, 'view'),
       'Team should not have access to post after permission set.'
-    ).to.equal(await parentSubject.isAllowed(childResource, 'view'));
+    );
 
-    expect(
+    t.is(
       await parentResource.isAllowed(childSubject, 'view'),
+      await childSubject.isAllowed(parentResource, 'view'),
       'User should have access to blog after permission set'
-    ).to.equal(await childSubject.isAllowed(parentResource, 'view'));
+    );
 
-    expect(
+    t.is(
       await childResource.isAllowed(childSubject, 'view'),
+      await childSubject.isAllowed(childResource, 'view'),
       'User should have access to post after permission set.'
-    ).to.equal(await childSubject.isAllowed(childResource, 'view'));
+    );
   });
 
-  test.serial(description + ' Node.getHierarchyIds() should return flattened array of correct ids', async() => {
+  test.serial(description + ' Node.getHierarchyIds() should return flattened array of correct ids', async(t) => {
     const childResource: Resource  = new nodeClasses.PostResource(postA1a);
-    expect(
+    t.deepEqual(
       await childResource.getHierarchyIds(),
+      [ 'p0014', 'b0010', 'o001' ],
       'Post -> Blog -> Org'
-    ).to.deep.equal([ 'p0014', 'b0010', 'o001' ]);
+    );
   });
 
-  test.serial(description + ' Node.getHierarchyClassNames() should return array of class names', () => {
+  test.serial(description + ' Node.getHierarchyClassNames() should return array of class names', (t) => {
     const childResource: Resource = new nodeClasses.PostResource(postA1a),
           childSubject: Subject   = new nodeClasses.UserSubject(userA1);
 
     const name = (c: any) => <string> (c.displayName || c.name);
 
-    expect(childResource.getHierarchyClassNames(), 'resource class names')
-      .to.deep.equal(
-        [ name(nodeClasses.PostResource), name(nodeClasses.BlogResource), name(nodeClasses.OrganizationResource) ]
+    t.deepEqual(childResource.getHierarchyClassNames(),
+        [ name(nodeClasses.PostResource), name(nodeClasses.BlogResource), name(nodeClasses.OrganizationResource) ],
+        'resource class names'
       );
 
-    expect(childSubject.getHierarchyClassNames(), 'subject class names')
-      .to.deep.equal(
-        [ name(nodeClasses.UserSubject), name(nodeClasses.TeamSubject), name(nodeClasses.OrganizationSubject) ]
+    t.deepEqual(childSubject.getHierarchyClassNames(),
+        [ name(nodeClasses.UserSubject), name(nodeClasses.TeamSubject), name(nodeClasses.OrganizationSubject) ],
+        'subject class names'
       );
 
   });
 
-  test.serial(description + ' Should get access through parent having access to itself', async () => {
+  test.serial(description + ' Should get access through parent having access to itself', async (t) => {
     const parentResource: Resource = new nodeClasses.OrganizationResource(orgA),
           parentSubject: Subject  = new nodeClasses.OrganizationSubject(orgA),
           childSubject: Subject   = new nodeClasses.UserSubject(userA1);
@@ -713,7 +711,7 @@ function runNodeTestsWithClasses(description: string, nodeClasses: TestNodeClass
     // allow team -> blog access
     await parentResource.allow(parentSubject, 'view');
     const perm = await parentResource.determineAccess(childSubject, 'view');
-    expect(perm['view'].access, 'child should have access through parent -> parent').to.equal(true);
+    t.true(perm['view'].access, 'child should have access through parent -> parent');
   });
 
 
@@ -723,7 +721,7 @@ function runNodeTestsWithClasses(description: string, nodeClasses: TestNodeClass
      component -- gracl should return deny. Additionally, the same
      logic should apply if there are multiple resources with conflicting access
    */
-  test.serial(description + ' multiple resogetParentResources with conflicting access at the same hierarchy depth should default to deny', async () => {
+  test.serial(description + ' multiple resogetParentResources with conflicting access at the same hierarchy depth should default to deny', async (t) => {
     const subject: Subject = new nodeClasses.UserSubject(userA1);
     const resource: Resource = new nodeClasses.PostResource(postA1a);
     const [ parentSubject1, parentSubject2 ] = await subject.getParents();
@@ -731,11 +729,11 @@ function runNodeTestsWithClasses(description: string, nodeClasses: TestNodeClass
     await resource.deny(<Subject> parentSubject2, 'view');
     await resource.allow(<Subject> parentSubject1, 'view');
 
-    expect(await resource.isAllowed(subject, 'view')).to.equal(false);
+    t.false(await resource.isAllowed(subject, 'view'));
   });
 
 
-  test.serial(description + ' checking multiple perms should short circuit correctly', async () => {
+  test.serial(description + ' checking multiple perms should short circuit correctly', async (t) => {
     const subject: Subject = new nodeClasses.UserSubject(userA1);
     const resource: Resource = new nodeClasses.PostResource(postA1a);
     const [ parentSubject1, parentSubject2 ] = await subject.getParents();
@@ -746,8 +744,8 @@ function runNodeTestsWithClasses(description: string, nodeClasses: TestNodeClass
 
     const accessResults = await resource.determineAccess(subject, ['deniedPerm', 'allowedPerm']);
 
-    expect(accessResults['deniedPerm'].access, 'conflicting parent perm should be false after short circuit').to.equal(false);
-    expect(accessResults['allowedPerm'].access, 'perm with no conflict should be true').to.equal(true);
+    t.false(accessResults['deniedPerm'].access, 'conflicting parent perm should be false after short circuit');
+    t.true(accessResults['allowedPerm'].access, 'perm with no conflict should be true');
   });
 
 }

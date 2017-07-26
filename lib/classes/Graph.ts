@@ -14,7 +14,7 @@ export interface SchemaNode {
   permissionProperty?: string;
   getParents?: typeof Node.prototype.getParents;
   getPermission?: typeof Resource.prototype.getPermission;
-};
+}
 
 
 export type Schema = {
@@ -44,15 +44,15 @@ export class Graph {
 
 
       if (node.parent) {
-        const ParentClass = classGraph.get(node.parent);
+        const ParentClass = classGraph.get(node.parent)!;
         classGraph.set(node.name, class extends ParentClass {
           static id          = node.id || 'id';
-          static parentId    = node.parentId;
+          static parentId    = node.parentId!;
           static displayName = node.name;
           static repository  = node.repository;
           static permissionPropertyKey = node.permissionProperty || 'permissions';
-          getParents() { return getParentsMethod.call(this); };
-          getPermission(subject: Subject) { return getPermissionMethod.call(this, subject); };
+          getParents() { return getParentsMethod.call(this); }
+          getPermission(subject: Subject) { return getPermissionMethod.call(this, subject); }
         });
       } else {
         classGraph.set(node.name, class extends Resource {
@@ -60,7 +60,7 @@ export class Graph {
           static displayName = node.name;
           static repository  = node.repository;
           static permissionPropertyKey = node.permissionProperty || 'permissions';
-          getPermission(subject: Subject) { return getPermissionMethod.call(this, subject); };
+          getPermission(subject: Subject) { return getPermissionMethod.call(this, subject); }
         });
       }
     };
@@ -84,10 +84,10 @@ export class Graph {
       const getParentsMethod = node.getParents || Node.prototype.getParents;
 
       if (node.parent) {
-        const ParentClass = classGraph.get(node.parent);
+        const ParentClass = classGraph.get(node.parent)!;
         classGraph.set(node.name, class extends ParentClass {
           static id          = node.id || 'id';
-          static parentId    = node.parentId;
+          static parentId    = node.parentId!;
           static displayName = node.name;
           static repository  = node.repository;
           static permissionPropertyKey = node.permissionProperty || 'permissions';
@@ -134,7 +134,7 @@ export class Graph {
       const parentResources = ChildResource.getHierarchyClassNames();
       parentResources.forEach(parentName => {
         if (!this.resourceChildMap.has(parentName)) this.resourceChildMap.set(parentName, new Map());
-        if (parentName !== childName) this.resourceChildMap.get(parentName).set(childName, ChildResource);
+        if (parentName !== childName) this.resourceChildMap.get(parentName)!.set(childName, ChildResource);
       });
     });
 
@@ -143,7 +143,7 @@ export class Graph {
       const parentSubjects = ChildSubject.getHierarchyClassNames();
       parentSubjects.forEach(parentName => {
         if (!this.subjectChildMap.has(parentName)) this.subjectChildMap.set(parentName, new Map());
-        if (parentName !== childName) this.subjectChildMap.get(parentName).set(childName, ChildSubject);
+        if (parentName !== childName) this.subjectChildMap.get(parentName)!.set(childName, ChildSubject);
       });
     });
   }
@@ -162,7 +162,7 @@ export class Graph {
       default: throw new Error(`Invalid class type ${type}, must be subject or resource!`);
     }
 
-    if (map.has(name)) return map.get(name);
+    if (map.has(name)) return map.get(name)!;
 
     throw new Error(`No ${type} class found for ${name}!`);
   }
@@ -187,13 +187,13 @@ export class Graph {
   getChildResources(node: string | typeof Node): Array<typeof Resource> {
     const name = Graph.resolveNodeName(node);
     if (!this.resources.has(name)) throw new Error(`No resource class found for ${name}!`);
-    return Array.from(this.resourceChildMap.get(name).values());
+    return Array.from(this.resourceChildMap.get(name)!.values());
   }
 
   getChildSubjects(node: string | typeof Node): Array<typeof Subject> {
     const name = Graph.resolveNodeName(node);
     if (!this.subjects.has(name)) throw new Error(`No subject class found for ${name}!`);
-    return Array.from(this.subjectChildMap.get(name).values());
+    return Array.from(this.subjectChildMap.get(name)!.values());
   }
 
   getParentResources(node: string | typeof Node): Array<typeof Resource> {

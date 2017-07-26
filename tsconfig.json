@@ -2,21 +2,13 @@
   "compilerOptions": {
     "target": "es2015",
     "module": "commonjs",
-    "moduleResolution" : "node",
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
+    "strict": true,
     "declaration": true,
-    "removeComments": false,
-    "noLib": false,
-    "outDir": "./dist/es2015/",
-    "inlineSourceMap": true,
-    "forceConsistentCasingInFileNames": true
+    "outDir": "./dist/",
+    "lib": ["es2015"]
   },
-  "exclude": [
-    "node_modules",
-    "scripts",
-    "typings",
-    "dist"
+  "include": [
+    "lib",
+    "test"
   ]
 }

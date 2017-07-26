@@ -71,18 +71,18 @@ export function topologicalSort(nodes: Hash<any>[], nameKey = 'name', parentKey 
 
       for (let parent of parents) {
         if (!parentMapping.has(parent)) parentMapping.set(parent, []);
-        parentMapping.get(parent).push(schemaNode);
+        parentMapping.get(parent)!.push(schemaNode);
       }
     }
   }
 
   while (noParentList.length) {
-    const rootNode = noParentList.pop();
+    const rootNode = noParentList.pop()!;
     nodeList.push(rootNode);
     if (parentMapping.has(rootNode[nameKey])) {
-      const children = parentMapping.get(rootNode[nameKey]);
+      const children = parentMapping.get(rootNode[nameKey])!;
       while (children.length) {
-        const child = children.pop(),
+        const child = children.pop()!,
               childName = child[nameKey];
         // parent child should be added after its last parent
         if (--parentCounts[childName] === 0) {

@@ -3,6 +3,8 @@ import { Subject } from './Subject';
 import { Resource } from './Resource';
 import { yes, getClassOf } from '../util';
 
+declare var console: any;
+
 /**
  * union of subclasses for inherited method signatures
  */
@@ -194,7 +196,7 @@ export class Node {
       console.warn(`Calling Node.getParents() without Node.parentId, must implement on subclass!`);
       return [];
     }
-  };
+  }
 
 
   /**

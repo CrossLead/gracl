@@ -5,7 +5,7 @@ import { Node } from './classes/Node';
 export interface Repository {
   getEntity(id: any, node?: Node): Promise<Document>;
   saveEntity(id: any, doc: Document, node?: Node): Promise<Document>;
-};
+}
 
 
 /**

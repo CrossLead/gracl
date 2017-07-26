@@ -195,7 +195,7 @@ export class Resource extends Node {
               // subject and resource combination and
               // determine access for the given resource type
               const permObj = await getPermissionObj(res, sub);
-              const access = permObj.access[perm];
+              const access = permObj.access && permObj.access[perm];
 
               // if we have a defined access value,
               // set the reason and the access for the permission
@@ -334,7 +334,7 @@ export class Resource extends Node {
         const parentHierarchies = <PermissionsHierarchy[]> (<any> (await Promise.all(
           parents.map(p => p.getPermissionsHierarchy())
         )));
-        graph.parents.push(...parentHierarchies);
+        graph.parents && graph.parents.push(...parentHierarchies);
       }
     }
 
