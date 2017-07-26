@@ -192,6 +192,12 @@ test('topologicalSort should detect circular dependencies', t => {
   );
 });
 
+/**
+ *
+ * TODO: this is an odd es2015 classes bug...
+ *
+ */
+
 // test.serial('Creating a node subclass without a repository should throw on instantiation', (t) => {
 
 //   t.throws(() => {
